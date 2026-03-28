@@ -30,6 +30,7 @@ export type ArticleMeta = {
   publishedAt: string
   updatedAt?: string
   readingTimeMin: number
+  featureImage?: string
   aiSummary?: string[]
   tags?: string[]
   faq?: { q: string; a: string }[]
@@ -60,6 +61,7 @@ function parseMeta(data: Record<string, unknown>, slug: string, categorie: strin
     publishedAt: (data.publishedAt as string) ?? '',
     updatedAt: data.updatedAt as string | undefined,
     readingTimeMin: (data.readingTimeMin as number) ?? 5,
+    featureImage: data.featureImage as string | undefined,
     aiSummary: data.aiSummary as string[] | undefined,
     tags: data.tags as string[] | undefined,
     faq: data.faq as { q: string; a: string }[] | undefined,

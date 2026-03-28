@@ -1,10 +1,11 @@
 /**
  * ArticleCard — carte article éditoriale.
- * Zéro boîte blanche sur gris. Typo pure, border-left accent discret.
- * Variante featured : titre XXL + description + accent latéral fort.
+ * Si featureImage est présente → affiche l'image en haut de la carte.
+ * Sinon → design typographique pur avec border-left/top accent.
  * Server Component.
  */
 import Link from 'next/link'
+import Image from 'next/image'
 import type { ArticleMeta } from '@/lib/blog'
 import { CATEGORY_LABELS, CATEGORY_ACCENT, formatDate, articleHref } from '@/lib/blog'
 
@@ -25,12 +26,28 @@ export function ArticleCard({ article, featured = false, showCategory = true, in
         <article
           className="article-card"
           style={{
-            borderLeft: `4px solid ${accent}`,
-            paddingLeft: 'var(--space-6)',
+            borderLeft: article.featureImage ? 'none' : `4px solid ${accent}`,
+            paddingLeft: article.featureImage ? 0 : 'var(--space-6)',
             paddingTop: 'var(--space-2)',
             paddingBottom: 'var(--space-2)',
+            overflow: 'hidden',
           }}
         >
+          {article.featureImage && (
+            <Image
+              src={article.featureImage}
+              alt={article.title}
+              width={960}
+              height={540}
+              style={{
+                width: '100%',
+                height: 'auto',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--border)',
+                marginBottom: 'var(--space-4)',
+              }}
+            />
+          )}
           {showCategory && (
             <p style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: accent, margin: '0 0 var(--space-3)' }}>
               {label}
@@ -75,8 +92,8 @@ export function ArticleCard({ article, featured = false, showCategory = true, in
         style={{
           position: 'relative',
           overflow: 'hidden',
-          borderTop: `3px solid ${accent}`,
-          paddingTop: 'var(--space-5)',
+          borderTop: article.featureImage ? 'none' : `3px solid ${accent}`,
+          paddingTop: article.featureImage ? 0 : 'var(--space-5)',
           paddingBottom: 'var(--space-4)',
           height: '100%',
           display: 'flex',
@@ -84,26 +101,42 @@ export function ArticleCard({ article, featured = false, showCategory = true, in
           gap: 'var(--space-2)',
         }}
       >
-        {/* Numéro oversize en watermark */}
-        {num && (
-          <span
-            aria-hidden="true"
+        {article.featureImage ? (
+          <Image
+            src={article.featureImage}
+            alt={article.title}
+            width={480}
+            height={270}
             style={{
-              position: 'absolute',
-              top: '-8px',
-              right: 'var(--space-2)',
-              fontFamily: 'var(--next-font-mono), monospace',
-              fontSize: '72px',
-              fontWeight: 800,
-              color: accent,
-              opacity: 0.06,
-              lineHeight: 1,
-              pointerEvents: 'none',
-              userSelect: 'none',
+              width: '100%',
+              height: 'auto',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--border)',
+              marginBottom: 'var(--space-2)',
             }}
-          >
-            {num}
-          </span>
+          />
+        ) : (
+          /* Numéro oversize en watermark — seulement sans image */
+          num && (
+            <span
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                top: '-8px',
+                right: 'var(--space-2)',
+                fontFamily: 'var(--next-font-mono), monospace',
+                fontSize: '72px',
+                fontWeight: 800,
+                color: accent,
+                opacity: 0.06,
+                lineHeight: 1,
+                pointerEvents: 'none',
+                userSelect: 'none',
+              }}
+            >
+              {num}
+            </span>
+          )
         )}
         {showCategory && (
           <p style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: accent, margin: 0 }}>

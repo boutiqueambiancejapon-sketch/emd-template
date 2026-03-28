@@ -7,6 +7,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { compileMDX } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
 import { remarkAmazonAffiliate } from '@/lib/plugins/remarkAmazonAffiliate'
@@ -25,6 +26,7 @@ import { StatCard, StatRow } from '@/components/blog/StatCard'
 import { CompareBar, CompareBarGroup } from '@/components/blog/CompareBar'
 import { ToolCTA } from '@/components/blog/ToolCTA'
 import { ProductCTA } from '@/components/blog/ProductCTA'
+import { ArticleImage } from '@/components/blog/ArticleImage'
 import { AutoProductCTAs } from '@/components/blog/AutoProductCTAs'
 import { ReadingProgress } from '@/components/blog/ReadingProgress'
 import { FaqAccordion } from '@/components/blog/FaqAccordion'
@@ -65,6 +67,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       publishedTime: meta.publishedAt,
       modifiedTime: meta.updatedAt ?? meta.publishedAt,
       ...(niche.author.name ? { authors: [niche.author.name] } : {}),
+      ...(meta.featureImage ? {
+        images: [{
+          url: meta.featureImage.startsWith('/') ? `${SITE_URL}${meta.featureImage}` : meta.featureImage,
+        }],
+      } : {}),
     },
   }
 }
@@ -86,7 +93,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
       Warning,
       Verdict,
       ProConTable,
-      PullQuote, StatCard, StatRow, CompareBar, CompareBarGroup, ProductCTA,
+      PullQuote, StatCard, StatRow, CompareBar, CompareBarGroup, ProductCTA, ArticleImage,
       table: ({ children }: { children: ReactNode }) => (
         <div className="table-scroll-wrap">
           <table>{children}</table>
@@ -249,6 +256,25 @@ export default async function ArticlePage({ params }: { params: Params }) {
             />
           </header>
           </div>{/* /article-hero-band */}
+
+          {/* Feature Image */}
+          {meta.featureImage && (
+            <div style={{ maxWidth: '960px', margin: '0 auto', padding: '0 var(--space-6) var(--space-8)' }}>
+              <Image
+                src={meta.featureImage}
+                alt={meta.title}
+                width={960}
+                height={540}
+                priority
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid var(--border)',
+                }}
+              />
+            </div>
+          )}
 
           {/* Body */}
           <div
