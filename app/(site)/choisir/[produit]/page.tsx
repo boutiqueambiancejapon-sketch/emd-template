@@ -35,6 +35,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     alternates: {
       canonical: `${SITE_URL}/choisir/${produit}`,
     },
+    openGraph: {
+      title: `Quel ${data.label} choisir en ${year} ?`,
+      description: `Quiz en 4 questions, comparatif par profil et verdict honnête pour choisir son ${data.label} en ${year}.`,
+      url: `${SITE_URL}/choisir/${produit}`,
+      siteName: niche.siteName,
+      type: 'article',
+    },
   }
 }
 

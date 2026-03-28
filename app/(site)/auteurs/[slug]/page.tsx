@@ -62,6 +62,13 @@ export async function generateMetadata(
     title: `${author.name} — ${author.role} | ${niche.siteName}`,
     description: author.bio,
     alternates: { canonical: author.url },
+    openGraph: {
+      title: `${author.name} — ${author.role}`,
+      description: author.bio,
+      url: author.url,
+      siteName: niche.siteName,
+      type: 'profile',
+    },
   }
 }
 

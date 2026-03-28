@@ -203,7 +203,21 @@ export default function DealsPage() {
             padding: '0 var(--space-6) var(--space-24)',
           }}
         >
-          <DealsGrid deals={DEALS} />
+          {DEALS.length === 0 ? (
+            <p
+              style={{
+                textAlign: 'center',
+                color: 'var(--text-muted)',
+                fontSize: '16px',
+                padding: 'var(--space-16) var(--space-6)',
+                lineHeight: 1.6,
+              }}
+            >
+              Aucune promotion disponible pour le moment. Revenez bientôt !
+            </p>
+          ) : (
+            <DealsGrid deals={DEALS} />
+          )}
 
           {/* FAQ */}
           <section aria-labelledby="faq-deals" style={{ marginTop: 'var(--space-12)' }}>
