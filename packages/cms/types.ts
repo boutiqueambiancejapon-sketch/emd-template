@@ -72,6 +72,8 @@ export type CmsSession = {
   githubToken?: string
   /** Display name or email */
   user: string
+  /** User-friendly display name */
+  displayName?: string
   /** User role */
   role: CmsRole
   /** Auth method used */
@@ -83,6 +85,8 @@ export type CmsSession = {
 export type CmsUser = {
   email: string
   name: string
+  /** User-friendly display name shown in the UI */
+  displayName?: string
   role: CmsRole
   /** PBKDF2 hash of password */
   hash: string

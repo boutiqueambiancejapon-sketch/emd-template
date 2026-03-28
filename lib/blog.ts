@@ -39,6 +39,7 @@ export type ArticleMeta = {
   draft?: boolean
   stickyCta?: { label: string; url: string }[]
   stickyCtaMessage?: string
+  authorSlug?: string
 }
 
 /** Retourne le href correct pour un article (blog ou standalone). */
@@ -69,6 +70,7 @@ function parseMeta(data: Record<string, unknown>, slug: string, categorie: strin
     draft: !!data.draft,
     stickyCta: data.stickyCta as { label: string; url: string }[] | undefined,
     stickyCtaMessage: data.stickyCtaMessage as string | undefined,
+    authorSlug: data.authorSlug as string | undefined,
   }
 }
 

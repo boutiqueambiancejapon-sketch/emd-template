@@ -15,7 +15,7 @@ export async function GET() {
 
   const { users } = await getUsers(cmsConfig.repo, cmsConfig.branch)
   // Return without hash/salt
-  const safe = users.map(({ email, name, role }) => ({ email, name, role }))
+  const safe = users.map(({ email, name, displayName, role }) => ({ email, name, displayName, role }))
   return NextResponse.json({ users: safe })
 }
 
@@ -30,13 +30,13 @@ export async function POST(request: Request) {
   const { action } = body as { action: string }
 
   if (action === 'create') {
-    const { email, name, password, role } = body as {
-      email: string; name: string; password: string; role: CmsRole
+    const { email, name, password, role, displayName } = body as {
+      email: string; name: string; password: string; role: CmsRole; displayName?: string
     }
     if (!email || !name || !password) {
       return NextResponse.json({ error: 'Tous les champs sont requis' }, { status: 400 })
     }
-    const result = await createUser(cmsConfig.repo, cmsConfig.branch, email, name, password, role || 'editor')
+    const result = await createUser(cmsConfig.repo, cmsConfig.branch, email, name, password, role || 'editor', displayName || undefined)
     if (result.error) return NextResponse.json({ error: result.error }, { status: 400 })
     return NextResponse.json({ ok: true })
   }

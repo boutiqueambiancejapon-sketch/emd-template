@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 
-type User = { email: string; name: string; role: 'admin' | 'editor' }
+type User = { email: string; name: string; displayName?: string; role: 'admin' | 'editor' }
 
 export function UsersManager() {
   const [users, setUsers] = useState<User[]>([])
@@ -13,6 +13,7 @@ export function UsersManager() {
   // Create form
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
+  const [displayName, setDisplayName] = useState('')
   const [password, setPassword] = useState('')
   const [role, setRole] = useState<'admin' | 'editor'>('editor')
 
@@ -33,14 +34,14 @@ export function UsersManager() {
     const res = await fetch('/api/cms/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'create', email, name, password, role }),
+      body: JSON.stringify({ action: 'create', email, name, password, role, ...(displayName ? { displayName } : {}) }),
     })
     const data = await res.json()
     if (!res.ok) { setToast({ message: data.error, type: 'error' }); return }
 
     setToast({ message: `${name} ajouté`, type: 'success' })
     setShowCreate(false)
-    setEmail(''); setName(''); setPassword(''); setRole('editor')
+    setEmail(''); setName(''); setDisplayName(''); setPassword(''); setRole('editor')
     loadUsers()
   }
 
@@ -110,6 +111,10 @@ export function UsersManager() {
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={inputStyle} placeholder="julie@site.com" />
             </div>
           </div>
+          <div>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#888', marginBottom: 4 }}>Nom affiché (optionnel)</label>
+            <input type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} style={inputStyle} placeholder="Ex : Julie M." />
+          </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
               <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#888', marginBottom: 4 }}>Mot de passe (min 12 car.)</label>
@@ -142,8 +147,8 @@ export function UsersManager() {
           {users.map((user) => (
             <div key={user.email} style={{ display: 'flex', alignItems: 'center', padding: '12px 16px', background: '#161616', borderBottom: '1px solid #1a1a1a', gap: 12 }}>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 14, fontWeight: 500, color: '#e5e5e5' }}>{user.name}</div>
-                <div style={{ fontSize: 12, color: '#888' }}>{user.email}</div>
+                <div style={{ fontSize: 14, fontWeight: 500, color: '#e5e5e5' }}>{user.displayName || user.name}</div>
+                <div style={{ fontSize: 12, color: '#888' }}>{user.displayName ? `${user.name} · ${user.email}` : user.email}</div>
               </div>
               <span style={{
                 fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 4,

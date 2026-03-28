@@ -26,6 +26,7 @@ function parseUsersYaml(raw: string): CmsUser[] {
       users.push({
         email: user.email,
         name: user.name || user.email,
+        ...(user.displayName ? { displayName: user.displayName } : {}),
         role: (user.role as CmsRole) || 'editor',
         hash: user.hash,
         salt: user.salt,
@@ -38,9 +39,17 @@ function parseUsersYaml(raw: string): CmsUser[] {
 
 /** Serialize users to YAML */
 function serializeUsersYaml(users: CmsUser[]): string {
-  return users.map((u) =>
-    `- email: "${u.email}"\n  name: "${u.name}"\n  role: "${u.role}"\n  hash: "${u.hash}"\n  salt: "${u.salt}"`
-  ).join('\n')
+  return users.map((u) => {
+    const lines = [
+      `- email: "${u.email}"`,
+      `  name: "${u.name}"`,
+      ...(u.displayName ? [`  displayName: "${u.displayName}"`] : []),
+      `  role: "${u.role}"`,
+      `  hash: "${u.hash}"`,
+      `  salt: "${u.salt}"`,
+    ]
+    return lines.join('\n')
+  }).join('\n')
 }
 
 /** Get the GitHub token for server-side operations */
@@ -79,7 +88,8 @@ export async function createUser(
   email: string,
   name: string,
   password: string,
-  role: CmsRole
+  role: CmsRole,
+  displayName?: string
 ): Promise<{ error?: string }> {
   const pwError = validatePassword(password)
   if (pwError) return { error: pwError }
@@ -93,7 +103,7 @@ export async function createUser(
   const salt = generateSalt()
   const hash = await hashPassword(password, salt)
 
-  users.push({ email, name, role, hash, salt })
+  users.push({ email, name, ...(displayName ? { displayName } : {}), role, hash, salt })
 
   const token = getServerToken()
   const content = serializeUsersYaml(users)

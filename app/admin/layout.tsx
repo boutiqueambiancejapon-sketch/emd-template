@@ -104,10 +104,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <div style={{ marginTop: 'auto', padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                 <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg, #1C1C26, #13131A)', border: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, color: '#9090A8', fontWeight: 700 }}>
-                  {session.user.charAt(0).toUpperCase()}
+                  {(session.displayName ?? session.user).charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#F0F0F5' }}>{session.user}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#F0F0F5' }}>{session.displayName ?? session.user}</div>
                   <div style={{ fontSize: 10, color: '#55556A' }}>
                     {session.role === 'admin' ? 'Administrateur' : 'Rédacteur'}
                     {session.authMethod === 'github' ? ' · GitHub' : ''}

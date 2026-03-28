@@ -88,6 +88,7 @@ export async function POST(request: Request, { params }: { params: Params }) {
 
   const session: CmsSession = {
     user: user.name || user.email,
+    ...(user.displayName ? { displayName: user.displayName } : {}),
     role: user.role,
     authMethod: 'password',
     expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days

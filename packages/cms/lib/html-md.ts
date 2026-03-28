@@ -31,6 +31,9 @@ export function markdownToHtml(md: string): string {
   // Horizontal rule
   html = html.replace(/^---$/gm, '<hr>')
 
+  // Markdown pipe tables → HTML tables
+  html = convertMarkdownTablesToHtml(html)
+
   // Images (before links)
   html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
 
@@ -170,6 +173,9 @@ export function htmlToMarkdown(html: string): string {
   md = md.replace(/<img[^>]*src="([^"]*)"[^>]*alt="([^"]*)"[^>]*\/?>/gi, '![$2]($1)')
   md = md.replace(/<img[^>]*src="([^"]*)"[^>]*\/?>/gi, '![]($1)')
 
+  // Tables → markdown pipe tables
+  md = convertHtmlTablesToMarkdown(md)
+
   // Paragraphs/divs → newlines
   md = md.replace(/<\/p>/gi, '\n')
   md = md.replace(/<p[^>]*>/gi, '')
@@ -201,4 +207,117 @@ function unescapeHtml(str: string): string {
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
     .replace(/&#x27;/g, "'")
+}
+
+/** Convert markdown pipe tables to HTML <table> */
+function convertMarkdownTablesToHtml(md: string): string {
+  const lines = md.split('\n')
+  const result: string[] = []
+  let i = 0
+
+  while (i < lines.length) {
+    // Detect a table: line with |, followed by separator line |---|
+    if (
+      lines[i]?.includes('|') &&
+      i + 1 < lines.length &&
+      /^\|?\s*[-:]+[-|:\s]+\s*\|?$/.test(lines[i + 1])
+    ) {
+      const headerCells = parsePipeRow(lines[i])
+      // Skip separator line
+      i += 2
+
+      let tableHtml = '<table><thead><tr>'
+      for (const cell of headerCells) {
+        tableHtml += `<th>${cell}</th>`
+      }
+      tableHtml += '</tr></thead><tbody>'
+
+      while (i < lines.length && lines[i]?.includes('|')) {
+        const cells = parsePipeRow(lines[i])
+        tableHtml += '<tr>'
+        for (const cell of cells) {
+          tableHtml += `<td>${cell}</td>`
+        }
+        tableHtml += '</tr>'
+        i++
+      }
+      tableHtml += '</tbody></table>'
+      result.push(tableHtml)
+    } else {
+      result.push(lines[i])
+      i++
+    }
+  }
+  return result.join('\n')
+}
+
+/** Parse a markdown pipe-table row into cells */
+function parsePipeRow(line: string): string[] {
+  let trimmed = line.trim()
+  if (trimmed.startsWith('|')) trimmed = trimmed.slice(1)
+  if (trimmed.endsWith('|')) trimmed = trimmed.slice(0, -1)
+  return trimmed.split('|').map(c => c.trim())
+}
+
+/** Convert HTML <table> to markdown pipe table */
+function convertHtmlTablesToMarkdown(html: string): string {
+  return html.replace(/<table[^>]*>([\s\S]*?)<\/table>/gi, (_, tableContent) => {
+    const rows: string[][] = []
+    let isHeader = false
+    let headerRowCount = 0
+
+    // Extract rows from thead and tbody
+    const theadMatch = tableContent.match(/<thead[^>]*>([\s\S]*?)<\/thead>/i)
+    const tbodyMatch = tableContent.match(/<tbody[^>]*>([\s\S]*?)<\/tbody>/i)
+
+    function extractRows(content: string, markHeader: boolean) {
+      const rowRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi
+      let rowMatch
+      while ((rowMatch = rowRegex.exec(content)) !== null) {
+        const cells: string[] = []
+        const cellRegex = /<(?:td|th)[^>]*>([\s\S]*?)<\/(?:td|th)>/gi
+        let cellMatch
+        while ((cellMatch = cellRegex.exec(rowMatch[1])) !== null) {
+          // Strip inner tags for the cell text
+          const cellText = cellMatch[1].replace(/<[^>]+>/g, '').trim()
+          cells.push(cellText)
+        }
+        if (cells.length > 0) {
+          rows.push(cells)
+          if (markHeader) headerRowCount++
+        }
+      }
+    }
+
+    if (theadMatch) {
+      extractRows(theadMatch[1], true)
+    }
+    if (tbodyMatch) {
+      extractRows(tbodyMatch[1], false)
+    }
+
+    // If no thead/tbody, just extract all rows; treat first as header
+    if (!theadMatch && !tbodyMatch) {
+      extractRows(tableContent, false)
+      headerRowCount = rows.length > 0 ? 1 : 0
+    }
+
+    if (rows.length === 0) return ''
+
+    const colCount = Math.max(...rows.map(r => r.length))
+    const mdRows: string[] = []
+
+    for (let r = 0; r < rows.length; r++) {
+      const cells = rows[r]
+      while (cells.length < colCount) cells.push('')
+      mdRows.push('| ' + cells.join(' | ') + ' |')
+
+      // Insert separator after header row(s)
+      if (r === (headerRowCount > 0 ? headerRowCount - 1 : 0) && r === 0) {
+        mdRows.push('| ' + cells.map(() => '---').join(' | ') + ' |')
+      }
+    }
+
+    return '\n' + mdRows.join('\n') + '\n'
+  })
 }

@@ -6,6 +6,10 @@ import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Underline from '@tiptap/extension-underline'
 import Placeholder from '@tiptap/extension-placeholder'
+import { Table } from '@tiptap/extension-table'
+import { TableRow } from '@tiptap/extension-table-row'
+import { TableCell } from '@tiptap/extension-table-cell'
+import { TableHeader } from '@tiptap/extension-table-header'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 type MediaItem = { name: string; url: string; sha: string }
@@ -29,6 +33,10 @@ export function WysiwygEditor({ value, onChange }: Props) {
       Link.configure({ openOnClick: false, HTMLAttributes: { style: 'color: #6af; text-decoration: underline;' } }),
       Image.configure({ HTMLAttributes: { style: 'max-width: 100%; height: auto; border-radius: 6px; margin: 12px 0;' } }),
       Placeholder.configure({ placeholder: 'Commencez à écrire…' }),
+      Table.configure({ resizable: false, HTMLAttributes: { style: 'border-collapse: collapse; width: 100%; margin: 12px 0;' } }),
+      TableRow,
+      TableCell.configure({ HTMLAttributes: { style: 'border: 1px solid rgba(255,255,255,0.15); padding: 8px 12px;' } }),
+      TableHeader.configure({ HTMLAttributes: { style: 'border: 1px solid rgba(255,255,255,0.15); padding: 8px 12px; background: rgba(255,255,255,0.05); font-weight: 600;' } }),
     ],
     content: value,
     onUpdate: ({ editor: e }) => onChange(e.getHTML()),
@@ -154,6 +162,15 @@ export function WysiwygEditor({ value, onChange }: Props) {
 
         <button onClick={() => editor.chain().focus().undo().run()} style={btn(false)} title="Annuler">↩</button>
         <button onClick={() => editor.chain().focus().redo().run()} style={btn(false)} title="Rétablir">↪</button>
+
+        <div style={sep} />
+
+        <button onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()} style={btn(false)} title="Insérer un tableau">⊞</button>
+        <button onClick={() => editor.chain().focus().addRowAfter().run()} style={btn(false)} title="Ajouter une ligne">+↓</button>
+        <button onClick={() => editor.chain().focus().addColumnAfter().run()} style={btn(false)} title="Ajouter une colonne">+→</button>
+        <button onClick={() => editor.chain().focus().deleteRow().run()} style={btn(false)} title="Supprimer la ligne">−↓</button>
+        <button onClick={() => editor.chain().focus().deleteColumn().run()} style={btn(false)} title="Supprimer la colonne">−→</button>
+        <button onClick={() => editor.chain().focus().deleteTable().run()} style={btn(false)} title="Supprimer le tableau">⊟</button>
       </div>
 
       {/* Editor */}
@@ -227,6 +244,11 @@ export function WysiwygEditor({ value, onChange }: Props) {
         .tiptap pre code { background: none; padding: 0; }
         .tiptap hr { border: none; border-top: 1px solid #333; margin: 24px 0; }
         .tiptap p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: #555; pointer-events: none; float: left; height: 0; }
+        .tiptap table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+        .tiptap th, .tiptap td { border: 1px solid rgba(255,255,255,0.15); padding: 8px 12px; min-width: 80px; vertical-align: top; }
+        .tiptap th { background: rgba(255,255,255,0.05); font-weight: 600; color: #fff; }
+        .tiptap td { color: #e5e5e5; }
+        .tiptap .selectedCell { background: rgba(102,170,255,0.12); }
       `}</style>
     </div>
   )

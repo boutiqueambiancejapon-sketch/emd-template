@@ -31,6 +31,7 @@ export const cmsConfig: CmsConfig = {
         updatedAt: { type: 'date', label: 'Date MAJ' },
         readingTimeMin: { type: 'number', label: 'Temps de lecture (min)', default: 5 },
         categorie: { type: 'select', label: 'Catégorie', options: articleCategoryOptions },
+        authorSlug: { type: 'relation', label: 'Auteur', collection: 'authors' },
         tags: { type: 'tags', label: 'Tags' },
         aiSummary: { type: 'list', label: 'En bref', itemType: 'textarea' },
         faq: {
@@ -116,6 +117,32 @@ export const cmsConfig: CmsConfig = {
         marquee: { type: 'list', label: 'Bandeau défilant', itemType: 'text' },
         faq_title: { type: 'text', label: 'Titre section FAQ' },
         affiliate_disclaimer: { type: 'textarea', label: 'Disclaimer affiliation' },
+        // Home page fields
+        h1_prefix: { type: 'text', label: 'H1 — préfixe' },
+        h1_suffix: { type: 'text', label: 'H1 — suffixe' },
+        rotating_words: { type: 'list', label: 'Mots rotatifs (H1)', itemType: 'text' },
+        tools_eyebrow: { type: 'text', label: 'Outils — sur-titre' },
+        tools_title: { type: 'text', label: 'Outils — titre' },
+        tools_cta: { type: 'text', label: 'Outils — bouton CTA' },
+        tools_cta_url: { type: 'text', label: 'Outils — URL CTA' },
+        // Quiz page fields
+        steps: {
+          type: 'repeater',
+          label: 'Étapes du quiz',
+          fields: {
+            id: { type: 'text', label: 'Identifiant', required: true },
+            question: { type: 'text', label: 'Question', required: true },
+            options: {
+              type: 'repeater',
+              label: 'Options',
+              fields: {
+                label: { type: 'text', label: 'Libellé', required: true },
+                value: { type: 'text', label: 'Valeur', required: true },
+                emoji: { type: 'text', label: 'Emoji (optionnel)' },
+              },
+            },
+          },
+        },
       },
     },
     settings: {
