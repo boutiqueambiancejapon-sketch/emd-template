@@ -9,6 +9,7 @@ import type { Metadata } from 'next'
 import { currentYear } from '@/lib/utils/year'
 import { QuizEngine } from '@/components/quiz/QuizEngine'
 import { niche } from '@/niche.config'
+import { getPageContent } from '@/lib/cms-pages'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 
@@ -42,6 +43,8 @@ const jsonLd = {
 }
 
 export default function QuizPage() {
+  const quizContent = getPageContent('quiz')
+  const steps = quizContent?.steps as { id: string; question: string; options: { label: string; value: string; emoji?: string }[] }[] | undefined
   return (
     <>
       <script
@@ -142,7 +145,7 @@ export default function QuizPage() {
               padding: 'var(--space-8)',
             }}
           >
-            <QuizEngine />
+            <QuizEngine steps={steps} />
           </div>
         </section>
       </main>

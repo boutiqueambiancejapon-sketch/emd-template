@@ -34,7 +34,7 @@ type Recommendation = {
 
 /* ─── Questions (placeholder — à adapter par niche) ──── */
 
-const STEPS: Step[] = [
+const DEFAULT_STEPS: Step[] = [
   {
     id: 'categorie',
     question: 'Quelle catégorie vous intéresse ?',
@@ -86,9 +86,12 @@ function recommend(answers: Answers): Recommendation {
 type QuizEngineProps = {
   /** Pré-sélectionne la catégorie et saute l'étape 0. */
   defaultProduit?: string
+  /** Steps du quiz — passés depuis le Server Component (quiz.yaml). Fallback sur DEFAULT_STEPS. */
+  steps?: Step[]
 }
 
-export function QuizEngine({ defaultProduit }: QuizEngineProps = {}) {
+export function QuizEngine({ defaultProduit, steps }: QuizEngineProps = {}) {
+  const STEPS = steps && steps.length > 0 ? steps : DEFAULT_STEPS
   const initialStep = defaultProduit ? 1 : 0
   const initialAnswers: Answers = defaultProduit ? { categorie: defaultProduit } : {}
 

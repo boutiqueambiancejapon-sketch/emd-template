@@ -75,21 +75,28 @@ Sur base de la niche, propose-moi et demande validation :
 
 ## Après les réponses
 
-1. Remplir `niche.config.ts` avec toutes les valeurs
-2. Appliquer à `app/globals.css` (palette)
-3. Appliquer à `app/layout.tsx` (fonts, metadata)
-4. Appliquer à tous les composants (home, nav, footer, outils)
-5. Appliquer à `cms.config.ts` (catégories, repo)
-6. Appliquer à `lib/utils/affiliate.ts` (tag)
-7. Créer `docs/AUTHOR-[slug].md`
-8. Créer `docs/SEO-GEO-REDACTION.md` adapté à la niche
-9. Mettre à jour `CLAUDE.md`
-10. Mettre à jour `content/settings.yaml` (nav)
-11. Mettre à jour `content/pages/home.yaml`
-12. Supprimer les fichiers `_example.*`
-13. Rédiger le premier article (800+ mots, 6+ FAQ, composants MDX)
-14. `tsc --noEmit` + `next lint`
-15. Commit et push
+### Étape 1 — Config (tout est câblé, seul niche.config.ts change)
+1. Remplir `niche.config.ts` avec toutes les valeurs (le reste se propage automatiquement)
+2. Mettre à jour `content/settings.yaml` (nav avec les catégories)
+3. Mettre à jour `content/pages/home.yaml` (rotating_words, subtitle, CTAs)
+4. Mettre à jour `content/pages/quiz.yaml` (questions et options du quiz)
+
+### Étape 2 — Contenu niche
+5. Remplir `lib/comparateur.ts` (données produits pour le comparateur)
+6. Remplir `lib/choisir-content.ts` (contenu éditorial des pages /choisir/)
+7. Mettre à jour les pages légales (`app/(site)/mentions-legales/page.tsx` et `confidentialite`)
+8. Créer `docs/AUTHOR-[slug].md` (profil auteur)
+
+### Étape 3 — Premier article
+9. Supprimer `content/articles/_example.mdx` et `content/produits/_example.yaml`
+10. Rédiger le premier article (800+ mots, 6+ FAQ, composants MDX)
+    Composants dispo : `<ArticleImage>`, `<ProductCTA>`, `<ProductCarousel>`,
+    `<CompareBar>`, `<Tip>`, `<Warning>`, `<Verdict>`, `<ProConTable>`,
+    `<PullQuote>`, `<StatCard>`, `<StatRow>`
+
+### Étape 4 — Vérification
+11. `tsc --noEmit` + `next lint`
+12. Commit et push
 ```
 
 ---
