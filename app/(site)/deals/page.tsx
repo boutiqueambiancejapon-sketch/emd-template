@@ -1,5 +1,5 @@
 /**
- * /deals — Page Deals Apple.
+ * /deals — Page Deals.
  * DA : watermark numéros --accent-2 oversize opacity 0.05 · MarqueeStrip intégré.
  * ISR 900s (deals mis à jour fréquemment). Server Component.
  */
@@ -205,7 +205,7 @@ export default function DealsPage() {
         >
           <DealsGrid deals={DEALS} />
 
-          {/* FAQ — bons plans Apple, code promo, réductions */}
+          {/* FAQ */}
           <section aria-labelledby="faq-deals" style={{ marginTop: 'var(--space-12)' }}>
             <h2
               id="faq-deals"

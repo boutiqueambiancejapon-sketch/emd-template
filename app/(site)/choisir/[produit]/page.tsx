@@ -1,5 +1,5 @@
 /**
- * /choisir/[produit] — "Quel [produit] Apple choisir en {year} ?"
+ * /choisir/[produit] — "Quel [produit] choisir en {year} ?"
  * Structure : hero + quiz interactif + contenu éditorial + FAQ + auteur.
  * Server Component — QuizEngine isolé en 'use client'.
  */

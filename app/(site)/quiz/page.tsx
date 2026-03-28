@@ -1,6 +1,5 @@
 /**
- * /quiz — Quiz "Quel produit Apple pour moi ?"
- * iPhone · Mac · iPad · Apple Watch · AirPods.
+ * /quiz — Quiz personnalisé.
  * DA : effect-quiz → radial gradient --accent-4 + glassmorphism card.
  * Server Component — QuizEngine 'use client' isolé pour l'interactivité.
  */
