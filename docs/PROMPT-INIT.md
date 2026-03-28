@@ -21,6 +21,15 @@ Tu vas initialiser ce site à partir du template 10min.
 
 ## Questions à poser (dans cet ordre)
 
+### Bloc 0 — Technique
+Détecter automatiquement le repo GitHub (via `git remote -v`) et la branche principale.
+Si la détection échoue, demander :
+1. Quel est le repo GitHub ? (ex: mon-org/10minutesvoyage)
+2. Quelle est la branche principale ? (ex: main, master, production)
+
+**IMPORTANT** : Le CMS utilise cette branche pour lire/écrire le contenu via l'API GitHub.
+Mettre à jour `niche.config.ts` (champs `repo` et `branch`) ET vérifier que `cms.config.ts` les propage.
+
 ### Bloc 1 — Identité
 1. Quel est le sujet/niche du site ? (ex: voyage, cartes de crédit, aspirateurs, crypto)
 2. Quel nom de domaine ? (ex: 10minutesvoyage.com)

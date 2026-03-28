@@ -85,7 +85,7 @@ export type NicheConfig = {
   // Technique
   vercelRegion: string     // "fra1"
   repo: string             // "org/repo"
-  branch: string           // "main"
+  branch: string           // branche principale — PAS toujours "main" ! Le CMS l'utilise pour lire/écrire le contenu.
 }
 
 // ─── Valeurs par défaut (placeholder) ───────────────────────────────────
