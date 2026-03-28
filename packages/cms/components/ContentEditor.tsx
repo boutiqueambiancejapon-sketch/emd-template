@@ -39,6 +39,36 @@ function Toast({ message, type, onClose }: { message: string; type: 'success' | 
   )
 }
 
+// --- FAQ Preview ---
+function FaqPreview({ faq }: { faq: Record<string, unknown>[] }) {
+  if (!faq.length) return null
+  return (
+    <div style={{ marginTop: 24 }}>
+      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#888', marginBottom: 12 }}>FAQ Preview</label>
+      <div style={{ border: '1px solid #222', borderRadius: 8, overflow: 'hidden' }}>
+        {faq.map((item, i) => {
+          const q = (item.question as string) || ''
+          const a = (item.answer as string) || (item.reponse as string) || ''
+          if (!q && !a) return null
+          return (
+            <div key={i} style={{ borderBottom: i < faq.length - 1 ? '1px solid #222' : 'none', padding: '14px 16px', background: i % 2 === 0 ? '#111' : '#0d0d0d' }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#e5e5e5', marginBottom: a ? 8 : 0 }}>{q || '(question vide)'}</div>
+              {a && <div style={{ fontSize: 13, color: '#999', lineHeight: 1.6 }}>{a}</div>}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// --- Sidebar field keys ---
+const SIDEBAR_FIELDS = new Set([
+  'description', 'featureImage', 'publishedAt', 'updatedAt',
+  'readingTimeMin', 'categorie', 'tags', 'stickyCta',
+  'stickyCtaMessage', 'draft', 'aiSummary', 'faq',
+])
+
 // --- Props ---
 type Props = {
   collection: string
@@ -61,6 +91,8 @@ export function ContentEditor({ collection, slug, fields, format, initialData, i
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
   const importRef = useRef<HTMLInputElement>(null)
+  const [showPasteModal, setShowPasteModal] = useState(false)
+  const [pasteContent, setPasteContent] = useState('')
 
   const isDraft = !!data.draft
 
@@ -168,6 +200,135 @@ export function ContentEditor({ collection, slug, fields, format, initialData, i
     if (importRef.current) importRef.current.value = ''
   }
 
+  function handlePasteImport() {
+    const raw = pasteContent.trim()
+    if (!raw) return
+
+    const lines = raw.split('\n')
+    const newData: Record<string, unknown> = {}
+    const bodyLines: string[] = []
+    const faqItems: { question: string; answer: string }[] = []
+
+    let titleFound = false
+    let descriptionFound = false
+    let i = 0
+
+    // First line that looks like a title: short, no period at end, not a heading marker
+    while (i < lines.length) {
+      const line = lines[i].trim()
+      if (!line) { i++; continue }
+
+      // Strip markdown heading prefix if present
+      const cleanLine = line.replace(/^#{1,3}\s+/, '')
+
+      if (!titleFound && cleanLine.length > 0 && cleanLine.length < 120 && !cleanLine.endsWith('.') && !cleanLine.startsWith('Q:') && !cleanLine.startsWith('**Q:**')) {
+        newData.title = cleanLine
+        titleFound = true
+        if (isNew) setEntrySlug(slugify(cleanLine))
+        i++
+        continue
+      }
+      break
+    }
+
+    // First real paragraph → description
+    while (i < lines.length) {
+      const line = lines[i].trim()
+      if (!line) { i++; continue }
+      if (!descriptionFound && !line.startsWith('##') && !line.startsWith('Q:') && !line.startsWith('**Q:**') && !line.endsWith('?')) {
+        newData.description = line
+        descriptionFound = true
+        i++
+        continue
+      }
+      break
+    }
+
+    // Process remaining lines: FAQ detection + body
+    while (i < lines.length) {
+      const line = lines[i].trim()
+
+      // FAQ: "Q: ..." or "**Q:** ..." pattern
+      const qMatch = line.match(/^(?:\*\*Q:\*\*|Q:)\s*(.+)/)
+      if (qMatch) {
+        const question = qMatch[1].trim()
+        // Next non-empty line(s) are the answer
+        i++
+        const answerParts: string[] = []
+        while (i < lines.length) {
+          const aLine = lines[i].trim()
+          // Check for A: prefix
+          const aMatch = aLine.match(/^(?:\*\*(?:A|R):\*\*|(?:A|R):)\s*(.+)/)
+          if (aMatch) {
+            answerParts.push(aMatch[1].trim())
+            i++
+            break
+          } else if (aLine && !aLine.match(/^(?:\*\*Q:\*\*|Q:)/) && !aLine.startsWith('##')) {
+            answerParts.push(aLine)
+            i++
+          } else {
+            break
+          }
+        }
+        faqItems.push({ question, answer: answerParts.join(' ') })
+        continue
+      }
+
+      // FAQ: line ending with "?" followed by an answer
+      if (line.endsWith('?') && !line.startsWith('##')) {
+        const question = line
+        i++
+        const answerParts: string[] = []
+        while (i < lines.length) {
+          const aLine = lines[i].trim()
+          if (aLine && !aLine.endsWith('?') && !aLine.startsWith('##') && !aLine.match(/^(?:\*\*Q:\*\*|Q:)/)) {
+            answerParts.push(aLine)
+            i++
+          } else {
+            break
+          }
+        }
+        if (answerParts.length > 0) {
+          faqItems.push({ question, answer: answerParts.join(' ') })
+        } else {
+          // No answer found, treat as body
+          bodyLines.push(line)
+        }
+        continue
+      }
+
+      // Section breaks (## headings) → keep in body
+      bodyLines.push(lines[i])
+      i++
+    }
+
+    // Apply parsed data
+    setData((prev) => {
+      const updated = { ...prev, ...newData }
+      if (faqItems.length > 0) {
+        updated.faq = faqItems
+      }
+      return updated
+    })
+
+    const body = bodyLines.join('\n').trim()
+    if (body) {
+      setBodyMd(body)
+      setBodyHtml(markdownToHtml(body))
+    }
+
+    // Build summary for toast
+    const detected: string[] = []
+    if (newData.title) detected.push('titre')
+    if (newData.description) detected.push('description')
+    if (faqItems.length > 0) detected.push(`${faqItems.length} FAQ`)
+    if (body) detected.push('contenu')
+
+    setToast({ message: `Import collé — ${detected.join(', ')} détecté${detected.length > 1 ? 's' : ''}`, type: 'success' })
+    setShowPasteModal(false)
+    setPasteContent('')
+  }
+
   async function handleSave() {
     const finalSlug = entrySlug || slug
     if (!finalSlug) { setToast({ message: 'Le slug est requis', type: 'error' }); return }
@@ -226,10 +387,18 @@ export function ContentEditor({ collection, slug, fields, format, initialData, i
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           {/* Import .md */}
           {isNew && format === 'mdx' && (
-            <label style={{ padding: '8px 12px', background: 'transparent', border: '1px solid #333', color: '#888', borderRadius: 6, cursor: 'pointer', fontSize: 12 }}>
-              Importer .md
-              <input ref={importRef} type="file" accept=".md,.mdx,.markdown" onChange={handleImportMd} style={{ display: 'none' }} />
-            </label>
+            <>
+              <label style={{ padding: '8px 12px', background: 'transparent', border: '1px solid #333', color: '#888', borderRadius: 6, cursor: 'pointer', fontSize: 12 }}>
+                Importer .md
+                <input ref={importRef} type="file" accept=".md,.mdx,.markdown" onChange={handleImportMd} style={{ display: 'none' }} />
+              </label>
+              <button
+                onClick={() => setShowPasteModal(true)}
+                style={{ padding: '8px 12px', background: 'transparent', border: '1px solid #333', color: '#888', borderRadius: 6, cursor: 'pointer', fontSize: 12 }}
+              >
+                {'\uD83D\uDCCB'} Coller du contenu
+              </button>
+            </>
           )}
           {/* Draft toggle */}
           <button onClick={toggleDraft} style={{ padding: '8px 12px', background: 'transparent', border: '1px solid #333', color: isDraft ? '#fa0' : '#888', borderRadius: 6, cursor: 'pointer', fontSize: 12 }}>
@@ -281,6 +450,42 @@ export function ContentEditor({ collection, slug, fields, format, initialData, i
             setBodyMd(htmlToMarkdown(html))
           }}
         />
+      )}
+
+      {/* Paste import modal */}
+      {showPasteModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: '90%', maxWidth: 620, background: '#13131A', border: '1px solid #333', borderRadius: 12, padding: 24, boxShadow: '0 8px 32px rgba(0,0,0,0.6)' }}>
+            <h3 style={{ margin: '0 0 4px', fontSize: 16, fontWeight: 700, color: '#e5e5e5' }}>
+              {'\uD83D\uDCCB'} Coller du contenu
+            </h3>
+            <p style={{ margin: '0 0 16px', fontSize: 12, color: '#888', lineHeight: 1.5 }}>
+              Collez du texte brut (Google Docs, Word, notes). Le titre, la description, les FAQ et le contenu seront d{'é'}tect{'é'}s automatiquement.
+            </p>
+            <textarea
+              value={pasteContent}
+              onChange={(e) => setPasteContent(e.target.value)}
+              rows={14}
+              placeholder={'Mon titre d\'article\n\nUne description courte du contenu.\n\n## Première section\n\nContenu de la section...\n\nQ: Une question ?\nR: Une réponse.'}
+              style={{ width: '100%', padding: 12, background: '#161616', border: '1px solid #333', borderRadius: 8, color: '#e5e5e5', fontSize: 13, resize: 'vertical', boxSizing: 'border-box', lineHeight: 1.6, fontFamily: 'monospace' }}
+            />
+            <div style={{ display: 'flex', gap: 8, marginTop: 14, justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => { setShowPasteModal(false); setPasteContent('') }}
+                style={{ padding: '8px 16px', background: 'transparent', color: '#888', borderRadius: 6, border: '1px solid #333', cursor: 'pointer', fontSize: 12 }}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handlePasteImport}
+                disabled={!pasteContent.trim()}
+                style={{ padding: '8px 16px', background: '#fff', color: '#000', border: 'none', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 600, opacity: pasteContent.trim() ? 1 : 0.5 }}
+              >
+                Importer
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Toast */}

@@ -22,6 +22,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!session) {
     return (
       <html lang="fr">
+        <head>
+          <link rel="icon" href="/icons/brand/favicon.svg" />
+        </head>
         <body style={{ margin: 0, background: '#0A0A0F', color: '#F0F0F5', fontFamily: "'Space Grotesk', system-ui, sans-serif", minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ width: '100%', maxWidth: 420, padding: 24 }}>
             <div style={{ textAlign: 'center', marginBottom: 40 }}>
@@ -46,6 +49,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <html lang="fr">
+      <head>
+        <link rel="icon" href="/icons/brand/favicon.svg" />
+      </head>
       <body style={{ margin: 0, background: '#0A0A0F', color: '#F0F0F5', fontFamily: "'Space Grotesk', system-ui, sans-serif" }}>
         <div style={{ display: 'flex', minHeight: '100vh' }}>
 

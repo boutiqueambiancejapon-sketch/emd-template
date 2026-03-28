@@ -28,6 +28,7 @@ import { ToolCTA } from '@/components/blog/ToolCTA'
 import { ProductCTA } from '@/components/blog/ProductCTA'
 import { ArticleImage } from '@/components/blog/ArticleImage'
 import { AutoProductCTAs } from '@/components/blog/AutoProductCTAs'
+import { ProductCarousel } from '@/components/blog/ProductCarousel'
 import { ReadingProgress } from '@/components/blog/ReadingProgress'
 import { FaqAccordion } from '@/components/blog/FaqAccordion'
 import { getCTAsForCategory } from '@/lib/article-ctas'
@@ -93,7 +94,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
       Warning,
       Verdict,
       ProConTable,
-      PullQuote, StatCard, StatRow, CompareBar, CompareBarGroup, ProductCTA, ArticleImage,
+      PullQuote, StatCard, StatRow, CompareBar, CompareBarGroup, ProductCTA, ArticleImage, ProductCarousel,
       table: ({ children }: { children: ReactNode }) => (
         <div className="table-scroll-wrap">
           <table>{children}</table>

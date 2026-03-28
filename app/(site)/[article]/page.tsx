@@ -28,6 +28,7 @@ import { CompareBar, CompareBarGroup } from '@/components/blog/CompareBar'
 import { ProductCTA } from '@/components/blog/ProductCTA'
 import { ArticleImage } from '@/components/blog/ArticleImage'
 import { AutoProductCTAs } from '@/components/blog/AutoProductCTAs'
+import { ProductCarousel } from '@/components/blog/ProductCarousel'
 import { ReadingProgress } from '@/components/blog/ReadingProgress'
 import { FaqAccordion } from '@/components/blog/FaqAccordion'
 import { AuthorByline } from '@/components/ui/AuthorByline'
@@ -77,7 +78,7 @@ export default async function StandaloneArticlePage({ params }: { params: Params
     source: content,
     options: { mdxOptions: { remarkPlugins: [remarkGfm, remarkAmazonAffiliate] } },
     components: {
-      Tip, Warning, Verdict, ProConTable, PullQuote, StatCard, StatRow, CompareBar, CompareBarGroup, ProductCTA, ArticleImage,
+      Tip, Warning, Verdict, ProConTable, PullQuote, StatCard, StatRow, CompareBar, CompareBarGroup, ProductCTA, ArticleImage, ProductCarousel,
       table: ({ children }: { children: ReactNode }) => (
         <div className="table-scroll-wrap"><table>{children}</table></div>
       ),
