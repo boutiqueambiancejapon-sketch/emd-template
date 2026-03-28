@@ -13,11 +13,12 @@ Tu vas initialiser ce site à partir du template 10min.
 
 1. Lis `docs/TEMPLATE-SPEC.md` pour comprendre l'architecture
 2. Lis `docs/CMS-SPEC.md` pour comprendre le CMS
-3. Pose-moi les questions ci-dessous UNE PAR UNE
-4. Remplis `niche.config.ts` avec mes réponses
-5. Applique le config à tout le site
-6. Rédige le premier article
-7. Commit et push
+3. Lis `docs/SEO-GEO-REDACTION.md` pour les règles SEO
+4. Pose-moi les questions ci-dessous UNE PAR UNE
+5. Remplis `niche.config.ts` avec mes réponses
+6. Applique la DA (palette, fonts, effets) à tout le site
+7. Rédige le premier article
+8. Commit et push
 
 ## Questions à poser (dans cet ordre)
 
@@ -62,9 +63,36 @@ Sur base de la niche, propose-moi et demande validation :
    - Formulations récurrentes (ex: "Honnêtement,")
    - No-go (formulations interdites)
 
-### Bloc 6 — DA
+### Bloc 6 — DA & Branding
 7. Ambiance visuelle ? (3 adjectifs, ex: premium, sombre, tech)
-   Je proposerai une palette et des fonts adaptées.
+   2–3 sites de référence pour l'ambiance ? (optionnel)
+
+Sur base de la niche et de l'ambiance, proposer ET demander validation :
+
+**Palette complète** (11 couleurs) :
+- accent1 → couleur principale (CTAs, liens, éléments actifs)
+- accent2 → couleur secondaire (badges, highlights)
+- accent3 → couleur tertiaire (succès, validation)
+- accent4 → couleur quaternaire (quiz, éléments interactifs)
+- accent5 → couleur quinaire (liens secondaires)
+- bgPrimary → fond principal (#0A0A0F par défaut dark, adapter si light)
+- bgSurface → fond cartes (#13131A par défaut)
+- bgSurface2 → fond cartes secondaire (#1C1C26 par défaut)
+- textPrimary → texte principal
+- textSecondary → texte secondaire
+- textMuted → texte discret
+
+**Fonts** (2 familles max) :
+- display : pour les titres (ex: Unbounded, Syne, Plus Jakarta Sans, Outfit, Manrope)
+- body : pour le texte courant (ex: Space Grotesk, Inter, DM Sans, Geist)
+IMPORTANT : uniquement des fonts Google Fonts compatibles next/font.
+
+**Effets visuels** :
+- Aurora : 3 couleurs du gradient animé (généralement accent1 + accent4 + accent3)
+- Noise : opacité (0.03–0.05, 0 pour désactiver)
+- Style général : dark bold / minimal clean / premium glossy / tech brutalist
+
+Présenter la proposition comme un tableau visuel avec les hex et demander validation.
 
 ### Bloc 7 — Affiliation
 8. Tag affilié Amazon ? (ex: monsite-21)
@@ -75,28 +103,56 @@ Sur base de la niche, propose-moi et demande validation :
 
 ## Après les réponses
 
-### Étape 1 — Config (tout est câblé, seul niche.config.ts change)
-1. Remplir `niche.config.ts` avec toutes les valeurs (le reste se propage automatiquement)
-2. Mettre à jour `content/settings.yaml` (nav avec les catégories)
-3. Mettre à jour `content/pages/home.yaml` (rotating_words, subtitle, CTAs)
-4. Mettre à jour `content/pages/quiz.yaml` (questions et options du quiz)
+### Étape 1 — Config
+1. Remplir `niche.config.ts` avec TOUTES les valeurs (identité, vocabulaire, catégories, outils, auteur, palette, fonts, affiliation, technique)
 
-### Étape 2 — Contenu niche
-5. Remplir `lib/comparateur.ts` (données produits pour le comparateur)
-6. Remplir `lib/choisir-content.ts` (contenu éditorial des pages /choisir/)
-7. Mettre à jour les pages légales (`app/(site)/mentions-legales/page.tsx` et `confidentialite`)
-8. Créer `docs/AUTHOR-[slug].md` (profil auteur)
+### Étape 2 — Appliquer la DA
+**C'est l'étape critique.** Le template a une DA par défaut qui DOIT être remplacée.
 
-### Étape 3 — Premier article
-9. Supprimer `content/articles/_example.mdx` et `content/produits/_example.yaml`
-10. Rédiger le premier article (800+ mots, 6+ FAQ, composants MDX)
+2. **`app/globals.css`** — Réécrire TOUTES les variables CSS :
+   - Les 5 accents + 3 backgrounds + 3 textes
+   - Les 3 couleurs aurora (--aurora-1, --aurora-2, --aurora-3)
+   - Les couleurs success/warning/error (basées sur la palette)
+   - Les variantes light mode (accents assombris pour WCAG AA sur fond blanc)
+   - Le --noise-opacity
+
+3. **`app/layout.tsx`** — Remplacer les imports de fonts :
+   - Importer les fonts choisies depuis `next/font/google`
+   - Mettre à jour les variables `--next-font-primary` et `--next-font-display`
+   - adjustFontFallback:true obligatoire
+
+4. **`public/icons/brand/`** — Régénérer les SVGs :
+   - `logo.svg` : "10min·[niche]" avec les bonnes fonts et couleurs
+   - `favicon.svg` : "10" sur fond accent1
+   - `og-default.svg` : tagline + domaine avec la nouvelle palette
+
+5. **`app/opengraph-image.tsx`** — Mettre à jour les couleurs du gradient et du texte
+
+6. **Admin CMS** (`app/admin/layout.tsx`) — Mettre à jour les couleurs aurora de la sidebar si la palette change significativement
+
+### Étape 3 — Contenu
+7. Mettre à jour `content/settings.yaml` (nav avec les catégories)
+8. Mettre à jour `content/pages/home.yaml` (rotating_words, subtitle, CTAs)
+9. Mettre à jour `content/pages/quiz.yaml` (questions et options du quiz)
+10. Remplir `lib/comparateur.ts` (données produits pour le comparateur)
+11. Remplir `lib/choisir-content.ts` (contenu éditorial des pages /choisir/)
+12. Mettre à jour les pages légales (mentions-legales + confidentialité)
+13. Créer `docs/AUTHOR-[slug].md` (profil auteur)
+
+### Étape 4 — Premier article
+14. Supprimer `content/articles/_example.mdx` et `content/produits/_example.yaml`
+15. Rédiger le premier article (800+ mots, 6+ FAQ, composants MDX)
+    Lire `docs/SEO-GEO-REDACTION.md` et `docs/AUTHOR-[slug].md` AVANT de rédiger.
     Composants dispo : `<ArticleImage>`, `<ProductCTA>`, `<ProductCarousel>`,
     `<CompareBar>`, `<Tip>`, `<Warning>`, `<Verdict>`, `<ProConTable>`,
     `<PullQuote>`, `<StatCard>`, `<StatRow>`
+    ATTENTION : les props MDX sont des STRINGS uniquement.
+    Ex: `<ProConTable pros="Avantage 1|Avantage 2" cons="Inconvénient 1" />`
 
-### Étape 4 — Vérification
-11. `tsc --noEmit` + `next lint`
-12. Commit et push
+### Étape 5 — Vérification
+16. `tsc --noEmit` + `next lint`
+17. Vérifier le contraste WCAG AA pour chaque couleur accent sur les fonds
+18. Commit et push
 ```
 
 ---
@@ -104,32 +160,55 @@ Sur base de la niche, propose-moi et demande validation :
 ## Exemple de session
 
 **Claude Code** : Quel est le sujet du site ?
-**Toi** : Les meilleures cartes de crédit
+**Toi** : Les meilleurs aspirateurs robots
 **Claude Code** : Quel nom de domaine ?
-**Toi** : 10minutescarte.com
+**Toi** : 10minutesaspirateur.com
 **Claude Code** : Tagline ?
-**Toi** : Trouvez la meilleure carte en 10 minutes
+**Toi** : Trouvez le meilleur aspirateur robot en 10 minutes
 
-**Claude Code** : Sur base de "cartes de crédit", je propose :
-- entity : "carte" / entities : "cartes"
-- entityVerb : "souscrire"
-- dealWord : "offres"
-- rotatingWords : ["carte Visa", "Mastercard", "Amex", "néobanque", "carte premium"]
-- subtitle : "Comparateur indépendant, quiz personnalisé et simulation de frais — tout pour choisir la bonne carte."
+**Claude Code** : Sur base de "aspirateurs robots", je propose :
+- entity : "aspirateur" / entities : "aspirateurs"
+- entityVerb : "acheter"
+- dealWord : "bons plans"
+- rotatingWords : ["Roomba", "Roborock", "Dreame", "Ecovacs", "Dyson"]
+- subtitle : "Comparateur indépendant, quiz personnalisé et simulateur de budget — tout pour choisir le bon aspirateur robot."
 Tu valides ou tu modifies ?
 
 **Toi** : Valide
 
 **Claude Code** : Quelles catégories ?
-**Toi** : Visa, Mastercard, Amex, Néobanques, Cartes premium
+**Toi** : Roomba, Roborock, Dreame, Ecovacs, Dyson
 
-**Claude Code** : Je propose ces couleurs :
-- visa → #3D9BFF (bleu)
-- mastercard → #FF3D57 (rouge)
-- amex → #3DFFC0 (vert)
-- neobanques → #7B61FF (violet)
-- premium → #FFD23F (or)
-Tu valides ?
+**Claude Code** : Ambiance visuelle ?
+**Toi** : Tech, propre, moderne
+
+**Claude Code** : Sur base de "tech, propre, moderne" + aspirateurs robots, je propose :
+
+**Palette :**
+| Variable | Hex | Usage |
+|---|---|---|
+| accent1 | `#00D4AA` | CTA principal, liens — vert tech |
+| accent2 | `#FF8C42` | Badges, deals — orange warm |
+| accent3 | `#4ECDC4` | Succès, validation — teal |
+| accent4 | `#6C63FF` | Quiz, interactif — indigo |
+| accent5 | `#45B7D1` | Liens secondaires — sky blue |
+| bgPrimary | `#0B0F14` | Fond principal — bleu-noir profond |
+| bgSurface | `#111820` | Cartes |
+| bgSurface2 | `#1A2230` | Cartes secondaires |
+| textPrimary | `#F0F4F8` | Texte principal |
+| textSecondary | `#8899AA` | Texte secondaire |
+| textMuted | `#556677` | Texte discret |
+
+**Fonts :**
+- display : **Outfit** (géométrique, tech, propre)
+- body : **DM Sans** (lisible, moderne)
+
+**Effets :**
+- Aurora : `#00D4AA` → `#6C63FF` → `#4ECDC4`
+- Noise : 0.03 (subtil)
+- Style : dark tech minimal
+
+Tu valides ou tu modifies ?
 
 *(etc.)*
 
@@ -142,7 +221,7 @@ Après la session (~15 min de questions + ~30 min de code), le site est :
 - Déployable sur Vercel
 - CMS fonctionnel sur `/admin`
 - 1 article publié
-- DA appliquée
+- **DA unique** appliquée (palette, fonts, effets, logo, OG)
 - Outils configurés (quiz, comparateur, simulateur)
 - SEO prêt (sitemap, robots, JSON-LD, auteur)
 

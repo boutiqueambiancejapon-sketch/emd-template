@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { niche } from '@/niche.config'
 import './globals.css'
 
+// ── Fonts — remplacer à l'init par les fonts choisies pour la niche ──
 const fontPrimary = Space_Grotesk({
   subsets: ['latin'],
   weight: ['400', '500', '700'],

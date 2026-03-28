@@ -1,7 +1,13 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════════════
+   DA TEMPLATE — TOUTES CES VALEURS DOIVENT ÊTRE REMPLACÉES À L'INIT
+   Le prompt d'init (docs/PROMPT-INIT.md) propose une palette + fonts
+   adaptées à la niche et réécrit cette section.
+   ═══════════════════════════════════════════════════════════════════════ */
+
 @theme {
-  /* Colors */
+  /* Colors — remplacer par la palette de la niche */
   --color-accent-1: #FF3D57;
   --color-accent-2: #FFD23F;
   --color-accent-3: #3DFFC0;
@@ -23,6 +29,8 @@
 }
 
 :root {
+  /* ── Palette — remplacer à l'init ── */
+
   /* Fonds */
   --bg-primary:   #0A0A0F;
   --bg-surface:   #13131A;
