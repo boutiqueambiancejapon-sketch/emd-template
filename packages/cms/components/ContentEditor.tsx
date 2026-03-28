@@ -96,6 +96,12 @@ export function ContentEditor({ collection, slug, fields, format, initialData, i
 
   const isDraft = !!data.draft
 
+  function renderField(key: string, field: FieldDef) {
+    return field.type === 'image'
+      ? <ImageField key={key} label={field.label} value={(data[key] as string) ?? ''} onChange={(v) => updateField(key, v)} articleTitle={(data.title as string) ?? ''} articleSlug={entrySlug} />
+      : <FieldInput key={key} fieldKey={key} field={field} value={data[key]} onChange={(v) => updateField(key, v)} />
+  }
+
   function updateField(key: string, value: unknown) {
     setData((prev) => ({ ...prev, [key]: value }))
     // Auto-slugify from title
@@ -432,25 +438,48 @@ export function ContentEditor({ collection, slug, fields, format, initialData, i
         </div>
       )}
 
-      {/* Fields */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {Object.entries(fields).map(([key, field]) => (
-          field.type === 'image'
-            ? <ImageField key={key} label={field.label} value={(data[key] as string) ?? ''} onChange={(v) => updateField(key, v)} articleTitle={(data.title as string) ?? ''} articleSlug={entrySlug} />
-            : <FieldInput key={key} fieldKey={key} field={field} value={data[key]} onChange={(v) => updateField(key, v)} />
-        ))}
+      {/* Two-column layout: main + sidebar */}
+      <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }} className="cms-editor-layout">
+        {/* Main column */}
+        <div style={{ flex: '1 1 0%', minWidth: 0 }}>
+          {/* Title field */}
+          {fields.title && <div style={{ marginBottom: 16 }}>{renderField('title', fields.title)}</div>}
+
+          {/* Body editor for MDX — WYSIWYG like WordPress */}
+          {format === 'mdx' && (
+            <WysiwygEditor
+              value={bodyHtml}
+              onChange={(html) => {
+                setBodyHtml(html)
+                setBodyMd(htmlToMarkdown(html))
+              }}
+            />
+          )}
+
+          {/* FAQ preview (read-only) */}
+          {Array.isArray(data.faq) && (data.faq as Record<string, unknown>[]).length > 0 && (
+            <FaqPreview faq={data.faq as Record<string, unknown>[]} />
+          )}
+        </div>
+
+        {/* SEO sidebar */}
+        <div style={{ width: 320, flexShrink: 0 }} className="cms-editor-sidebar">
+          <div style={{ position: 'sticky', top: 16, display: 'flex', flexDirection: 'column', gap: 14, padding: 16, background: '#111', border: '1px solid #222', borderRadius: 10 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#aaa', marginBottom: 2 }}>SEO &amp; Meta</div>
+            {Object.entries(fields).filter(([key]) => key !== 'title' && SIDEBAR_FIELDS.has(key)).map(([key, field]) => renderField(key, field))}
+            {/* Remaining fields not in sidebar set and not title */}
+            {Object.entries(fields).some(([key]) => key !== 'title' && !SIDEBAR_FIELDS.has(key)) && (
+              <>
+                <div style={{ borderTop: '1px solid #222', paddingTop: 10, marginTop: 2, fontSize: 13, fontWeight: 700, color: '#aaa' }}>Autres champs</div>
+                {Object.entries(fields).filter(([key]) => key !== 'title' && !SIDEBAR_FIELDS.has(key)).map(([key, field]) => renderField(key, field))}
+              </>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Body editor for MDX — WYSIWYG like WordPress */}
-      {format === 'mdx' && (
-        <WysiwygEditor
-          value={bodyHtml}
-          onChange={(html) => {
-            setBodyHtml(html)
-            setBodyMd(htmlToMarkdown(html))
-          }}
-        />
-      )}
+      {/* Responsive: sidebar below main on narrow screens */}
+      <style>{`@media (max-width: 900px) { .cms-editor-layout { flex-direction: column !important; } .cms-editor-sidebar { width: 100% !important; } }`}</style>
 
       {/* Paste import modal */}
       {showPasteModal && (
