@@ -1,5 +1,5 @@
 /**
- * /comparer/[produit] — comparateur côte à côte style Apple.
+ * /comparer/[produit] — comparateur côte à côte.
  * Sélecteurs dropdown + specs alignés en colonnes.
  * Server Component — ComparateurSelector isolé en 'use client'.
  */
@@ -10,6 +10,9 @@ import type { Metadata } from 'next'
 import { getProduit, PRODUIT_SLUGS } from '@/lib/comparateur'
 import { ComparateurSelector } from '@/components/comparer/ComparateurSelector'
 import { currentYear } from '@/lib/utils/year'
+import { niche } from '@/niche.config'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 
 export const revalidate = 3600
 
@@ -25,26 +28,23 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (!data) return {}
   const year = currentYear()
   return {
-    title: `Comparateur ${data.label} ${year} — quel modèle choisir ? | 10minutesapple`,
+    title: `Comparateur ${data.label} ${year} — quel modèle choisir ? | ${niche.siteName}`,
     description: data.description,
-    alternates: { canonical: `https://10minutesapple.com/comparer/${produit}` },
+    alternates: { canonical: `${SITE_URL}/comparer/${produit}` },
     openGraph: {
       title: `Comparateur ${data.label} ${year}`,
       description: data.description,
-      url: `https://10minutesapple.com/comparer/${produit}`,
-      siteName: '10minutesapple',
+      url: `${SITE_URL}/comparer/${produit}`,
+      siteName: niche.siteName,
       type: 'website',
     },
   }
 }
 
-const AUTRES_PRODUITS = [
-  { slug: 'iphone', label: 'iPhone' },
-  { slug: 'mac', label: 'Mac' },
-  { slug: 'ipad', label: 'iPad' },
-  { slug: 'watch', label: 'Apple Watch' },
-  { slug: 'airpods', label: 'AirPods' },
-]
+const AUTRES_PRODUITS = PRODUIT_SLUGS.map((slug) => {
+  const p = getProduit(slug)
+  return { slug, label: p?.label ?? slug }
+})
 
 export default async function ComparateurProduitPage({ params }: { params: Params }) {
   const { produit } = await params
@@ -57,9 +57,9 @@ export default async function ComparateurProduitPage({ params }: { params: Param
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://10minutesapple.com' },
-      { '@type': 'ListItem', position: 2, name: 'Comparateur', item: 'https://10minutesapple.com/comparer' },
-      { '@type': 'ListItem', position: 3, name: data.label, item: `https://10minutesapple.com/comparer/${produit}` },
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Comparateur', item: `${SITE_URL}/comparer` },
+      { '@type': 'ListItem', position: 3, name: data.label, item: `${SITE_URL}/comparer/${produit}` },
     ],
   }
 
@@ -146,7 +146,7 @@ export default async function ComparateurProduitPage({ params }: { params: Param
           />
 
           <p style={{ marginTop: 'var(--space-8)', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-            Prix indicatifs Apple Store France. Les liens Amazon sont des liens affiliés
+            Prix indicatifs. Les liens {niche.defaultStore} sont des liens affiliés
             — le prix que tu paies reste identique.
           </p>
 

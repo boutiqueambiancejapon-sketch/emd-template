@@ -1,6 +1,13 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { AffiliateButton } from '@/components/ui/AffiliateButton'
+
+vi.mock('@/niche.config', () => ({
+  niche: {
+    affiliateTag: 'test-tag-21',
+    defaultStore: 'Amazon',
+  },
+}))
 
 describe('AffiliateButton', () => {
   it('affiche le label', () => {
@@ -21,7 +28,7 @@ describe('AffiliateButton', () => {
       />
     )
     const link = screen.getByRole('link')
-    expect(link.getAttribute('href')).toContain('tag=ambiancejap0a-21')
+    expect(link.getAttribute('href')).toContain('tag=test-tag-21')
   })
 
   it('a les attributs rel corrects', () => {
@@ -54,7 +61,6 @@ describe('AffiliateButton', () => {
         label="CTA"
       />
     )
-    // lucide-react rend un SVG
     expect(container.querySelector('svg')).toBeInTheDocument()
   })
 })

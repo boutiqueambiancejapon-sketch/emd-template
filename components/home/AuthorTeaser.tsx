@@ -1,12 +1,17 @@
 /**
  * AuthorTeaser — encart éditorial asymétrique.
- * Monogramme "M" géant + bio + lien auteur.
+ * Monogramme géant + bio + lien auteur.
  * Server Component.
  */
 
 import Link from 'next/link'
+import { niche } from '@/niche.config'
 
 export function AuthorTeaser() {
+  if (!niche.author.name) return null
+
+  const initial = niche.author.name.charAt(0).toUpperCase()
+
   return (
     <section
       style={{
@@ -41,7 +46,6 @@ export function AuthorTeaser() {
             overflow: 'hidden',
           }}
         >
-          {/* Watermark accent */}
           <span
             style={{
               fontFamily: 'var(--next-font-display), system-ui, sans-serif',
@@ -53,9 +57,8 @@ export function AuthorTeaser() {
               userSelect: 'none',
             }}
           >
-            M
+            {initial}
           </span>
-          {/* Anneau d'accent */}
           <div
             style={{
               position: 'absolute',
@@ -94,7 +97,7 @@ export function AuthorTeaser() {
               lineHeight: 1.15,
             }}
           >
-            Mathias — utilisateur Apple depuis 2009
+            {niche.author.name} — {niche.author.title}
           </h2>
           <p
             style={{
@@ -105,22 +108,24 @@ export function AuthorTeaser() {
               marginBottom: 'var(--space-6)',
             }}
           >
-            Ni journaliste payé par Apple, ni influenceur sponsorisé. Juste quelqu&rsquo;un qui achète, teste et compare vraiment les produits &mdash; et partage ce qu&rsquo;il en pense en clair.
+            {niche.author.bio}
           </p>
-          <Link
-            href="/auteurs/mathias"
-            style={{
-              fontSize: '14px',
-              fontWeight: 600,
-              color: 'var(--accent-1)',
-              textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 'var(--space-1)',
-            }}
-          >
-            En savoir plus →
-          </Link>
+          {niche.author.slug && (
+            <Link
+              href={`/auteurs/${niche.author.slug}`}
+              style={{
+                fontSize: '14px',
+                fontWeight: 600,
+                color: 'var(--accent-1)',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 'var(--space-1)',
+              }}
+            >
+              En savoir plus →
+            </Link>
+          )}
         </div>
       </div>
     </section>

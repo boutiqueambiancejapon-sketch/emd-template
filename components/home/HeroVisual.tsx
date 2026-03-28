@@ -1,65 +1,33 @@
 /**
  * HeroVisual — colonne droite du héro.
- * Navigation typographique éditoriale : 5 familles Apple en grand type.
+ * Navigation typographique éditoriale : catégories en grand type.
  * Pas d'images, pas de boîtes — pure typographie + séparateurs.
  * Server Component.
  */
 import Link from 'next/link'
-
-const FAMILIES = [
-  {
-    label: 'iPhone',
-    sub: 'Comparatif · Guide · Deals',
-    href: '/comparer/iphone',
-    choisir: '/choisir/iphone',
-    accent: 'var(--accent-1)',
-    index: '01',
-  },
-  {
-    label: 'Mac',
-    sub: 'MacBook Air · MacBook Pro · Mac mini',
-    href: '/comparer/mac',
-    choisir: '/choisir/mac',
-    accent: 'var(--accent-4)',
-    index: '02',
-  },
-  {
-    label: 'iPad',
-    sub: 'iPad Air · Pro · mini',
-    href: '/comparer/ipad',
-    choisir: '/choisir/ipad',
-    accent: 'var(--accent-3)',
-    index: '03',
-  },
-  {
-    label: 'Apple Watch',
-    sub: 'Series 10 · SE · Ultra 2',
-    href: '/comparer/watch',
-    choisir: '/choisir/watch',
-    accent: 'var(--accent-2)',
-    index: '04',
-  },
-  {
-    label: 'AirPods',
-    sub: 'AirPods 4 · Pro 2 · Max',
-    href: '/comparer/airpods',
-    choisir: '/choisir/airpods',
-    accent: 'var(--accent-4)',
-    index: '05',
-  },
-] as const
+import { niche, categoryAccent } from '@/niche.config'
 
 export function HeroVisual() {
+  const families = niche.categories.map((cat, i) => ({
+    label: cat.label,
+    sub: cat.description ?? `Comparatif · Guide · ${niche.dealWord}`,
+    href: `/comparer/${cat.slug}`,
+    accent: categoryAccent(i),
+    index: String(i + 1).padStart(2, '0'),
+  }))
+
+  if (families.length === 0) return null
+
   return (
     <nav
-      aria-label="Familles de produits Apple"
+      aria-label={`Catégories de ${niche.entities}`}
       style={{
         display: 'flex',
         flexDirection: 'column',
         gap: 0,
       }}
     >
-      {FAMILIES.map(({ label, sub, href, choisir, accent, index }) => (
+      {families.map(({ label, sub, href, accent, index }) => (
         <Link
           key={index}
           href={href}

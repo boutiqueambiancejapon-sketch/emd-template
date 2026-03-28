@@ -10,314 +10,59 @@ import { currentYear } from '@/lib/utils/year'
 import { MarqueeStrip } from '@/components/effects/MarqueeStrip'
 import { DealsGrid } from '@/components/deals/DealsGrid'
 import { FaqAccordion } from '@/components/blog/FaqAccordion'
+import { niche } from '@/niche.config'
 import type { Deal } from '@/components/deals/DealsGrid'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 
 export const revalidate = 900
 
 export function generateMetadata(): Metadata {
   const year = currentYear()
+  const dealWord = niche.dealWord.charAt(0).toUpperCase() + niche.dealWord.slice(1)
   return {
-    title: `Deals Apple ${year} — meilleures promos du moment | 10minutesapple`,
+    title: `${dealWord} ${year} — meilleures promos du moment | ${niche.siteName}`,
     description:
-      'Les meilleures promos Apple du moment : iPhone, iPad, Mac, accessoires. Sélection manuelle — pas de spam.',
-    alternates: { canonical: 'https://10minutesapple.com/deals' },
+      `Les meilleures promos ${niche.entities} du moment. Sélection manuelle — pas de spam.`,
+    alternates: { canonical: `${SITE_URL}/deals` },
     openGraph: {
-      title: `Deals Apple ${year}`,
-      description: 'Meilleures promos Apple sélectionnées manuellement.',
-      url: 'https://10minutesapple.com/deals',
-      siteName: '10minutesapple',
+      title: `${dealWord} ${year}`,
+      description: `Meilleures promos ${niche.entities} sélectionnées manuellement.`,
+      url: `${SITE_URL}/deals`,
+      siteName: niche.siteName,
       type: 'website',
     },
   }
 }
 
-const DEALS: Deal[] = [
-  // iPhone
-  {
-    titre: 'iPhone 17 256 Go',
-    categorie: 'iPhone',
-    prixAvant: 999,
-    prixApres: 949,
-    source: 'Amazon',
-    chaud: true,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/Apple-iPhone-17-256GB-black/dp/B0FQFJVJBQ',
-  },
-  {
-    titre: 'iPhone 17 Pro 256 Go',
-    categorie: 'iPhone',
-    prixAvant: 1229,
-    prixApres: 1169,
-    source: 'Amazon',
-    chaud: true,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/Apple-iPhone-Pro-256-prodigieuse/dp/B0FQH32F7H',
-  },
-  {
-    titre: 'iPhone 16 256 Go',
-    categorie: 'iPhone',
-    prixAvant: 969,
-    prixApres: 819,
-    source: 'Amazon',
-    chaud: true,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DGHN3YNR',
-  },
-  {
-    titre: 'iPhone 16 Pro 256 Go',
-    categorie: 'iPhone',
-    prixAvant: 1299,
-    prixApres: 1159,
-    source: 'Amazon',
-    chaud: true,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DGHH9JY3',
-  },
-  {
-    titre: 'iPhone 16 Plus 256 Go',
-    categorie: 'iPhone',
-    prixAvant: 1119,
-    prixApres: 915,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DGHQW185',
-  },
-  {
-    titre: 'iPhone 16 Pro Max 256 Go',
-    categorie: 'iPhone',
-    prixAvant: 1479,
-    prixApres: 1389,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DGHYHG25',
-  },
-  {
-    titre: 'iPhone 15 128 Go',
-    categorie: 'iPhone',
-    prixAvant: 969,
-    prixApres: 729,
-    source: 'Amazon',
-    chaud: true,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0CHX7Z69Z',
-  },
-  {
-    titre: 'iPhone 16e 128 Go',
-    categorie: 'iPhone',
-    prixAvant: 699,
-    prixApres: 669,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DXQQ65T2',
-  },
-  // Mac
-  {
-    titre: 'MacBook Neo 13" 256 Go',
-    categorie: 'Mac',
-    prixAvant: 699,
-    prixApres: 669,
-    source: 'Amazon',
-    chaud: true,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/Apple-MacBook-2026-Portable-avec/dp/B0GR6MBRPB',
-  },
-  {
-    titre: 'MacBook Air 13" M5 256 Go',
-    categorie: 'Mac',
-    prixAvant: 1299,
-    prixApres: 1229,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0GR1W24CR',
-  },
-  {
-    titre: 'MacBook Air 15" M5 256 Go',
-    categorie: 'Mac',
-    prixAvant: 1599,
-    prixApres: 1519,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0GR1NRFZD',
-  },
-  {
-    titre: 'Mac mini M4 256 Go',
-    categorie: 'Mac',
-    prixAvant: 699,
-    prixApres: 659,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DLBW9GNQ',
-  },
-  {
-    titre: 'MacBook Pro 14" M5 512 Go',
-    categorie: 'Mac',
-    prixAvant: 1999,
-    prixApres: 1899,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0FWDCNPPZ',
-  },
-  {
-    titre: 'iMac 24" M4 256 Go',
-    categorie: 'Mac',
-    prixAvant: 1699,
-    prixApres: 1599,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DL6KQ5SP',
-  },
-  // iPad
-  {
-    titre: 'iPad Air 11" M3 128 Go Wi-Fi',
-    categorie: 'iPad',
-    prixAvant: 799,
-    prixApres: 749,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0GQVLW917',
-  },
-  {
-    titre: 'iPad 11e génération 128 Go',
-    categorie: 'iPad',
-    prixAvant: 369,
-    prixApres: 349,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DZ75RKZH',
-  },
-  {
-    titre: 'iPad mini 7 128 Go Wi-Fi',
-    categorie: 'iPad',
-    prixAvant: 599,
-    prixApres: 559,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DK3YHKBB',
-  },
-  {
-    titre: 'iPad Pro 11" M5 256 Go',
-    categorie: 'iPad',
-    prixAvant: 1199,
-    prixApres: 1139,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0FWD6KNY8',
-  },
-  // Apple Watch
-  {
-    titre: 'Apple Watch Series 11 GPS 42 mm',
-    categorie: 'Watch',
-    prixAvant: 449,
-    prixApres: 419,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0FQGHR6SY',
-  },
-  {
-    titre: 'Apple Watch SE 2 GPS 40 mm',
-    categorie: 'Watch',
-    prixAvant: 279,
-    prixApres: 239,
-    source: 'Amazon',
-    chaud: true,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DGHZ15PD',
-  },
-  {
-    titre: 'Apple Watch Ultra 2 GPS+Cell 49 mm',
-    categorie: 'Watch',
-    prixAvant: 899,
-    prixApres: 849,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DGJ9M892',
-  },
-  // Accessoires
-  {
-    titre: 'AirPods Pro 2 USB-C',
-    categorie: 'Accessoires',
-    prixAvant: 279,
-    prixApres: 219,
-    source: 'Amazon',
-    chaud: true,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DGHWD7CT',
-  },
-  {
-    titre: 'AirPods 4 ANC',
-    categorie: 'Accessoires',
-    prixAvant: 199,
-    prixApres: 179,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0FQF32239',
-  },
-  {
-    titre: 'AirPods Max USB-C',
-    categorie: 'Accessoires',
-    prixAvant: 579,
-    prixApres: 529,
-    source: 'Amazon',
-    chaud: false,
-    date: '2026-03-25',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DGHQ1KVY',
-  },
-]
+// Placeholder deals — will be populated by the init prompt
+const DEALS: Deal[] = []
 
 const MARQUEE_ITEMS = [
-  'iPhone 17 à 949 €',
-  'iPhone 16 à 819 €',
-  'iPhone 15 à 729 €',
-  'AirPods Pro 2 à 219 €',
-  'MacBook Neo à 669 €',
-  'Apple Watch SE 2 à 239 €',
-  'iPad 11e gen à 349 €',
   'Sélection mise à jour chaque semaine',
+  `Les meilleurs ${niche.dealWord} du moment`,
 ]
 
 const FAQ_ITEMS = [
   {
-    q: 'Où trouver les meilleurs bons plans Apple en ce moment ?',
-    a: 'Sur 10minutesapple.com/deals, on sélectionne manuellement les meilleures réductions Apple chaque semaine : iPhone, Mac, iPad, Apple Watch et accessoires. Pas de faux deals ni de prix gonflés avant promo — que des vraies baisses vérifiées sur Amazon.',
+    q: `Où trouver les meilleurs ${niche.dealWord} en ce moment ?`,
+    a: `Sur ${niche.domain}/deals, on sélectionne manuellement les meilleures réductions chaque semaine. Pas de faux deals ni de prix gonflés avant promo — que des vraies baisses vérifiées.`,
   },
   {
-    q: 'Existe-t-il un code promo Apple officiel ?',
-    a: 'Apple ne propose quasiment jamais de code promo direct sur son Apple Store. Les vraies réductions Apple passent par les revendeurs agréés (Amazon, Fnac, Boulanger). Sur Amazon, les baisses de prix sont automatiques — pas besoin de code promo Apple.',
+    q: `Quand acheter au meilleur prix ?`,
+    a: `Les meilleurs moments sont : le Black Friday (fin novembre), les soldes d'été et d'hiver, et juste après la sortie d'un nouveau modèle — l'ancien baisse immédiatement. Notre simulateur te montre les cycles de prix.`,
   },
   {
-    q: 'Quand acheter un produit Apple au meilleur prix ?',
-    a: 'Les meilleurs moments pour une réduction Apple sont : le Black Friday (fin novembre), les soldes d\'été et d\'hiver, et surtout juste après la sortie d\'un nouveau modèle — l\'ancien baisse immédiatement. Notre simulateur te montre les cycles de prix pour chaque produit.',
+    q: `Les deals sur ${niche.defaultStore} sont-ils fiables ?`,
+    a: `Oui. Les produits sont neufs, sous garantie, avec retour gratuit 30 jours. On vérifie chaque deal manuellement avant de le publier ici.`,
   },
   {
-    q: 'Les deals Apple sur Amazon sont-ils fiables ?',
-    a: 'Oui. Amazon est revendeur agréé Apple. Les produits sont neufs, sous garantie Apple standard, avec retour gratuit 30 jours. On vérifie chaque deal manuellement avant de le publier ici.',
+    q: 'Comment savoir si une réduction est une vraie promo ?',
+    a: `On compare le prix affiché avec le prix officiel et l'historique des prix. Si le prix barré est gonflé artificiellement, on ne publie pas le deal.`,
   },
   {
-    q: 'Comment savoir si une réduction Apple est une vraie promo ?',
-    a: 'On compare le prix affiché avec le prix Apple Store officiel et l\'historique des prix Amazon. Si le prix barré est gonflé artificiellement, on ne publie pas le deal. Chaque réduction Apple affichée ici est vérifiée.',
-  },
-  {
-    q: 'Y a-t-il des réductions Apple pour les étudiants ?',
-    a: 'Oui. Apple propose le programme Apple Education avec des remises de 5 à 10 % sur Mac et iPad via apple.com/fr/shop/go/education. En plus, Amazon propose parfois des prix encore inférieurs au tarif Education Apple — vérifie les deux avant d\'acheter.',
-  },
-  {
-    q: 'Comment être alerté des prochains bons plans Apple ?',
-    a: 'Reviens régulièrement sur cette page — on la met à jour chaque semaine. Les deals les plus chauds sont marqués avec le badge HOT. Tu peux aussi consulter notre simulateur de prix pour savoir si c\'est le bon moment d\'acheter.',
+    q: `Comment être alerté des prochains ${niche.dealWord} ?`,
+    a: `Reviens régulièrement sur cette page — on la met à jour chaque semaine. Les deals les plus chauds sont marqués avec le badge HOT. Tu peux aussi consulter notre simulateur de prix pour savoir si c'est le bon moment d'acheter.`,
   },
 ]
 
@@ -325,8 +70,8 @@ const jsonLdBreadcrumb = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://10minutesapple.com' },
-    { '@type': 'ListItem', position: 2, name: 'Deals', item: 'https://10minutesapple.com/deals' },
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Deals', item: `${SITE_URL}/deals` },
   ],
 }
 
@@ -435,7 +180,7 @@ export default function DealsPage() {
               marginBottom: 'var(--space-4)',
             }}
           >
-            Deals Apple
+            {niche.dealWord.charAt(0).toUpperCase() + niche.dealWord.slice(1)}
           </h1>
           <p
             style={{
@@ -472,7 +217,7 @@ export default function DealsPage() {
                 marginBottom: 'var(--space-6)',
               }}
             >
-              Questions fréquentes — bons plans Apple
+              Questions fréquentes — {niche.dealWord}
             </h2>
             <FaqAccordion items={FAQ_ITEMS} />
           </section>
@@ -489,8 +234,7 @@ export default function DealsPage() {
             }}
           >
             <strong style={{ color: 'var(--text-secondary)' }}>Liens affiliés :</strong> certains
-            liens vers Amazon.fr intègrent le tag affilié{' '}
-            <code style={{ fontSize: '12px' }}>ambiancejap0a-21</code>. Le prix que tu paies reste
+            liens vers {niche.defaultStore} intègrent un tag affilié. Le prix que tu paies reste
             identique.{' '}
             <Link href="/mentions-legales" style={{ color: 'var(--accent-1)', textDecoration: 'none' }}>
               Mentions légales →

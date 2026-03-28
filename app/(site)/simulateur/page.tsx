@@ -1,5 +1,5 @@
 /**
- * /simulateur — Simulateur de cycles de prix Apple V1.
+ * /simulateur — Simulateur de cycles de prix.
  * DA : effect-deals → watermark numéros --accent-2 oversize opacity 0.05.
  * Données historiques statiques. Server Component · ISR 86400s.
  */
@@ -8,21 +8,24 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { currentYear } from '@/lib/utils/year'
 import { AffiliateLink } from '@/components/ui/AffiliateLink'
+import { niche } from '@/niche.config'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 
 export const revalidate = 86400
 
 export function generateMetadata(): Metadata {
   const year = currentYear()
   return {
-    title: `Meilleur moment pour acheter un iPhone ${year} | 10minutesapple`,
+    title: niche.simulator.title ? `${niche.simulator.title} ${year} | ${niche.siteName}` : `Simulateur de prix ${year} | ${niche.siteName}`,
     description:
-      'Analyse des cycles de prix Apple. Achète au bon moment, économise jusqu\'à 200 €. Historique de prix depuis le lancement.',
-    alternates: { canonical: 'https://10minutesapple.com/simulateur' },
+      niche.simulator.description || `Analyse des cycles de prix. ${niche.entityVerb.charAt(0).toUpperCase() + niche.entityVerb.slice(1)} au bon moment et économisez.`,
+    alternates: { canonical: `${SITE_URL}/simulateur` },
     openGraph: {
-      title: `Meilleur moment pour acheter un iPhone ${year}`,
-      description: 'Cycles de prix Apple — quand les anciens modèles baissent après une keynote.',
-      url: 'https://10minutesapple.com/simulateur',
-      siteName: '10minutesapple',
+      title: niche.simulator.title || `Simulateur de prix ${year}`,
+      description: niche.simulator.description || `Cycles de prix ${niche.entities} — quand acheter au meilleur moment.`,
+      url: `${SITE_URL}/simulateur`,
+      siteName: niche.siteName,
       type: 'website',
     },
   }
@@ -38,44 +41,8 @@ type CyclePrix = {
   amazonUrl: string
 }
 
-const CYCLES: CyclePrix[] = [
-  {
-    modele: 'iPhone 16',
-    lancement: '2025-09-12',
-    prixLancement: 969,
-    prixActuel: 869,
-    prochaineAnnonce: 'Septembre 2026',
-    recommandation: 'acheter',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DGHN3YNR',
-  },
-  {
-    modele: 'iPhone 16 Plus',
-    lancement: '2025-09-12',
-    prixLancement: 1119,
-    prixActuel: 969,
-    prochaineAnnonce: 'Septembre 2026',
-    recommandation: 'acheter',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DGHQW185',
-  },
-  {
-    modele: 'iPhone 16 Pro',
-    lancement: '2025-09-12',
-    prixLancement: 1299,
-    prixActuel: 1229,
-    prochaineAnnonce: 'Septembre 2026',
-    recommandation: 'deal',
-    amazonUrl: 'https://www.amazon.fr/dp/B0DGHH9JY3',
-  },
-  {
-    modele: 'iPhone 15',
-    lancement: '2023-09-22',
-    prixLancement: 969,
-    prixActuel: 769,
-    prochaineAnnonce: 'Septembre 2026',
-    recommandation: 'deal',
-    amazonUrl: 'https://www.amazon.fr/dp/B0CHX7Z69Z',
-  },
-]
+// Placeholder cycles — will be populated by the init prompt
+const CYCLES: CyclePrix[] = []
 
 const REC_CONFIG = {
   acheter: { label: 'Bon moment', color: 'var(--accent-3)', bg: 'rgba(61,255,192,0.08)' },
@@ -87,12 +54,12 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://10minutesapple.com' },
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE_URL },
     {
       '@type': 'ListItem',
       position: 2,
       name: 'Simulateur',
-      item: 'https://10minutesapple.com/simulateur',
+      item: `${SITE_URL}/simulateur`,
     },
   ],
 }
@@ -168,7 +135,7 @@ export default function SimulateurPage() {
               marginBottom: 'var(--space-4)',
             }}
           >
-            Cycles de prix Apple
+            Cycles de prix
           </h1>
           <p
             style={{
@@ -179,11 +146,11 @@ export default function SimulateurPage() {
               marginBottom: 'var(--space-4)',
             }}
           >
-            Le vrai tip : Apple baisse les prix des anciens modèles à chaque keynote de septembre.
+            Les prix des anciens modèles baissent à chaque nouvelle sortie.
             Ce tableau te dit si tu es avant ou après la fenêtre optimale.
           </p>
           <Link
-            href="/blog/iphone/quand-acheter-iphone"
+            href="/blog"
             style={{
               fontSize: '14px',
               color: 'var(--accent-2)',
@@ -193,7 +160,7 @@ export default function SimulateurPage() {
               paddingBottom: '1px',
             }}
           >
-            Lire le guide complet →
+            Voir tous les guides →
           </Link>
         </section>
 
@@ -338,9 +305,7 @@ export default function SimulateurPage() {
               lineHeight: 1.5,
             }}
           >
-            Données basées sur l&apos;historique public Apple. Prix indicatifs Apple Store France
-            au{' '}
-            <time dateTime="2026-03-24">24 mars 2026</time>. Mise à jour à chaque keynote Apple.
+            Prix indicatifs. Mise à jour régulière.
           </p>
         </section>
       </main>

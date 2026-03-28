@@ -11,6 +11,9 @@ import { ChoisirEditorial } from '@/components/choisir/ChoisirEditorial'
 import { currentYear } from '@/lib/utils/year'
 import { COMPARATEURS, PRODUIT_SLUGS } from '@/lib/comparateur'
 import { getChoisirContent } from '@/lib/choisir-content'
+import { niche } from '@/niche.config'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 
 export const revalidate = 86400
 
@@ -27,10 +30,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const year = currentYear()
 
   return {
-    title: `Quel ${data.label} choisir en ${year} ? Guide complet + quiz | 10minutesapple`,
-    description: `Quel ${data.label} acheter en ${year} ? Quiz en 4 questions, comparatif par profil, prix et verdict honnête. Guide mis à jour.`,
+    title: `Quel ${data.label} choisir en ${year} ? Guide complet + quiz | ${niche.siteName}`,
+    description: `Quel ${data.label} ${niche.entityVerb} en ${year} ? Quiz en 4 questions, comparatif par profil, prix et verdict honnête. Guide mis à jour.`,
     alternates: {
-      canonical: `https://10minutesapple.com/choisir/${produit}`,
+      canonical: `${SITE_URL}/choisir/${produit}`,
     },
   }
 }
@@ -64,8 +67,8 @@ export default async function ChoisirPage({ params }: { params: Params }) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://10minutesapple.com' },
-      { '@type': 'ListItem', position: 2, name: `Choisir son ${data.label}`, item: `https://10minutesapple.com/choisir/${produit}` },
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: `Choisir son ${data.label}`, item: `${SITE_URL}/choisir/${produit}` },
     ],
   }
 

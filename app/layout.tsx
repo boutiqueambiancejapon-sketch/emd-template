@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Space_Grotesk, Unbounded } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { niche } from '@/niche.config'
 import './globals.css'
 
 const fontPrimary = Space_Grotesk({
@@ -23,14 +24,13 @@ const fontDisplay = Unbounded({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://10minutesapple.com'
+    process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
   ),
   title: {
-    template: '%s | 10minutesapple',
-    default: `Produits Apple au meilleur prix ${new Date().getFullYear()} | 10minutesapple`,
+    template: `%s | ${niche.siteName}`,
+    default: `${niche.tagline} | ${niche.siteName}`,
   },
-  description:
-    'Comparateur, quiz et deals Apple. Trouve le bon produit en 10 minutes.',
+  description: niche.tagline,
   robots: {
     index: true,
     follow: true,

@@ -1,9 +1,23 @@
 import type { CmsConfig } from '@/packages/cms/types'
+import { niche } from '@/niche.config'
+
+// Build category options from niche config
+const categoryOptions = niche.categories.map((cat) => ({
+  label: cat.label,
+  value: cat.slug,
+}))
+
+// Add default utility categories
+const articleCategoryOptions = [
+  ...categoryOptions,
+  { label: 'Astuces', value: 'astuces' },
+  { label: 'Deals', value: 'deals' },
+]
 
 export const cmsConfig: CmsConfig = {
-  siteName: '10minutesapple',
-  repo: 'boutiqueambiancejapon-sketch/10minutesapple',
-  branch: 'claude/setup-nextjs-apple-guide-En4gb',
+  siteName: niche.siteName,
+  repo: niche.repo,
+  branch: niche.branch,
   collections: {
     articles: {
       label: 'Articles',
@@ -16,15 +30,7 @@ export const cmsConfig: CmsConfig = {
         publishedAt: { type: 'date', label: 'Date publication', required: true },
         updatedAt: { type: 'date', label: 'Date MAJ' },
         readingTimeMin: { type: 'number', label: 'Temps de lecture (min)', default: 5 },
-        categorie: { type: 'select', label: 'Catégorie', options: [
-          { label: 'iPhone', value: 'iphone' },
-          { label: 'Mac', value: 'mac' },
-          { label: 'iPad', value: 'ipad' },
-          { label: 'Apple Watch', value: 'watch' },
-          { label: 'Accessoires', value: 'accessoires' },
-          { label: 'Astuces', value: 'astuces' },
-          { label: 'Deals', value: 'deals' },
-        ]},
+        categorie: { type: 'select', label: 'Catégorie', options: articleCategoryOptions },
         tags: { type: 'tags', label: 'Tags' },
         aiSummary: { type: 'list', label: 'En bref', itemType: 'textarea' },
         faq: {
@@ -40,7 +46,7 @@ export const cmsConfig: CmsConfig = {
           label: 'Sticky CTA',
           fields: {
             label: { type: 'text', label: 'Label bouton', required: true },
-            url: { type: 'text', label: 'URL Amazon', required: true },
+            url: { type: 'text', label: 'URL affilié', required: true },
           },
         },
         stickyCtaMessage: { type: 'text', label: 'Message CTA' },
@@ -63,11 +69,7 @@ export const cmsConfig: CmsConfig = {
       fields: {
         name: { type: 'text', label: 'Nom du produit', required: true },
         categorie: { type: 'select', label: 'Catégorie', options: [
-          { label: 'iPhone', value: 'iphone' },
-          { label: 'Mac', value: 'mac' },
-          { label: 'iPad', value: 'ipad' },
-          { label: 'Apple Watch', value: 'watch' },
-          { label: 'Accessoires', value: 'accessoires' },
+          ...categoryOptions,
           { label: 'Concurrent', value: 'concurrent' },
         ]},
         prix: { type: 'text', label: 'Prix', required: true },

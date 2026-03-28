@@ -1,36 +1,27 @@
 /**
  * DealsStrip — bandeau de deals en défilement continu (MarqueeStrip).
- * Données statiques pour le lancement — remplacées par ISR + API deals ensuite.
+ * Données statiques placeholder — remplacées par ISR + API deals ensuite.
  * Server Component.
  */
 
 import { MarqueeStrip } from '@/components/effects/MarqueeStrip'
-import { addAffiliateTag } from '@/lib/utils/affiliate'
+import { niche } from '@/niche.config'
 
 type Deal = {
   label: string
   badge: string
-  href: string
   badgeColor?: string
 }
 
+// Placeholder deals — will be replaced by CMS content
 const DEALS: Deal[] = [
-  { label: 'AirPods Pro 2', badge: '−25 %', href: 'https://www.amazon.fr/dp/B0DGHWD7CT', badgeColor: 'var(--accent-1)' },
-  { label: 'iPhone 17 Pro 256 Go', badge: 'Nouveau', href: 'https://www.amazon.fr/Apple-iPhone-Pro-256-prodigieuse/dp/B0FQH32F7H', badgeColor: 'var(--accent-3)' },
-  { label: 'MacBook Air 13" M5', badge: 'Nouveau', href: 'https://www.amazon.fr/dp/B0GR1W24CR', badgeColor: 'var(--accent-3)' },
-  { label: 'iPad Air 11" M3', badge: 'Promo Flash', href: 'https://www.amazon.fr/dp/B0GQVLW917', badgeColor: 'var(--accent-2)' },
-  { label: 'Apple Watch Series 11', badge: '−15 %', href: 'https://www.amazon.fr/dp/B0FQGHR6SY', badgeColor: 'var(--accent-2)' },
-  { label: 'Mac mini M4', badge: '699 €', href: 'https://www.amazon.fr/dp/B0DLBW9GNQ', badgeColor: 'var(--accent-3)' },
-  { label: 'iPhone 17 256 Go', badge: 'Nouveau', href: 'https://www.amazon.fr/Apple-iPhone-17-256GB-black/dp/B0FQFJVJBQ', badgeColor: 'var(--accent-3)' },
-  { label: 'AirPods 4 ANC', badge: '−10 %', href: 'https://www.amazon.fr/dp/B0FQF32239', badgeColor: 'var(--accent-1)' },
+  { label: `${niche.dealWord.charAt(0).toUpperCase() + niche.dealWord.slice(1)} en cours`, badge: 'Bientôt', badgeColor: 'var(--accent-3)' },
+  { label: 'Contenu à venir', badge: 'Template', badgeColor: 'var(--accent-2)' },
 ]
 
-function DealChip({ label, badge, href, badgeColor = 'var(--accent-1)' }: Deal) {
+function DealChip({ label, badge, badgeColor = 'var(--accent-1)' }: Deal) {
   return (
-    <a
-      href={addAffiliateTag(href)}
-      rel="nofollow noopener sponsored"
-      target="_blank"
+    <span
       style={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -39,13 +30,11 @@ function DealChip({ label, badge, href, badgeColor = 'var(--accent-1)' }: Deal) 
         backgroundColor: 'var(--bg-surface)',
         border: '1px solid var(--border)',
         borderRadius: '999px',
-        textDecoration: 'none',
         color: 'var(--text-primary)',
         fontSize: '13px',
         fontWeight: 500,
         whiteSpace: 'nowrap',
         flexShrink: 0,
-        transition: 'border-color 150ms ease',
       }}
     >
       <span
@@ -62,7 +51,7 @@ function DealChip({ label, badge, href, badgeColor = 'var(--accent-1)' }: Deal) 
         {badge}
       </span>
       {label}
-    </a>
+    </span>
   )
 }
 

@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next'
+import { niche } from '@/niche.config'
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://10minutesapple.com'
+  process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -40,12 +41,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.7,
-    },
-    {
-      url: `${SITE_URL}/auteurs/mathias`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
     },
   ]
 }

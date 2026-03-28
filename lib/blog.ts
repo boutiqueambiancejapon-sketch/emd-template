@@ -1,36 +1,19 @@
 /**
  * lib/blog.ts — utilitaires serveur pour les articles MDX.
  * Lecture de content/blog/**\/*.mdx ET content/articles/*.mdx.
- * Les articles standalone (ex-WordPress) sont servis à la racine.
  * Server-side uniquement (fs, path).
  */
 
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
+import { categoryLabels, categoryAccents } from '@/niche.config'
 
 const BLOG_DIR = path.join(process.cwd(), 'content/blog')
 const ARTICLES_DIR = path.join(process.cwd(), 'content/articles')
 
-export const CATEGORY_LABELS: Record<string, string> = {
-  iphone:      'iPhone',
-  mac:         'Mac',
-  ipad:        'iPad',
-  watch:       'Apple Watch',
-  accessoires: 'Accessoires',
-  astuces:     'Astuces',
-  deals:       'Deals',
-}
-
-export const CATEGORY_ACCENT: Record<string, string> = {
-  iphone:      'var(--accent-1)',
-  mac:         'var(--accent-4)',
-  ipad:        'var(--accent-3)',
-  watch:       'var(--accent-5)',
-  accessoires: 'var(--accent-2)',
-  astuces:     'var(--accent-4)',
-  deals:       'var(--accent-1)',
-}
+export const CATEGORY_LABELS: Record<string, string> = categoryLabels()
+export const CATEGORY_ACCENT: Record<string, string> = categoryAccents()
 
 /** Formatte une date ISO en français. */
 export function formatDate(iso: string): string {
@@ -120,7 +103,7 @@ export function getAllArticles(): ArticleMeta[] {
       const slug = file.replace(/\.mdx$/, '')
       const raw = fs.readFileSync(path.join(ARTICLES_DIR, file), 'utf-8')
       const { data } = matter(raw)
-      const categorie = (data.categorie as string) ?? 'accessoires'
+      const categorie = (data.categorie as string) ?? 'general'
       articles.push(parseMeta(data, slug, categorie, true))
     }
   }

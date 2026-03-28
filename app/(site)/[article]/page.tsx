@@ -15,6 +15,9 @@ import { remarkAmazonAffiliate } from '@/lib/plugins/remarkAmazonAffiliate'
 import { getRelatedArticles, articleHref, CATEGORY_LABELS } from '@/lib/blog'
 import { getCTAsForCategory } from '@/lib/article-ctas'
 import { getStandaloneArticle, getAllStandaloneSlugs } from '@/lib/articles'
+import { niche } from '@/niche.config'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 import { Tip } from '@/components/blog/Tip'
 import { Warning } from '@/components/blog/Warning'
 import { Verdict } from '@/components/blog/Verdict'
@@ -46,19 +49,19 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
   const { meta } = data
   return {
-    title: `${meta.title} | 10minutesapple`,
+    title: `${meta.title} | ${niche.siteName}`,
     description: meta.description,
-    alternates: { canonical: `https://10minutesapple.com/${slug}` },
+    alternates: { canonical: `${SITE_URL}/${slug}` },
     openGraph: {
       title: meta.title,
       description: meta.description,
-      url: `https://10minutesapple.com/${slug}`,
-      siteName: '10minutesapple',
+      url: `${SITE_URL}/${slug}`,
+      siteName: niche.siteName,
       type: 'article',
       publishedTime: meta.publishedAt,
       modifiedTime: meta.updatedAt ?? meta.publishedAt,
-      authors: ['Mathias'],
-      ...(meta.featureImage ? { images: [{ url: meta.featureImage.startsWith('/') ? `https://10minutesapple.com${meta.featureImage}` : meta.featureImage }] } : {}),
+      ...(niche.author.name ? { authors: [niche.author.name] } : {}),
+      ...(meta.featureImage ? { images: [{ url: meta.featureImage.startsWith('/') ? `${SITE_URL}${meta.featureImage}` : meta.featureImage }] } : {}),
     },
   }
 }
@@ -88,8 +91,8 @@ export default async function StandaloneArticlePage({ params }: { params: Params
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://10minutesapple.com' },
-        { '@type': 'ListItem', position: 2, name: meta.title, item: `https://10minutesapple.com/${slug}` },
+        { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE_URL },
+        { '@type': 'ListItem', position: 2, name: meta.title, item: `${SITE_URL}/${slug}` },
       ],
     },
     {
@@ -99,14 +102,14 @@ export default async function StandaloneArticlePage({ params }: { params: Params
       description: meta.description,
       datePublished: meta.publishedAt,
       dateModified: meta.updatedAt ?? meta.publishedAt,
-      url: `https://10minutesapple.com/${slug}`,
+      url: `${SITE_URL}/${slug}`,
       author: {
         '@type': 'Person',
-        name: 'Mathias',
-        jobTitle: 'Fan Apple & testeur depuis le 3G',
-        url: 'https://10minutesapple.com/auteurs/mathias',
+        name: niche.author.name || 'Auteur',
+        ...(niche.author.title ? { jobTitle: niche.author.title } : {}),
+        ...(niche.author.slug ? { url: `${SITE_URL}/auteurs/${niche.author.slug}` } : {}),
       },
-      publisher: { '@type': 'Organization', name: '10minutesapple', url: 'https://10minutesapple.com' },
+      publisher: { '@type': 'Organization', name: niche.siteName, url: SITE_URL },
     },
     ...(meta.faq?.length
       ? [{
@@ -150,7 +153,7 @@ export default async function StandaloneArticlePage({ params }: { params: Params
                 {meta.title}
               </h1>
 
-              <AuthorByline authorSlug="mathias" publishedAt={meta.publishedAt} updatedAt={meta.updatedAt} readingTimeMin={meta.readingTimeMin} />
+              <AuthorByline authorSlug={niche.author.slug || 'auteur'} publishedAt={meta.publishedAt} updatedAt={meta.updatedAt} readingTimeMin={meta.readingTimeMin} />
             </header>
           </div>
 
@@ -227,7 +230,7 @@ export default async function StandaloneArticlePage({ params }: { params: Params
 
             {/* AuthorCard */}
             <div style={{ marginTop: 'var(--space-10)' }}>
-              <AuthorCard authorSlug="mathias" bio="Fan Apple depuis le 3G. Testeur du quotidien, jailbreakeur de la première heure. Pas d'affiliation constructeur — juste l'honnêteté." variant="inline" />
+              <AuthorCard authorSlug={niche.author.slug || 'auteur'} bio={niche.author.bio || ''} variant="inline" />
             </div>
           </div>
         </article>

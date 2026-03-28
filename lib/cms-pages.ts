@@ -40,9 +40,11 @@ export type SiteSettings = {
   nav: NavItem[]
 }
 
+import { niche } from '@/niche.config'
+
 const defaultSettings: SiteSettings = {
-  siteName: '10minutesapple',
-  siteDescription: 'Comparateur, quiz et deals Apple.',
-  siteUrl: 'https://10minutesapple.com',
+  siteName: niche.siteName,
+  siteDescription: niche.tagline,
+  siteUrl: `https://${niche.domain}`,
   nav: [],
 }

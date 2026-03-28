@@ -1,12 +1,14 @@
 import { ImageResponse } from 'next/og'
+import { niche } from '@/niche.config'
 
 export const runtime = 'edge'
-export const alt = '10minutesapple.com — Le guide Apple le plus honnête de France'
+export const alt = `${niche.siteName} — ${niche.tagline}`
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
 export default function OGImage() {
   const year = new Date().getFullYear()
+  const domain = niche.domain.toUpperCase()
 
   return new ImageResponse(
     (
@@ -44,7 +46,7 @@ export default function OGImage() {
             fontWeight: 700,
           }}
         >
-          10MINUTESAPPLE.COM · {year}
+          {domain} · {year}
         </div>
 
         {/* Headline */}
@@ -57,14 +59,12 @@ export default function OGImage() {
             marginBottom: 24,
           }}
         >
-          Le guide Apple
-          <br />
-          le plus honnête de France.
+          {niche.tagline}
         </div>
 
         {/* Tagline */}
         <div style={{ fontSize: 24, color: '#9090A8', fontWeight: 400 }}>
-          Comparateur · Quiz · Simulateur de prix · Deals
+          Comparateur · Quiz · Simulateur · {niche.dealWord.charAt(0).toUpperCase() + niche.dealWord.slice(1)}
         </div>
 
         {/* Watermark number */}

@@ -1,8 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <title>10minutesapple</title>
-  <!-- Fond accent-1 avec coins arrondis -->
+  <title>10min</title>
   <rect width="32" height="32" rx="6" fill="#FF3D57"/>
-  <!-- "10" bold blanc centré -->
   <text
     x="16"
     y="24"

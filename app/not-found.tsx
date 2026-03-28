@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { niche } from '@/niche.config'
 
 export const metadata: Metadata = {
-  title: 'Page introuvable | 10minutesapple',
+  title: `Page introuvable | ${niche.siteName}`,
   robots: { index: false },
 }
 

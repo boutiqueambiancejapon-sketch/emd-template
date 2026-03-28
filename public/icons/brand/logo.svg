@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 44" role="img" aria-label="10minutesapple">
-  <title>10minutesapple</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 44" role="img" aria-label="10min-template">
+  <title>10min-template</title>
   <!-- "10min" ultra-bold -->
   <text
     x="0"
@@ -10,16 +10,16 @@
     fill="#F0F0F5"
     letter-spacing="-0.03em"
   >10min</text>
-  <!-- "Apple" light weight -->
+  <!-- Accent dot -->
+  <circle cx="110" cy="28" r="3" fill="#FF3D57"/>
+  <!-- Suffix placeholder -->
   <text
-    x="117"
+    x="120"
     y="34"
     font-family="Syne, system-ui, sans-serif"
     font-weight="400"
-    font-size="34"
-    fill="#F0F0F5"
+    font-size="28"
+    fill="#9090A8"
     letter-spacing="-0.02em"
-  >Apple</text>
-  <!-- Accent dot between the two words -->
-  <circle cx="110" cy="28" r="3" fill="#FF3D57"/>
+  >···</text>
 </svg>

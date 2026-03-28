@@ -1,7 +1,17 @@
-import { describe, it, expect } from 'vitest'
-import { addAffiliateTag } from '@/lib/utils/affiliate'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const TAG = 'ambiancejap0a-21'
+// Mock niche.config to provide a test tag
+vi.mock('@/niche.config', () => ({
+  niche: {
+    affiliateTag: 'test-tag-21',
+    defaultStore: 'Amazon',
+  },
+}))
+
+// Import after mock
+const { addAffiliateTag } = await import('@/lib/utils/affiliate')
+
+const TAG = 'test-tag-21'
 
 describe('addAffiliateTag', () => {
   it('ajoute le tag sur amazon.fr', () => {

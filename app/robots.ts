@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next'
+import { niche } from '@/niche.config'
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://10minutesapple.com'
+  process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 
 export default function robots(): MetadataRoute.Robots {
   return {

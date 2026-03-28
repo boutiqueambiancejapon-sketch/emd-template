@@ -1,6 +1,24 @@
-# 10minutesapple.com
+# 10min-template
 
-Le guide Apple le plus honnête de France. Par quelqu'un qui a jailbreaké son 3G.
+Template générique pour créer un site "10 minutes" — comparateur, quiz, simulateur et deals.
+
+## Démarrage
+
+```bash
+# 1. Fork ce repo
+# 2. Cloner et installer
+cp .env.example .env.local
+npm install
+npm run dev
+
+# 3. Initialiser avec Claude Code : donner le prompt de docs/PROMPT-INIT.md
+```
+
+## Configuration
+
+Tout le site est configuré via **un seul fichier** : `niche.config.ts`
+
+Le prompt d'init pose les questions et remplit automatiquement ce fichier.
 
 ## Stack
 
@@ -10,15 +28,7 @@ Le guide Apple le plus honnête de France. Par quelqu'un qui a jailbreaké son 3
 | TypeScript | strict |
 | Tailwind CSS | v4 |
 | Hébergement | Vercel — région fra1 |
-
-## Démarrage
-
-```bash
-cp .env.example .env.local
-# Remplir les variables d'environnement
-npm install
-npm run dev
-```
+| CMS | Custom (packages/cms/) |
 
 ## Scripts
 
@@ -29,28 +39,21 @@ npm run dev
 | `npm run lint` | ESLint |
 | `npm run type-check` | Vérification TypeScript |
 | `npm run test` | Tests unitaires (Vitest) |
-| `npm run test:e2e` | Tests E2E (Playwright) |
-| `npm run audit` | Audit de sécurité |
 
 ## Documentation
 
-- [`docs/CDC.md`](docs/CDC.md) — Cahier des charges complet
-- [`docs/AUTHOR-mathias.md`](docs/AUTHOR-mathias.md) — Voix éditoriale de Mathias
-- [`docs/SEO-GEO-REDACTION.md`](docs/SEO-GEO-REDACTION.md) — Guide de rédaction SEO/GEO
-- [`DECISIONS.md`](DECISIONS.md) — Décisions d'architecture et de DA
-- [`PROGRESS.md`](PROGRESS.md) — Progression par session
+- [`docs/TEMPLATE-SPEC.md`](docs/TEMPLATE-SPEC.md) — Architecture du template
+- [`docs/CMS-SPEC.md`](docs/CMS-SPEC.md) — Documentation CMS
+- [`docs/PROMPT-INIT.md`](docs/PROMPT-INIT.md) — Prompt d'initialisation
+- [`DECISIONS.md`](DECISIONS.md) — Décisions d'architecture
+- [`PROGRESS.md`](PROGRESS.md) — Progression
 
-## Contraintes impératives
+## Variables Vercel
 
-- **Zéro image raster** — SVG uniquement (`<img>` et `next/image` éditorial interdits)
-- **Budget JS : 80 kb** First Load gzippé
-- **TypeScript strict** — zéro `any`
-- **FR uniquement** — pas de segment `[locale]`, routes racine directes
-- **Jamais pousser sur `main`** directement — PR obligatoire
-- **Secrets dans Vercel Dashboard** uniquement — jamais dans le repo
-
-## Déploiement
-
-GitHub → Vercel (auto-deploy)
-Région : `fra1`
-Branche production : `main` (protégée)
+```
+CMS_SECRET=<openssl rand -hex 32>
+CMS_GITHUB_TOKEN=<PAT GitHub>
+BLOB_READ_WRITE_TOKEN=<auto via Vercel Blob>
+GITHUB_CMS_CLIENT_ID=<OAuth App>
+GITHUB_CMS_CLIENT_SECRET=<OAuth App secret>
+```

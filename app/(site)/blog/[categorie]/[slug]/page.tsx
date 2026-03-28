@@ -12,6 +12,9 @@ import remarkGfm from 'remark-gfm'
 import { remarkAmazonAffiliate } from '@/lib/plugins/remarkAmazonAffiliate'
 import { getAllArticles, getArticleRaw, articleExists, getRelatedArticles, articleHref } from '@/lib/blog'
 import { currentYear } from '@/lib/utils/year'
+import { niche } from '@/niche.config'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 import { AISummarize } from '@/components/blog/AISummarize'
 import { Tip } from '@/components/blog/Tip'
 import { Warning } from '@/components/blog/Warning'
@@ -48,31 +51,27 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const year = currentYear()
 
   return {
-    title: `${meta.title} ${year} | 10minutesapple`,
+    title: `${meta.title} ${year} | ${niche.siteName}`,
     description: meta.description,
     alternates: {
-      canonical: `https://10minutesapple.com/blog/${categorie}/${slug}`,
+      canonical: `${SITE_URL}/blog/${categorie}/${slug}`,
     },
     openGraph: {
       title: meta.title,
       description: meta.description,
-      url: `https://10minutesapple.com/blog/${categorie}/${slug}`,
-      siteName: '10minutesapple',
+      url: `${SITE_URL}/blog/${categorie}/${slug}`,
+      siteName: niche.siteName,
       type: 'article',
       publishedTime: meta.publishedAt,
       modifiedTime: meta.updatedAt ?? meta.publishedAt,
-      authors: ['Mathias'],
+      ...(niche.author.name ? { authors: [niche.author.name] } : {}),
     },
   }
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  iphone: 'iPhone',
-  mac: 'Mac',
-  ipad: 'iPad',
-  accessoires: 'Accessoires',
-  deals: 'Deals',
-}
+const CATEGORY_LABELS: Record<string, string> = Object.fromEntries(
+  niche.categories.map((c) => [c.slug, c.label])
+)
 
 export default async function ArticlePage({ params }: { params: Params }) {
   const { categorie, slug } = await params
@@ -104,19 +103,19 @@ export default async function ArticlePage({ params }: { params: Params }) {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://10minutesapple.com' },
-        { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://10minutesapple.com/blog' },
+        { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE_URL },
+        { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
         {
           '@type': 'ListItem',
           position: 3,
           name: catLabel,
-          item: `https://10minutesapple.com/blog/${categorie}`,
+          item: `${SITE_URL}/blog/${categorie}`,
         },
         {
           '@type': 'ListItem',
           position: 4,
           name: meta.title,
-          item: `https://10minutesapple.com/blog/${categorie}/${slug}`,
+          item: `${SITE_URL}/blog/${categorie}/${slug}`,
         },
       ],
     },
@@ -127,20 +126,18 @@ export default async function ArticlePage({ params }: { params: Params }) {
       description: meta.description,
       datePublished: meta.publishedAt,
       dateModified: meta.updatedAt ?? meta.publishedAt,
-      url: `https://10minutesapple.com/blog/${categorie}/${slug}`,
+      url: `${SITE_URL}/blog/${categorie}/${slug}`,
       author: {
         '@type': 'Person',
-        name: 'Mathias',
-        jobTitle: 'Fan Apple & testeur depuis le 3G',
-        url: 'https://10minutesapple.com/auteurs/mathias',
-        description:
-          'Utilisateur Apple depuis l\'iPhone 3G, jailbreakeur Cydia de la première heure.',
-        knowsAbout: ['iPhone', 'iOS', 'MacBook', 'iPad', 'jailbreak', 'accessoires Apple'],
+        name: niche.author.name || 'Auteur',
+        ...(niche.author.title ? { jobTitle: niche.author.title } : {}),
+        ...(niche.author.slug ? { url: `${SITE_URL}/auteurs/${niche.author.slug}` } : {}),
+        ...(niche.author.bio ? { description: niche.author.bio } : {}),
       },
       publisher: {
         '@type': 'Organization',
-        name: '10minutesapple',
-        url: 'https://10minutesapple.com',
+        name: niche.siteName,
+        url: SITE_URL,
       },
     },
     ...(meta.faq && meta.faq.length > 0
@@ -244,8 +241,8 @@ export default async function ArticlePage({ params }: { params: Params }) {
             </h1>
 
             <AuthorByline
-              authorSlug="mathias"
-              authorName="Mathias"
+              authorSlug={niche.author.slug || 'auteur'}
+              authorName={niche.author.name || 'Auteur'}
               publishedAt={meta.publishedAt}
               updatedAt={meta.updatedAt}
               readingTimeMin={meta.readingTimeMin}
@@ -376,9 +373,9 @@ export default async function ArticlePage({ params }: { params: Params }) {
             {/* AuthorCard */}
             <div style={{ marginTop: 'var(--space-10)' }}>
               <AuthorCard
-                authorSlug="mathias"
-                authorName="Mathias"
-                bio="Fan Apple depuis le 3G. Testeur du quotidien, jailbreakeur de la première heure. Pas d'affiliation constructeur — juste l'honnêteté."
+                authorSlug={niche.author.slug || 'auteur'}
+                authorName={niche.author.name || 'Auteur'}
+                bio={niche.author.bio || ''}
                 variant="inline"
               />
             </div>

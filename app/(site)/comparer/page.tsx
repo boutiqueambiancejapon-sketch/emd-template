@@ -1,6 +1,6 @@
 /**
  * /comparer — Hub de sélection produit.
- * Redirige vers /comparer/[produit] pour chaque famille Apple.
+ * Redirige vers /comparer/[produit] pour chaque famille.
  * DA : bento grid + border animée --accent-1 pulse lent.
  * Server Component · ISR 86400s.
  */
@@ -9,40 +9,35 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { currentYear } from '@/lib/utils/year'
 import { COMPARATEURS } from '@/lib/comparateur'
+import { niche } from '@/niche.config'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 
 export const revalidate = 86400
 
 export function generateMetadata(): Metadata {
   const year = currentYear()
   return {
-    title: `Comparateur Apple ${year} — iPhone, Mac, iPad, Watch, AirPods | 10minutesapple`,
+    title: `Comparateur ${year} | ${niche.siteName}`,
     description:
-      'Compare tous les produits Apple côte à côte : iPhone, Mac, iPad, Apple Watch, AirPods. Données à jour, liens Amazon affiliés.',
-    alternates: { canonical: 'https://10minutesapple.com/comparer' },
+      `Comparez tous les ${niche.entities} côte à côte. Données à jour, liens ${niche.defaultStore} affiliés.`,
+    alternates: { canonical: `${SITE_URL}/comparer` },
     openGraph: {
-      title: `Comparateur Apple ${year}`,
-      description: 'iPhone, Mac, iPad, Apple Watch, AirPods — tous les comparateurs en un endroit.',
-      url: 'https://10minutesapple.com/comparer',
-      siteName: '10minutesapple',
+      title: `Comparateur ${year}`,
+      description: `Tous les comparateurs ${niche.entities} en un endroit.`,
+      url: `${SITE_URL}/comparer`,
+      siteName: niche.siteName,
       type: 'website',
     },
   }
-}
-
-const EMOJIS: Record<string, string> = {
-  iphone: '📱',
-  mac: '💻',
-  ipad: '🖥',
-  watch: '⌚',
-  airpods: '🎧',
 }
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://10minutesapple.com' },
-    { '@type': 'ListItem', position: 2, name: 'Comparateur', item: 'https://10minutesapple.com/comparer' },
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Comparateur', item: `${SITE_URL}/comparer` },
   ],
 }
 
@@ -91,7 +86,7 @@ export default function ComparateurHubPage() {
               marginBottom: 'var(--space-4)',
             }}
           >
-            Comparateur Apple
+            Comparateur
           </h1>
           <p style={{ fontSize: 'clamp(15px, 2vw, 18px)', color: 'var(--text-secondary)', maxWidth: '500px', lineHeight: 1.6 }}>
             Choisis une famille de produit pour comparer les modèles côte à côte.
@@ -128,7 +123,7 @@ export default function ComparateurHubPage() {
                         gap: 'var(--space-3)',
                       }}
                     >
-                      <div style={{ fontSize: '32px', lineHeight: 1 }}>{EMOJIS[p.id]}</div>
+                      {/* Card content */}
                       <h2
                         style={{
                           fontFamily: 'var(--next-font-display), system-ui, sans-serif',

@@ -9,22 +9,25 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { currentYear } from '@/lib/utils/year'
 import { QuizEngine } from '@/components/quiz/QuizEngine'
+import { niche } from '@/niche.config'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 
 export const revalidate = 86400
 
 export function generateMetadata(): Metadata {
   const year = currentYear()
+  const question = niche.quiz.question || `Quel ${niche.entity} choisir ${year} ?`
   return {
-    title: `Quel produit Apple choisir ${year} ? Quiz | 10minutesapple`,
+    title: `${question} Quiz | ${niche.siteName}`,
     description:
-      'iPhone, Mac, iPad, Apple Watch ou AirPods — 4 questions pour trouver le produit Apple fait pour toi. Résultat immédiat.',
-    alternates: { canonical: 'https://10minutesapple.com/quiz' },
+      `4 questions pour trouver le ${niche.entity} fait pour toi. Résultat immédiat.`,
+    alternates: { canonical: `${SITE_URL}/quiz` },
     openGraph: {
-      title: `Quel produit Apple choisir ${year} ?`,
-      description:
-        'Quiz 4 questions — iPhone, Mac, iPad, Apple Watch, AirPods. Résultat immédiat.',
-      url: 'https://10minutesapple.com/quiz',
-      siteName: '10minutesapple',
+      title: question,
+      description: `Quiz 4 questions — trouve ton ${niche.entity}. Résultat immédiat.`,
+      url: `${SITE_URL}/quiz`,
+      siteName: niche.siteName,
       type: 'website',
     },
   }
@@ -34,8 +37,8 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://10minutesapple.com' },
-    { '@type': 'ListItem', position: 2, name: 'Quiz', item: 'https://10minutesapple.com/quiz' },
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Quiz', item: `${SITE_URL}/quiz` },
   ],
 }
 
@@ -108,7 +111,7 @@ export default function QuizPage() {
                 textWrap: 'balance',
               }}
             >
-              Quel produit Apple est fait pour toi ?
+              {niche.quiz.question || `Quel ${niche.entity} est fait pour toi ?`}
             </h1>
             <p
               style={{
@@ -119,8 +122,7 @@ export default function QuizPage() {
                 margin: '0 auto',
               }}
             >
-              iPhone, Mac, iPad, Apple Watch ou AirPods — clique sur une réponse
-              et obtiens une recommandation directe.
+              Clique sur une réponse et obtiens une recommandation directe.
             </p>
           </div>
         </section>

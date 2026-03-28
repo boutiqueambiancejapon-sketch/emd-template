@@ -10,6 +10,9 @@ import { getAllArticles, getCategories, CATEGORY_ACCENT } from '@/lib/blog'
 import { currentYear } from '@/lib/utils/year'
 import { ArticleCard } from '@/components/blog/ArticleCard'
 import { Pagination } from '@/components/blog/Pagination'
+import { niche } from '@/niche.config'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 
 export const revalidate = 3600
 
@@ -20,15 +23,15 @@ type SearchParams = Promise<{ page?: string }>
 export function generateMetadata(): Metadata {
   const year = currentYear()
   return {
-    title: `Blog Apple ${year} — tests et guides | 10minutesapple`,
+    title: `Blog ${year} — tests et guides | ${niche.siteName}`,
     description:
-      'Tous les articles Apple : iPhone, Mac, iPad, accessoires. Avis honnêtes signés Mathias.',
-    alternates: { canonical: 'https://10minutesapple.com/blog' },
+      `Tous les articles : guides d'achat, comparatifs et conseils.`,
+    alternates: { canonical: `${SITE_URL}/blog` },
     openGraph: {
-      title: `Blog Apple ${year} — tests et guides`,
-      description: 'Tous les articles Apple. Avis honnêtes signés Mathias.',
-      url: 'https://10minutesapple.com/blog',
-      siteName: '10minutesapple',
+      title: `Blog ${year} — tests et guides`,
+      description: `Tous les articles ${niche.entities}. Avis honnêtes.`,
+      url: `${SITE_URL}/blog`,
+      siteName: niche.siteName,
       type: 'website',
     },
   }
@@ -52,8 +55,8 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://10minutesapple.com' },
-      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://10minutesapple.com/blog' },
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
     ],
   }
 
@@ -72,10 +75,10 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
             </ol>
           </nav>
           <h1 style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontSize: 'clamp(32px, 5vw, 60px)', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1, marginBottom: 'var(--space-3)' }}>
-            Blog Apple
+            Blog
           </h1>
           <p style={{ fontSize: 'clamp(15px, 2vw, 17px)', color: 'var(--text-secondary)', maxWidth: '520px', lineHeight: 1.6 }}>
-            Tests, guides et analyses. Direct, honnête — par Mathias, fan depuis le 3G.
+            Tests, guides et analyses.
           </p>
         </section>
 

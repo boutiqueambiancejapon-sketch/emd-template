@@ -8,11 +8,12 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { AuthorCard } from '@/components/ui/AuthorCard'
+import { niche } from '@/niche.config'
 
 export const revalidate = 86400
 
 /* ------------------------------------------------------------------ */
-/* Données statiques — remplacer par fetch CMS si besoin               */
+/* Données statiques depuis niche.config                               */
 /* ------------------------------------------------------------------ */
 
 type AuthorData = {
@@ -24,19 +25,18 @@ type AuthorData = {
   url: string
 }
 
-const AUTHORS: Record<string, AuthorData> = {
-  mathias: {
-    slug: 'mathias',
-    name: 'Mathias',
-    role: 'Fondateur & rédacteur en chef',
-    bio: 'Utilisateur Apple depuis le 3G, testeur compulsif de gadgets, rédacteur indépendant depuis 2018.',
-    longBio: [
-      "Tout a commencé avec un iPhone 3G acheté à sa sortie en 2008. Depuis, j'ai acheté, testé et revendu une vingtaine d'appareils Apple \u2014 pas pour le plaisir de consommer, mais pour comprendre vraiment ce qui vaut le coup et ce qui ne vaut pas le prix demandé.",
-      "Ce site est né d'une frustration : la plupart des tests en ligne répètent les communiqués de presse. Ici, on prend du recul. On compare les usages réels. On dit quand un produit est décevant ou surévalué \u2014 même si ça ne plaît pas à tout le monde.",
-      "Je ne suis pas journaliste officiel, je n'ai pas de badge presse, et c'est très bien comme ça. Je paie mes appareils, et je dis ce que j'en pense.",
-    ],
-    url: 'https://10minutesapple.com/auteurs/mathias',
-  },
+function getAuthors(): Record<string, AuthorData> {
+  if (!niche.author.slug) return {}
+  return {
+    [niche.author.slug]: {
+      slug: niche.author.slug,
+      name: niche.author.name,
+      role: niche.author.title,
+      bio: niche.author.bio,
+      longBio: [niche.author.bio],
+      url: `https://${niche.domain}/auteurs/${niche.author.slug}`,
+    },
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -44,7 +44,7 @@ const AUTHORS: Record<string, AuthorData> = {
 /* ------------------------------------------------------------------ */
 
 export function generateStaticParams() {
-  return Object.keys(AUTHORS).map((slug) => ({ slug }))
+  return Object.keys(getAuthors()).map((slug) => ({ slug }))
 }
 
 /* ------------------------------------------------------------------ */
@@ -55,11 +55,11 @@ export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<Metadata> {
   const { slug } = await params
-  const author = AUTHORS[slug]
+  const author = getAuthors()[slug]
   if (!author) return {}
 
   return {
-    title: `${author.name} — ${author.role} | 10minutesapple`,
+    title: `${author.name} — ${author.role} | ${niche.siteName}`,
     description: author.bio,
     alternates: { canonical: author.url },
   }
@@ -73,8 +73,10 @@ export default async function AuthorPage(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params
-  const author = AUTHORS[slug]
+  const author = getAuthors()[slug]
   if (!author) notFound()
+
+  const initial = author.name.charAt(0).toUpperCase()
 
   /* JSON-LD Person */
   const jsonLd = {
@@ -86,8 +88,8 @@ export default async function AuthorPage(
     description: author.bio,
     worksFor: {
       '@type': 'Organization',
-      name: '10minutesapple',
-      url: 'https://10minutesapple.com',
+      name: niche.siteName,
+      url: `https://${niche.domain}`,
     },
   }
 
@@ -108,7 +110,7 @@ export default async function AuthorPage(
           overflow: 'hidden',
         }}
       >
-        {/* Filigrane "M" — DA signature */}
+        {/* Filigrane initial — DA signature */}
         <span
           aria-hidden="true"
           className="section-watermark"
@@ -122,7 +124,7 @@ export default async function AuthorPage(
             fontFamily: 'var(--next-font-display), system-ui, sans-serif',
           }}
         >
-          M
+          {initial}
         </span>
 
         {/* Eyebrow */}

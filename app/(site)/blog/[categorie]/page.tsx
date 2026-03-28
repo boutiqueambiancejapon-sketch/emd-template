@@ -11,6 +11,9 @@ import { getAllArticles, getCategories, CATEGORY_LABELS, CATEGORY_ACCENT } from 
 import { currentYear } from '@/lib/utils/year'
 import { ArticleCard } from '@/components/blog/ArticleCard'
 import { Pagination } from '@/components/blog/Pagination'
+import { niche } from '@/niche.config'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 
 export const revalidate = 3600
 
@@ -29,9 +32,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const label = CATEGORY_LABELS[categorie] ?? categorie
   const year = currentYear()
   return {
-    title: `${label} — articles et guides ${year} | 10minutesapple`,
-    description: `Tous les articles ${label} : guides d'achat, comparatifs et conseils signés Mathias.`,
-    alternates: { canonical: `https://10minutesapple.com/blog/${categorie}` },
+    title: `${label} — articles et guides ${year} | ${niche.siteName}`,
+    description: `Tous les articles ${label} : guides d'achat, comparatifs et conseils.`,
+    alternates: { canonical: `${SITE_URL}/blog/${categorie}` },
   }
 }
 
@@ -61,9 +64,9 @@ export default async function CategoryPage({
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://10minutesapple.com' },
-      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://10minutesapple.com/blog' },
-      { '@type': 'ListItem', position: 3, name: label, item: `https://10minutesapple.com/blog/${categorie}` },
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
+      { '@type': 'ListItem', position: 3, name: label, item: `${SITE_URL}/blog/${categorie}` },
     ],
   }
 

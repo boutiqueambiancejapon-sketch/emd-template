@@ -6,6 +6,7 @@
  */
 
 import Link from 'next/link'
+import { niche } from '@/niche.config'
 
 type ToolCardProps = {
   href: string
@@ -147,6 +148,15 @@ const IconSimulator = () => (
 )
 
 export function FeaturedTools() {
+  const comparatorTitle = niche.comparator.enabled
+    ? `Comparez les ${niche.entities} côte à côte`
+    : `Découvrez nos ${niche.entities}`
+
+  const quizTitle = niche.quiz.question || `Trouvez votre ${niche.entity} idéal`
+
+  const simulatorTitle = niche.simulator.title || `Calculez votre budget`
+  const simulatorDesc = niche.simulator.description || `Simulez le coût réel de votre ${niche.entity}.`
+
   return (
     <section
       style={{
@@ -191,13 +201,13 @@ export function FeaturedTools() {
         }}
         className="bento-grid"
       >
-        {/* Grande cellule Comparateur — 2 colonnes sur 2 rangées (CSS class pour responsive) */}
+        {/* Grande cellule Comparateur */}
         <div className="bento-featured">
           <ToolCard
             href="/comparer"
             eyebrow="Comparateur"
-            title="Quel iPhone, Mac ou iPad pour vous ?"
-            description="Comparez côte à côte les specs, prix et usages. Filtres par budget, besoin professionnel ou gaming."
+            title={comparatorTitle}
+            description={`Comparez côte à côte les specs, prix et usages. Filtres par budget et besoin.`}
             cta="Lancer le comparateur"
             accent="var(--accent-1)"
             large
@@ -206,26 +216,30 @@ export function FeaturedTools() {
         </div>
 
         {/* Quiz */}
-        <ToolCard
-          href="/quiz"
-          eyebrow="Quiz"
-          title="Trouvez votre Apple idéal"
-          description="6 questions pour identifier le produit fait pour vous."
-          cta="Démarrer le quiz"
-          accent="var(--accent-2)"
-          icon={<IconQuiz />}
-        />
+        {niche.quiz.enabled && (
+          <ToolCard
+            href="/quiz"
+            eyebrow="Quiz"
+            title={quizTitle}
+            description={`Quelques questions pour identifier le ${niche.entity} fait pour vous.`}
+            cta="Démarrer le quiz"
+            accent="var(--accent-2)"
+            icon={<IconQuiz />}
+          />
+        )}
 
         {/* Simulateur */}
-        <ToolCard
-          href="/simulateur"
-          eyebrow="Simulateur"
-          title="Calculez votre budget Apple"
-          description="Abonnements, accessoires, reprise — simulez le coût réel."
-          cta="Simuler mon budget"
-          accent="var(--accent-3)"
-          icon={<IconSimulator />}
-        />
+        {niche.simulator.enabled && (
+          <ToolCard
+            href="/simulateur"
+            eyebrow="Simulateur"
+            title={simulatorTitle}
+            description={simulatorDesc}
+            cta="Simuler"
+            accent="var(--accent-3)"
+            icon={<IconSimulator />}
+          />
+        )}
       </div>
     </section>
   )

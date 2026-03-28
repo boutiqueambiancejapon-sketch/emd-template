@@ -10,8 +10,7 @@ import { AnimatedHeading } from '@/components/effects/AnimatedHeading'
 import { RotatingWords } from '@/components/effects/RotatingWords'
 import { HeroVisual } from './HeroVisual'
 import Link from 'next/link'
-
-const ROTATING = ['iPhone', 'Mac', 'iPad', 'Apple Watch', 'AirPods']
+import { niche } from '@/niche.config'
 
 export function HeroSection() {
   return (
@@ -65,7 +64,7 @@ export function HeroSection() {
             marginBottom: '0.15em',
           }}
         >
-          Choisir votre
+          {niche.heroPrefix}
         </AnimatedHeading>
 
         {/* H1 — ligne 2 avec mot rotatif */}
@@ -87,11 +86,11 @@ export function HeroSection() {
           }}
         >
           <RotatingWords
-            words={ROTATING}
+            words={niche.rotatingWords}
             interval={2600}
             style={{ color: 'var(--accent-1)' }}
           />
-          <span className="text-gradient-hero">en&nbsp;10&nbsp;minutes</span>
+          <span className="text-gradient-hero">{niche.heroSuffix}</span>
         </AnimatedHeading>
 
         {/* Sous-titre */}
@@ -107,7 +106,7 @@ export function HeroSection() {
             marginBottom: 'var(--space-10)',
           }}
         >
-          Tests terrain, comparateur interactif, quiz &laquo;&thinsp;quel Apple te convient&thinsp;?&raquo; et simulateur de budget &mdash; tout ce qu&rsquo;il faut pour décider vite et bien.
+          {niche.subtitle}
         </AnimatedHeading>
 
         {/* CTAs */}
@@ -123,7 +122,7 @@ export function HeroSection() {
           }}
         >
           <Link
-            href="/comparer"
+            href={niche.ctaPrimary.url}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -140,10 +139,10 @@ export function HeroSection() {
             }}
             className="btn-primary"
           >
-            Comparer les modèles →
+            {niche.ctaPrimary.text}
           </Link>
           <Link
-            href="/quiz"
+            href={niche.ctaSecondary.url}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -159,7 +158,7 @@ export function HeroSection() {
               transition: 'border-color 150ms ease',
             }}
           >
-            Quel Apple me convient ?
+            {niche.ctaSecondary.text}
           </Link>
         </AnimatedHeading>
         </div>{/* /colonne gauche */}

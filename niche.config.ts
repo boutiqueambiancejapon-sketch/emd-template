@@ -1,0 +1,165 @@
+/**
+ * niche.config.ts — Configuration centrale du site.
+ * C'est le SEUL fichier à remplir pour chaque nouveau site issu du template.
+ * Le prompt d'init pose les questions et remplit ces valeurs.
+ */
+
+export type NicheConfig = {
+  // Identité
+  siteName: string
+  domain: string
+  tagline: string
+
+  // Vocabulaire de la niche
+  entity: string          // "produit", "destination", "carte"
+  entities: string        // pluriel
+  entityVerb: string      // "acheter", "explorer", "souscrire"
+  dealWord: string        // "deals", "bons plans", "offres"
+
+  // Hero
+  heroPrefix: string      // "Choisir votre"
+  heroSuffix: string      // "en 10 minutes"
+  rotatingWords: string[] // ["iPhone", "Mac"] → ["vol", "hôtel"]
+  subtitle: string
+  ctaPrimary: { text: string; url: string }
+  ctaSecondary: { text: string; url: string }
+
+  // Catégories (1 couleur accent par catégorie)
+  categories: {
+    slug: string
+    label: string
+    accent: string // hex color
+    description?: string
+  }[]
+
+  // Outils
+  quiz: {
+    enabled: boolean
+    question: string        // "Quel iPhone pour vous ?"
+    criteria: string[]      // ["budget", "usage", "taille"]
+  }
+  comparator: {
+    enabled: boolean
+    criteria: string[]      // ["prix", "performance", "photo"]
+  }
+  simulator: {
+    enabled: boolean
+    title: string           // "Calculer votre budget Apple"
+    description: string
+  }
+
+  // DA
+  palette: {
+    accent1: string
+    accent2: string
+    accent3: string
+    accent4: string
+    accent5: string
+    bgPrimary: string
+    bgSurface: string
+    bgSurface2: string
+    textPrimary: string
+    textSecondary: string
+    textMuted: string
+  }
+  fonts: {
+    display: string   // Google Fonts family name
+    body: string      // Google Fonts family name
+  }
+
+  // Auteur
+  author: {
+    name: string
+    slug: string
+    title: string
+    bio: string
+    tone: string[]          // ["direct", "honnête", "expert"]
+    noGo: string[]          // ["révolutionnaire", "incroyable"]
+    formulations: string[]  // ["Honnêtement,", "Le vrai tip :"]
+  }
+
+  // Affiliation
+  affiliateTag: string     // "monsite-21"
+  defaultStore: string     // "Amazon"
+
+  // Technique
+  vercelRegion: string     // "fra1"
+  repo: string             // "org/repo"
+  branch: string           // "main"
+}
+
+// ─── Valeurs par défaut (placeholder) ───────────────────────────────────
+// Le prompt d'init remplace ces valeurs. Le site build même avec des valeurs vides.
+
+export const niche: NicheConfig = {
+  siteName: '10min-template',
+  domain: 'example.com',
+  tagline: 'Trouvez le bon choix en 10 minutes',
+
+  entity: 'produit',
+  entities: 'produits',
+  entityVerb: 'choisir',
+  dealWord: 'deals',
+
+  heroPrefix: 'Choisir votre',
+  heroSuffix: 'en 10 minutes',
+  rotatingWords: ['produit'],
+  subtitle: 'Comparateur indépendant, quiz personnalisé et simulateur — tout pour décider vite et bien.',
+  ctaPrimary: { text: 'Comparer →', url: '/comparer' },
+  ctaSecondary: { text: 'Quiz personnalisé', url: '/quiz' },
+
+  categories: [],
+
+  quiz: { enabled: true, question: '', criteria: [] },
+  comparator: { enabled: true, criteria: [] },
+  simulator: { enabled: true, title: '', description: '' },
+
+  palette: {
+    accent1: '#FF3D57',
+    accent2: '#FFD23F',
+    accent3: '#3DFFC0',
+    accent4: '#7B61FF',
+    accent5: '#3D9BFF',
+    bgPrimary: '#0A0A0F',
+    bgSurface: '#13131A',
+    bgSurface2: '#1C1C26',
+    textPrimary: '#F0F0F5',
+    textSecondary: '#9090A8',
+    textMuted: '#55556A',
+  },
+  fonts: { display: 'Unbounded', body: 'Space Grotesk' },
+
+  author: { name: '', slug: '', title: '', bio: '', tone: [], noGo: [], formulations: [] },
+
+  affiliateTag: '',
+  defaultStore: 'Amazon',
+
+  vercelRegion: 'fra1',
+  repo: '',
+  branch: 'main',
+}
+
+// ─── Helpers ────────────────────────────────────────────────────────────
+
+/** Accent CSS variable for a given category index. */
+const ACCENT_VARS = ['var(--accent-1)', 'var(--accent-2)', 'var(--accent-3)', 'var(--accent-4)', 'var(--accent-5)']
+
+export function categoryAccent(index: number): string {
+  return ACCENT_VARS[index % ACCENT_VARS.length]
+}
+
+/** Map category slug → label */
+export function categoryLabels(): Record<string, string> {
+  const map: Record<string, string> = {}
+  for (const cat of niche.categories) map[cat.slug] = cat.label
+  return map
+}
+
+/** Map category slug → CSS accent variable */
+export function categoryAccents(): Record<string, string> {
+  const map: Record<string, string> = {}
+  niche.categories.forEach((cat, i) => {
+    map[cat.slug] = categoryAccent(i)
+  })
+  return map
+}
