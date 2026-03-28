@@ -38,6 +38,11 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: '/',
+    ...(niche.locales.length > 1 ? {
+      languages: Object.fromEntries(
+        niche.locales.map((locale) => [locale, `https://${niche.domain}/${locale === niche.defaultLocale ? '' : locale}`])
+      ),
+    } : {}),
   },
 }
 

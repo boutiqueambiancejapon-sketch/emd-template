@@ -82,6 +82,10 @@ export type NicheConfig = {
   affiliateTag: string     // "monsite-21"
   defaultStore: string     // "Amazon"
 
+  // Langue & i18n
+  defaultLocale: string    // "fr"
+  locales: string[]        // ["fr"] — ajouter "en" quand la traduction est prête
+
   // Technique
   vercelRegion: string     // "fra1"
   repo: string             // "org/repo"
@@ -133,6 +137,9 @@ export const niche: NicheConfig = {
 
   affiliateTag: '',
   defaultStore: 'Amazon',
+
+  defaultLocale: 'fr',
+  locales: ['fr'],
 
   vercelRegion: 'fra1',
   repo: '',
