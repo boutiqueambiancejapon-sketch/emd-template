@@ -1,17 +1,21 @@
 /**
  * ProConTable — tableau pour/contre côte à côte.
  * Usage MDX :
- *   <ProConTable
- *     pros={["Avantage 1", "Avantage 2"]}
- *     cons={["Inconvénient 1"]}
- *   />
+ *   <ProConTable pros="Avantage 1|Avantage 2" cons="Inconvénient 1|Inconvénient 2" />
+ * Props MUST be strings (compileMDX drops JSX expression props).
  */
 
 type Props = {
-  pros: string[]
-  cons: string[]
+  pros: string | string[]
+  cons: string | string[]
   labelPro?: string
   labelCon?: string
+}
+
+function parseList(val: string | string[] | undefined): string[] {
+  if (!val) return []
+  if (Array.isArray(val)) return val
+  return val.split('|').map((s) => s.trim()).filter(Boolean)
 }
 
 export function ProConTable({
@@ -20,6 +24,9 @@ export function ProConTable({
   labelPro = 'Pour',
   labelCon = 'Contre',
 }: Props) {
+  const proList = parseList(pros)
+  const conList = parseList(cons)
+
   return (
     <div
       style={{
@@ -52,7 +59,7 @@ export function ProConTable({
           ✓ {labelPro}
         </p>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-          {pros.map((item, i) => (
+          {proList.map((item, i) => (
             <li
               key={i}
               style={{
@@ -98,7 +105,7 @@ export function ProConTable({
           ✗ {labelCon}
         </p>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-          {cons.map((item, i) => (
+          {conList.map((item, i) => (
             <li
               key={i}
               style={{

@@ -10,7 +10,7 @@ import { useState } from 'react'
 
 type FaqItem = { q: string; a: string }
 
-export function FaqAccordion({ items }: { items: FaqItem[] }) {
+export function FaqAccordion({ items = [] }: { items: FaqItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
