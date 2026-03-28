@@ -1,7 +1,7 @@
 /**
  * ProductCTA — carte Amazon inline avec DA aurora.
  * Usage MDX :
- *   <ProductCTA name="iPhone 17" price="999 €" url="https://..." badge="Le plus populaire" hook="Puce A19, 120 Hz." />
+ *   <ProductCTA name="Produit X" price="999 €" url="https://..." badge="Recommandé" hook="Description courte." />
  * Server Component.
  */
 

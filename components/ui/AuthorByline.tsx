@@ -1,6 +1,6 @@
 /**
  * AuthorByline — byline éditorial textuel, zéro photo.
- * Format : "Par Mathias · 5 min · 23 mars 2026"
+ * Format : "Par [Auteur] · 5 min · 23 mars 2026"
  * Lien vers /auteurs/[authorSlug].
  * Server Component — rendu côté serveur, indexable.
  */
@@ -25,7 +25,7 @@ function formatDate(iso: string): string {
 
 export function AuthorByline({
   authorSlug,
-  authorName = 'Mathias',
+  authorName = '',
   publishedAt,
   updatedAt,
   readingTimeMin,

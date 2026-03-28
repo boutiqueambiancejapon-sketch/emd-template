@@ -4,19 +4,20 @@ import { AuthorByline } from '@/components/ui/AuthorByline'
 
 describe('AuthorByline', () => {
   const baseProps = {
-    authorSlug: 'mathias',
+    authorSlug: 'test-author',
+    authorName: 'Test Author',
     publishedAt: '2026-03-23',
   }
 
   it('affiche le nom de l\'auteur', () => {
     render(<AuthorByline {...baseProps} />)
-    expect(screen.getByText('Mathias')).toBeInTheDocument()
+    expect(screen.getByText('Test Author')).toBeInTheDocument()
   })
 
   it('le nom est un lien vers la page auteur', () => {
     render(<AuthorByline {...baseProps} />)
-    const link = screen.getByRole('link', { name: 'Mathias' })
-    expect(link.getAttribute('href')).toBe('/auteurs/mathias')
+    const link = screen.getByRole('link', { name: 'Test Author' })
+    expect(link.getAttribute('href')).toBe('/auteurs/test-author')
   })
 
   it('affiche la date de publication formatée en FR', () => {

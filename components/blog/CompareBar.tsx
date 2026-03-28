@@ -4,7 +4,7 @@
  * Server Component — compatible avec compileMDX de next-mdx-remote/rsc.
  *
  * Usage MDX :
- *   <CompareBar label="Photo" left="88" right="95" leftName="iPhone" rightName="Galaxy" />
+ *   <CompareBar label="Photo" left="88" right="95" leftName="Produit A" rightName="Produit B" />
  *   Valeurs 0–100 converties en /10. Valeurs 0–10 acceptées aussi.
  *   Props MUST be strings (compileMDX drops JSX expression props).
  */

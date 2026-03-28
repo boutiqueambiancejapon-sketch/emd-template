@@ -1,6 +1,6 @@
 /**
  * AuthorCard — carte auteur sans photo.
- * Identité : monogramme CSS "M" en Syne 800.
+ * Identité : monogramme CSS initiale en Syne 800.
  * Variants : 'inline' (en bas d'article) | 'full' (page auteur).
  * Server Component.
  */
@@ -16,7 +16,7 @@ type AuthorCardProps = {
   variant?: AuthorCardVariant
 }
 
-function Monogram({ size }: { size: number }) {
+function Monogram({ size, initial = '?' }: { size: number; initial?: string }) {
   return (
     <div
       aria-hidden="true"
@@ -41,7 +41,7 @@ function Monogram({ size }: { size: number }) {
           opacity: 0.85,
         }}
       >
-        M
+        {initial}
       </span>
     </div>
   )
@@ -49,7 +49,7 @@ function Monogram({ size }: { size: number }) {
 
 export function AuthorCard({
   authorSlug,
-  authorName = 'Mathias',
+  authorName = '',
   bio,
   variant = 'inline',
 }: AuthorCardProps) {
@@ -65,7 +65,7 @@ export function AuthorCard({
         borderTop: '1px solid var(--glass-border)',
       }}
     >
-      <Monogram size={isInline ? 44 : 64} />
+      <Monogram size={isInline ? 44 : 64} initial={authorName.charAt(0).toUpperCase() || '?'} />
 
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ marginBottom: 'var(--space-1)' }}>
@@ -81,16 +81,6 @@ export function AuthorCard({
           >
             {authorName}
           </Link>
-          <span
-            style={{
-              fontSize: '12px',
-              color: 'var(--text-muted)',
-              marginLeft: 'var(--space-2)',
-              letterSpacing: '0.02em',
-            }}
-          >
-            · Fan Apple depuis le 3G
-          </span>
         </div>
 
         <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>

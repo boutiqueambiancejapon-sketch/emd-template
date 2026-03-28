@@ -8,6 +8,7 @@ import { AuthorByline } from '@/components/ui/AuthorByline'
 import { AuthorCard } from '@/components/ui/AuthorCard'
 import { AffiliateLink } from '@/components/ui/AffiliateLink'
 import { COMPARATEURS } from '@/lib/comparateur'
+import { niche } from '@/niche.config'
 import type { ChoisirProductContent } from '@/lib/choisir-content'
 
 type Props = {
@@ -56,7 +57,8 @@ export function ChoisirEditorial({ content, produit, publishedAt }: Props) {
     >
       {/* Byline */}
       <AuthorByline
-        authorSlug="mathias"
+        authorSlug={niche.author.slug}
+        authorName={niche.author.name}
         publishedAt={publishedAt}
         readingTimeMin={5}
       />
@@ -219,8 +221,9 @@ export function ChoisirEditorial({ content, produit, publishedAt }: Props) {
       {/* Author */}
       <div style={{ marginTop: 'var(--space-10)' }}>
         <AuthorCard
-          authorSlug="mathias"
-          bio="Fan Apple depuis le 3G. Testeur du quotidien, jailbreakeur de la première heure. Pas d'affiliation constructeur — juste l'honnêteté."
+          authorSlug={niche.author.slug}
+          authorName={niche.author.name}
+          bio={niche.author.bio}
           variant="inline"
         />
       </div>

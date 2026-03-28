@@ -4,6 +4,7 @@
  * Server Component.
  */
 import Link from 'next/link'
+import { niche, categoryAccent } from '@/niche.config'
 
 type Tool = {
   href: string
@@ -11,64 +12,43 @@ type Tool = {
   description: string
   cta: string
   accentVar: string
-  bgRgba: string
-  borderRgba: string
 }
 
-const TOOLS: Record<string, Tool> = {
-  iphone: {
-    href: '/comparer/iphone',
-    label: 'Comparateur iPhone',
-    description: 'Compare tous les modèles côte à côte : puce, écran, photo, autonomie et prix.',
-    cta: 'Comparer maintenant →',
-    accentVar: 'var(--accent-1)',
-    bgRgba: 'rgba(255,61,87,0.06)',
-    borderRgba: 'rgba(255,61,87,0.20)',
-  },
-  mac: {
-    href: '/comparer/mac',
-    label: 'Comparateur Mac',
-    description: 'MacBook Air, MacBook Pro, Mac mini, iMac — tous les Mac comparés par prix et performance.',
-    cta: 'Comparer maintenant →',
-    accentVar: 'var(--accent-4)',
-    bgRgba: 'rgba(123,97,255,0.06)',
-    borderRgba: 'rgba(123,97,255,0.20)',
-  },
-  ipad: {
-    href: '/comparer/ipad',
-    label: 'Comparateur iPad',
-    description: 'iPad, mini, Air, Pro — le bon iPad selon ton usage et ton budget.',
-    cta: 'Comparer maintenant →',
-    accentVar: 'var(--accent-3)',
-    bgRgba: 'rgba(61,255,192,0.06)',
-    borderRgba: 'rgba(61,255,192,0.20)',
-  },
-  accessoires: {
-    href: '/comparer/airpods',
-    label: 'Comparateur AirPods',
-    description: 'AirPods 4, Pro 2, Max — les bons écouteurs Apple selon ton usage.',
-    cta: 'Comparer les AirPods →',
-    accentVar: 'var(--accent-2)',
-    bgRgba: 'rgba(255,210,63,0.06)',
-    borderRgba: 'rgba(255,210,63,0.20)',
-  },
-  deals: {
+function buildTools(): Record<string, Tool> {
+  const tools: Record<string, Tool> = {}
+  niche.categories.forEach((cat, i) => {
+    tools[cat.slug] = {
+      href: `/comparer/${cat.slug}`,
+      label: `Comparateur ${cat.label}`,
+      description: `Compare tous les ${cat.label.toLowerCase()} côte à côte.`,
+      cta: 'Comparer maintenant →',
+      accentVar: categoryAccent(i),
+    }
+  })
+  // Default tools
+  tools['deals'] = {
     href: '/simulateur',
-    label: 'Simulateur de prix',
-    description: 'Analyse les cycles de prix Apple et détermine le meilleur moment pour acheter.',
+    label: 'Simulateur',
+    description: `Simulez le coût réel de votre ${niche.entity}.`,
     cta: 'Utiliser le simulateur →',
     accentVar: 'var(--accent-1)',
-    bgRgba: 'rgba(255,61,87,0.06)',
-    borderRgba: 'rgba(255,61,87,0.20)',
-  },
+  }
+  return tools
 }
 
-const FALLBACK = TOOLS.iphone
+const FALLBACK: Tool = {
+  href: '/comparer',
+  label: 'Comparateur',
+  description: `Comparez les ${niche.entities} côte à côte.`,
+  cta: 'Comparer maintenant →',
+  accentVar: 'var(--accent-1)',
+}
 
 type Props = { categorie: string }
 
 export function ToolCTA({ categorie }: Props) {
-  const tool = TOOLS[categorie] ?? FALLBACK
+  const tools = buildTools()
+  const tool = tools[categorie] ?? FALLBACK
 
   return (
     <Link
