@@ -864,3 +864,9 @@ body {
     width: var(--bar-width, 0%);
   }
 }
+
+/* AI provider links hover */
+.ai-provider-link:hover {
+  border-color: var(--accent-4) !important;
+  color: var(--text-primary) !important;
+}

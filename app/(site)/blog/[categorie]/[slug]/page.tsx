@@ -287,7 +287,11 @@ export default async function ArticlePage({ params }: { params: Params }) {
           >
             {/* AISummarize */}
             {meta.aiSummary && meta.aiSummary.length > 0 && (
-              <AISummarize points={meta.aiSummary} />
+              <AISummarize
+                points={meta.aiSummary}
+                articleTitle={meta.title}
+                articleUrl={`${SITE_URL}/blog/${categorie}/${slug}`}
+              />
             )}
 
             {/* MDX content */}
