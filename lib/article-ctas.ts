@@ -108,10 +108,11 @@ export function getCTAsForCategory(categorie: string): ArticleCTA[] {
 
   if (matching.length > 0) return matching
 
-  // Fallback : catégorie "astuces" → iphone
-  if (categorie === 'astuces') {
-    const iphone = products.filter((p) => p.categorie === 'iphone').map(toArticleCTA)
-    if (iphone.length > 0) return iphone
+  // Fallback : catégorie "astuces" → première catégorie avec des produits
+  if (categorie === 'astuces' && products.length > 0) {
+    const firstCat = products[0].categorie
+    const fallback = products.filter((p) => p.categorie === firstCat).map(toArticleCTA)
+    if (fallback.length > 0) return fallback
   }
 
   // Fallback ultime : premiers produits trouvés

@@ -9,7 +9,7 @@ import type { CSSProperties } from 'react'
 type Props = {
   currentPage: number
   totalPages: number
-  /** Base URL sans query string — ex: "/blog" ou "/blog/iphone" */
+  /** Base URL sans query string — ex: "/blog" ou "/blog/categorie" */
   basePath: string
 }
 

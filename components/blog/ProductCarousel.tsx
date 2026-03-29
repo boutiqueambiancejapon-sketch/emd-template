@@ -4,7 +4,7 @@
  * Server Component — no JS carousel, pure CSS scroll.
  *
  * Usage MDX:
- *   <ProductCarousel products="iphone-17,macbook-air-m5,ipad-pro" />
+ *   <ProductCarousel products="produit-a,produit-b,produit-c" />
  */
 
 import Image from 'next/image'
