@@ -78,9 +78,11 @@ export function Nav() {
   const isGroupActive = (items: { href: string }[]) =>
     items.some(({ href }) => isActive(href))
 
-  // Extract short name from siteName (e.g. "10minutesvoyage" → "10min" + "voyage")
-  const shortPrefix = '10min'
-  const shortSuffix = niche.siteName.replace(/^10minutes?/i, '') || 'template'
+  // Parse logo: if it contains "·", split into bold + light parts
+  const logoText = niche.logo ?? niche.siteName
+  const hasDot = logoText.includes('·')
+  const logoBold = hasDot ? logoText.split('·')[0] : logoText
+  const logoLight = hasDot ? logoText.split('·').slice(1).join('·') : ''
 
   return (
     <>
@@ -99,9 +101,11 @@ export function Nav() {
 
           {/* Logo */}
           <Link href="/" aria-label={`${niche.siteName} — accueil`} style={{ textDecoration: 'none', flexShrink: 0, display: 'flex', alignItems: 'baseline', gap: '2px' }}>
-            <span style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontWeight: 800, fontSize: '16px', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{shortPrefix}</span>
-            <span style={{ color: 'var(--accent-1)', fontWeight: 800, fontSize: '18px', lineHeight: 1 }} className="nav-logo-dot">·</span>
-            <span style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontWeight: 400, fontSize: '16px', color: 'var(--text-secondary)' }}>{shortSuffix}</span>
+            <span style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontWeight: 800, fontSize: '16px', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{logoBold}</span>
+            {hasDot && <>
+              <span style={{ color: 'var(--accent-1)', fontWeight: 800, fontSize: '18px', lineHeight: 1 }} className="nav-logo-dot">·</span>
+              <span style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontWeight: 400, fontSize: '16px', color: 'var(--text-secondary)' }}>{logoLight}</span>
+            </>}
           </Link>
 
           {/* Desktop */}

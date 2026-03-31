@@ -69,15 +69,29 @@ Sur base de la niche, propose-moi et demande validation :
 
 Sur base de la niche et de l'ambiance, proposer ET demander validation :
 
+**Style structurel** (ce qui différencie visuellement les sites entre eux) :
+- mode : `dark` ou `light` — dark pour tech/gaming/premium, light pour santé/cuisine/lifestyle
+- hero : `split` (texte + nav catégories), `centered` (tout centré), `minimal` (titre + 1 CTA, épuré)
+- effects : `aurora` (gradient animé bold), `subtle` (noise léger seulement), `none` (propre et minimal)
+- cards : `bordered` (border-top accent + watermark), `filled` (fond accent subtil), `minimal` (texte pur)
+
+**Logo** : texte libre. Si contient `·`, le point sert de séparateur visuel (ex: "10min·voyage").
+Sinon, le nom s'affiche en gras (ex: "ASPIRO", "MonSite").
+
+**Ordre des sections home** : proposer un ordre adapté.
+Options : `ticker`, `deals`, `articles`, `categories`, `tools`, `author`
+Ex: un site deals-first → `['deals', 'articles', 'categories', 'tools', 'author']`
+Ex: un site contenu-first → `['articles', 'categories', 'tools', 'deals', 'author']`
+
 **Palette complète** (11 couleurs) :
 - accent1 → couleur principale (CTAs, liens, éléments actifs)
 - accent2 → couleur secondaire (badges, highlights)
 - accent3 → couleur tertiaire (succès, validation)
 - accent4 → couleur quaternaire (quiz, éléments interactifs)
 - accent5 → couleur quinaire (liens secondaires)
-- bgPrimary → fond principal (#0A0A0F par défaut dark, adapter si light)
-- bgSurface → fond cartes (#13131A par défaut)
-- bgSurface2 → fond cartes secondaire (#1C1C26 par défaut)
+- bgPrimary → fond principal (dark: #0A0A0F, light: #FAFAFA)
+- bgSurface → fond cartes (dark: #13131A, light: #FFFFFF)
+- bgSurface2 → fond cartes secondaire (dark: #1C1C26, light: #F0F0F5)
 - textPrimary → texte principal
 - textSecondary → texte secondaire
 - textMuted → texte discret
@@ -87,10 +101,9 @@ Sur base de la niche et de l'ambiance, proposer ET demander validation :
 - body : pour le texte courant (ex: Space Grotesk, Inter, DM Sans, Geist)
 IMPORTANT : uniquement des fonts Google Fonts compatibles next/font.
 
-**Effets visuels** :
+**Effets visuels** (si effects != 'none') :
 - Aurora : 3 couleurs du gradient animé (généralement accent1 + accent4 + accent3)
 - Noise : opacité (0.03–0.05, 0 pour désactiver)
-- Style général : dark bold / minimal clean / premium glossy / tech brutalist
 
 Présenter la proposition comme un tableau visuel avec les hex et demander validation.
 
@@ -184,31 +197,41 @@ Tu valides ou tu modifies ?
 
 **Claude Code** : Sur base de "tech, propre, moderne" + aspirateurs robots, je propose :
 
+**Style :**
+- mode : `dark` — univers tech/gadget
+- hero : `centered` — focus sur le message, pas de nav latérale
+- effects : `subtle` — noise léger, pas d'aurora (plus clean)
+- cards : `filled` — cartes avec fond coloré subtil
+- logo : `ASPIRO·guide` (bold + séparateur + light)
+- sections home : `['articles', 'categories', 'tools', 'deals', 'author']`
+
 **Palette :**
 | Variable | Hex | Usage |
 |---|---|---|
-| accent1 | `#00D4AA` | CTA principal, liens — vert tech |
+| accent1 | `#00D4AA` | CTA principal — vert tech |
 | accent2 | `#FF8C42` | Badges, deals — orange warm |
-| accent3 | `#4ECDC4` | Succès, validation — teal |
-| accent4 | `#6C63FF` | Quiz, interactif — indigo |
-| accent5 | `#45B7D1` | Liens secondaires — sky blue |
-| bgPrimary | `#0B0F14` | Fond principal — bleu-noir profond |
+| accent3 | `#4ECDC4` | Succès — teal |
+| accent4 | `#6C63FF` | Quiz — indigo |
+| accent5 | `#45B7D1` | Liens secondaires — sky |
+| bgPrimary | `#0B0F14` | Fond — bleu-noir profond |
 | bgSurface | `#111820` | Cartes |
 | bgSurface2 | `#1A2230` | Cartes secondaires |
-| textPrimary | `#F0F4F8` | Texte principal |
+| textPrimary | `#F0F4F8` | Texte |
 | textSecondary | `#8899AA` | Texte secondaire |
 | textMuted | `#556677` | Texte discret |
 
 **Fonts :**
-- display : **Outfit** (géométrique, tech, propre)
+- display : **Outfit** (géométrique, tech)
 - body : **DM Sans** (lisible, moderne)
 
-**Effets :**
-- Aurora : `#00D4AA` → `#6C63FF` → `#4ECDC4`
-- Noise : 0.03 (subtil)
-- Style : dark tech minimal
+**Effets :** noise 0.03 (subtil, pas d'aurora)
 
 Tu valides ou tu modifies ?
+
+*(Autre exemple : un site cuisine light-first)*
+- mode : `light`, hero : `minimal`, effects : `none`, cards : `minimal`
+- logo : `LaCuisine` (pas de séparateur)
+- Palette claire : bgPrimary #FAFBFC, accents chauds
 
 *(etc.)*
 

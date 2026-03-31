@@ -2,12 +2,14 @@
  * ArticleCard — carte article éditoriale.
  * Si featureImage est présente → affiche l'image en haut de la carte.
  * Sinon → design typographique pur avec border-left/top accent.
+ * Variant controlled by niche.style.cards: 'bordered' | 'filled' | 'minimal'.
  * Server Component.
  */
 import Link from 'next/link'
 import Image from 'next/image'
 import type { ArticleMeta } from '@/lib/blog'
 import { CATEGORY_LABELS, CATEGORY_ACCENT, formatDate, articleHref } from '@/lib/blog'
+import { niche } from '@/niche.config'
 
 type Props = {
   article: ArticleMeta
@@ -16,22 +18,99 @@ type Props = {
   index?: number
 }
 
+/* ── Style helpers per card variant ────────────────────────────── */
+
+function featuredStyle(accent: string, hasImage: boolean): React.CSSProperties {
+  const variant = niche.style.cards
+
+  const base: React.CSSProperties = {
+    paddingTop: 'var(--space-2)',
+    paddingBottom: 'var(--space-2)',
+    overflow: 'hidden',
+  }
+
+  if (variant === 'filled') {
+    return {
+      ...base,
+      background: `color-mix(in srgb, ${accent} 6%, var(--bg-surface))`,
+      border: `1px solid color-mix(in srgb, ${accent} 20%, transparent)`,
+      borderRadius: 'var(--radius-lg)',
+      padding: 'var(--space-5)',
+    }
+  }
+
+  if (variant === 'minimal') {
+    return {
+      ...base,
+      borderBottom: '1px solid var(--border)',
+      paddingBottom: 'var(--space-5)',
+    }
+  }
+
+  // bordered (default)
+  return {
+    ...base,
+    borderLeft: hasImage ? 'none' : `4px solid ${accent}`,
+    paddingLeft: hasImage ? 0 : 'var(--space-6)',
+  }
+}
+
+function normalStyle(accent: string, hasImage: boolean): React.CSSProperties {
+  const variant = niche.style.cards
+
+  const base: React.CSSProperties = {
+    position: 'relative',
+    overflow: 'hidden',
+    paddingBottom: 'var(--space-4)',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 'var(--space-2)',
+  }
+
+  if (variant === 'filled') {
+    return {
+      ...base,
+      background: `color-mix(in srgb, ${accent} 8%, var(--bg-surface))`,
+      border: `1px solid color-mix(in srgb, ${accent} 20%, transparent)`,
+      borderRadius: 'var(--radius-lg)',
+      padding: 'var(--space-4)',
+    }
+  }
+
+  if (variant === 'minimal') {
+    return {
+      ...base,
+      borderBottom: '1px solid var(--border)',
+      paddingTop: 'var(--space-4)',
+    }
+  }
+
+  // bordered (default)
+  return {
+    ...base,
+    borderTop: hasImage ? 'none' : `3px solid ${accent}`,
+    paddingTop: hasImage ? 0 : 'var(--space-5)',
+  }
+}
+
+/** Whether the watermark number should render. */
+function showWatermark(): boolean {
+  return niche.style.cards === 'bordered'
+}
+
 export function ArticleCard({ article, featured = false, showCategory = true, index }: Props) {
   const accent = CATEGORY_ACCENT[article.categorie] ?? 'var(--accent-1)'
   const label = CATEGORY_LABELS[article.categorie] ?? article.categorie
+  const variant = niche.style.cards
+  const hasImage = !!article.featureImage
 
   if (featured) {
     return (
       <Link href={articleHref(article)} style={{ textDecoration: 'none', display: 'block' }}>
         <article
           className="article-card"
-          style={{
-            borderLeft: article.featureImage ? 'none' : `4px solid ${accent}`,
-            paddingLeft: article.featureImage ? 0 : 'var(--space-6)',
-            paddingTop: 'var(--space-2)',
-            paddingBottom: 'var(--space-2)',
-            overflow: 'hidden',
-          }}
+          style={featuredStyle(accent, hasImage)}
         >
           {article.featureImage && (
             <Image
@@ -49,14 +128,23 @@ export function ArticleCard({ article, featured = false, showCategory = true, in
             />
           )}
           {showCategory && (
-            <p style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: accent, margin: '0 0 var(--space-3)' }}>
+            <p style={{
+              fontFamily: 'var(--next-font-display), system-ui, sans-serif',
+              fontSize: '11px',
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: accent,
+              margin: '0 0 var(--space-3)',
+              /* minimal: plain colored text, no chip styling needed — same markup */
+            }}>
               {label}
             </p>
           )}
           <h2
             style={{
               fontFamily: 'var(--next-font-display), system-ui, sans-serif',
-              fontSize: 'clamp(24px, 3.5vw, 44px)',
+              fontSize: variant === 'minimal' ? 'clamp(28px, 4vw, 52px)' : 'clamp(24px, 3.5vw, 44px)',
               fontWeight: 800,
               color: 'var(--text-primary)',
               lineHeight: 1.1,
@@ -89,17 +177,7 @@ export function ArticleCard({ article, featured = false, showCategory = true, in
     <Link href={articleHref(article)} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
       <article
         className="article-card"
-        style={{
-          position: 'relative',
-          overflow: 'hidden',
-          borderTop: article.featureImage ? 'none' : `3px solid ${accent}`,
-          paddingTop: article.featureImage ? 0 : 'var(--space-5)',
-          paddingBottom: 'var(--space-4)',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--space-2)',
-        }}
+        style={normalStyle(accent, hasImage)}
       >
         {article.featureImage ? (
           <Image
@@ -116,8 +194,8 @@ export function ArticleCard({ article, featured = false, showCategory = true, in
             }}
           />
         ) : (
-          /* Numéro oversize en watermark — seulement sans image */
-          num && (
+          /* Numéro oversize en watermark — only for 'bordered' variant */
+          showWatermark() && num && (
             <span
               aria-hidden="true"
               style={{
@@ -139,7 +217,15 @@ export function ArticleCard({ article, featured = false, showCategory = true, in
           )
         )}
         {showCategory && (
-          <p style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: accent, margin: 0 }}>
+          <p style={{
+            fontFamily: 'var(--next-font-display), system-ui, sans-serif',
+            fontSize: '10px',
+            fontWeight: 700,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: accent,
+            margin: 0,
+          }}>
             {label}
           </p>
         )}

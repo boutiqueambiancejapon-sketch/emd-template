@@ -7,21 +7,37 @@ import { FeaturedTools } from '@/components/home/FeaturedTools'
 import { AuthorTeaser } from '@/components/home/AuthorTeaser'
 import { niche } from '@/niche.config'
 
+/* ── Section registry ─────────────────────────────────────────── */
+
+function CategoriesSection() {
+  return (
+    <>
+      {niche.categories.map((cat, i) => (
+        <CategorySection key={cat.slug} slug={cat.slug} label={cat.label} index={i} />
+      ))}
+    </>
+  )
+}
+
+const SECTION_MAP: Record<string, React.ComponentType> = {
+  ticker: ArticleTicker,
+  deals: DealsStrip,
+  articles: RecentArticles,
+  categories: CategoriesSection,
+  tools: FeaturedTools,
+  author: AuthorTeaser,
+}
+
+/* ── Page ──────────────────────────────────────────────────────── */
+
 export default function HomePage() {
   return (
     <main id="main-content">
       <HeroSection />
-      <ArticleTicker />
-      <DealsStrip />
-      {/* Éditorial — derniers articles featured + grille */}
-      <RecentArticles />
-      {/* Sections par catégorie — dynamique depuis niche.config */}
-      {niche.categories.map((cat, i) => (
-        <CategorySection key={cat.slug} slug={cat.slug} label={cat.label} index={i} />
-      ))}
-      {/* Outils interactifs */}
-      <FeaturedTools />
-      <AuthorTeaser />
+      {niche.homeSections.map((key) => {
+        const Section = SECTION_MAP[key]
+        return Section ? <Section key={key} /> : null
+      })}
     </main>
   )
 }

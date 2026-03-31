@@ -48,7 +48,13 @@ export type NicheConfig = {
     description: string
   }
 
-  // DA
+  // Style & DA
+  style: {
+    mode: 'dark' | 'light'             // dark-first ou light-first
+    hero: 'split' | 'centered' | 'minimal' // layout du hero
+    effects: 'aurora' | 'subtle' | 'none'  // intensité des effets visuels
+    cards: 'bordered' | 'filled' | 'minimal' // style des cartes article
+  }
   palette: {
     accent1: string
     accent2: string
@@ -77,6 +83,10 @@ export type NicheConfig = {
     noGo: string[]          // ["révolutionnaire", "incroyable"]
     formulations: string[]  // ["Honnêtement,", "Le vrai tip :"]
   }
+
+  // Identité visuelle
+  logo: string                // Texte du logo libre (ex: "10min·voyage", "MonSite", "ASPIRO")
+  homeSections: string[]      // Ordre des sections home. Options: 'ticker', 'deals', 'articles', 'categories', 'tools', 'author'
 
   // Affiliation
   affiliateTag: string     // "monsite-21"
@@ -118,6 +128,12 @@ export const niche: NicheConfig = {
   comparator: { enabled: true, criteria: [] },
   simulator: { enabled: true, title: '', description: '' },
 
+  style: {
+    mode: 'dark',
+    hero: 'split',
+    effects: 'aurora',
+    cards: 'bordered',
+  },
   palette: {
     accent1: '#FF3D57',
     accent2: '#FFD23F',
@@ -134,6 +150,9 @@ export const niche: NicheConfig = {
   fonts: { display: 'Unbounded', body: 'Space Grotesk' },
 
   author: { name: '', slug: '', title: '', bio: '', tone: [], noGo: [], formulations: [] },
+
+  logo: '10min·template',
+  homeSections: ['ticker', 'deals', 'articles', 'categories', 'tools', 'author'],
 
   affiliateTag: '',
   defaultStore: 'Amazon',
