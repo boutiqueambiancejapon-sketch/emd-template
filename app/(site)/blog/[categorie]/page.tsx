@@ -7,6 +7,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import Balancer from 'react-wrap-balancer'
 import { getAllArticles, getCategories, CATEGORY_LABELS, CATEGORY_ACCENT } from '@/lib/blog'
 import { currentYear } from '@/lib/utils/year'
 import { ArticleCard } from '@/components/blog/ArticleCard'
@@ -100,7 +101,7 @@ export default async function CategoryPage({
                   Catégorie
                 </span>
                 <h1 style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontSize: 'clamp(28px, 4vw, 52px)', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1 }}>
-                  {label}
+                  <Balancer>{label}</Balancer>
                 </h1>
               </div>
               <p style={{ fontSize: '14px', color: 'var(--text-muted)', flexShrink: 0 }}>

@@ -4,6 +4,7 @@
  * Server Component.
  */
 import Link from 'next/link'
+import Balancer from 'react-wrap-balancer'
 import { getAllArticles } from '@/lib/blog'
 import { ArticleCard } from '@/components/blog/ArticleCard'
 
@@ -24,7 +25,7 @@ export function RecentArticles() {
               Éditorial
             </span>
             <h2 style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontSize: 'clamp(22px, 3vw, 36px)', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1, margin: 0 }}>
-              Derniers articles
+              <Balancer>Derniers articles</Balancer>
             </h2>
           </div>
           <Link href="/blog" style={{ fontSize: '13px', fontWeight: 600, color: 'var(--accent-1)', textDecoration: 'none', borderBottom: '1px solid rgba(255,61,87,0.35)', paddingBottom: '2px', whiteSpace: 'nowrap' }}>

@@ -6,6 +6,7 @@
  */
 
 import Link from 'next/link'
+import Balancer from 'react-wrap-balancer'
 import { niche } from '@/niche.config'
 
 type ToolCardProps = {
@@ -181,7 +182,7 @@ export function FeaturedTools() {
               lineHeight: 1.2,
             }}
           >
-            Décidez en connaissance<br />de cause
+            <Balancer>Décidez en connaissance<br />de cause</Balancer>
           </h2>
         </div>
         <Link

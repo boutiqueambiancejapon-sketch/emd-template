@@ -6,6 +6,7 @@
 
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import Balancer from 'react-wrap-balancer'
 import { currentYear } from '@/lib/utils/year'
 import { QuizEngine } from '@/components/quiz/QuizEngine'
 import { niche } from '@/niche.config'
@@ -113,7 +114,7 @@ export default function QuizPage() {
                 textWrap: 'balance',
               }}
             >
-              {niche.quiz.question || `Quel ${niche.entity} est fait pour toi ?`}
+              <Balancer>{niche.quiz.question || `Quel ${niche.entity} est fait pour toi ?`}</Balancer>
             </h1>
             <p
               style={{

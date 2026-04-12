@@ -8,6 +8,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import Balancer from 'react-wrap-balancer'
 import { compileMDX } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
 import { remarkAmazonAffiliate } from '@/lib/plugins/remarkAmazonAffiliate'
@@ -245,7 +246,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
                 textWrap: 'balance',
               }}
             >
-              {meta.title}
+              <Balancer>{meta.title}</Balancer>
             </h1>
 
             <AuthorByline
@@ -318,7 +319,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
                     textWrap: 'balance',
                   }}
                 >
-                  Questions fréquentes
+                  <Balancer>Questions fréquentes</Balancer>
                 </h2>
                 <FaqAccordion items={meta.faq} />
               </section>
@@ -341,7 +342,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
                     letterSpacing: '-0.01em',
                   }}
                 >
-                  Continuer votre lecture
+                  <Balancer>Continuer votre lecture</Balancer>
                 </h2>
                 <ul
                   role="list"

@@ -6,6 +6,7 @@
 
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import Balancer from 'react-wrap-balancer'
 import { currentYear } from '@/lib/utils/year'
 import { MarqueeStrip } from '@/components/effects/MarqueeStrip'
 import { DealsGrid } from '@/components/deals/DealsGrid'
@@ -180,7 +181,7 @@ export default function DealsPage() {
               marginBottom: 'var(--space-4)',
             }}
           >
-            {niche.dealWord.charAt(0).toUpperCase() + niche.dealWord.slice(1)}
+            <Balancer>{niche.dealWord.charAt(0).toUpperCase() + niche.dealWord.slice(1)}</Balancer>
           </h1>
           <p
             style={{
@@ -231,7 +232,7 @@ export default function DealsPage() {
                 marginBottom: 'var(--space-6)',
               }}
             >
-              Questions fréquentes — {niche.dealWord}
+              <Balancer>Questions fréquentes — {niche.dealWord}</Balancer>
             </h2>
             <FaqAccordion items={FAQ_ITEMS} />
           </section>

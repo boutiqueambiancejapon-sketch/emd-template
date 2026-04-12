@@ -143,18 +143,29 @@ Présenter la proposition comme un tableau visuel avec les hex et demander valid
 
 6. **Admin CMS** (`app/admin/layout.tsx`) — Mettre à jour les couleurs aurora de la sidebar si la palette change significativement
 
-### Étape 3 — Contenu
-7. Mettre à jour `content/settings.yaml` (nav avec les catégories)
-8. Mettre à jour `content/pages/home.yaml` (rotating_words, subtitle, CTAs)
-9. Mettre à jour `content/pages/quiz.yaml` (questions et options du quiz)
-10. Remplir `lib/comparateur.ts` (données produits pour le comparateur)
-11. Remplir `lib/choisir-content.ts` (contenu éditorial des pages /choisir/)
-12. Mettre à jour les pages légales (mentions-legales + confidentialité)
-13. Créer `docs/AUTHOR-[slug].md` (profil auteur)
+### Étape 3 — Images structurelles
+Le template a un système de placeholders pour les images fixes du site (hero, headers d'outils, illustrations catégories, photo auteur).
 
-### Étape 4 — Premier article
-14. Supprimer `content/articles/_example.mdx` et `content/produits/_example.yaml`
-15. Rédiger le premier article (800+ mots, 6+ FAQ, composants MDX)
+7. Lire `lib/image-slots.ts` — registre central avec ID, dimensions et prompt IA pour chaque image
+8. Visiter `/admin/images` une fois le site lancé pour voir le statut de chaque image
+9. Adapter les prompts IA dans `lib/image-slots.ts` à la niche spécifique :
+   - Personnaliser chaque prompt pour qu'il reflète l'ambiance choisie au Bloc 6
+   - Ajouter le style visuel de la niche (aesthetic keywords, lighting, mood)
+10. Générer les images via Midjourney / DALL-E / Flux / Gemini avec les prompts
+11. Renommer chaque image avec le nom exact attendu et déposer dans `public/images/...`
+
+### Étape 4 — Contenu
+12. Mettre à jour `content/settings.yaml` (nav avec les catégories)
+13. Mettre à jour `content/pages/home.yaml` (rotating_words, subtitle, CTAs)
+14. Mettre à jour `content/pages/quiz.yaml` (questions et options du quiz)
+15. Remplir `lib/comparateur.ts` (données produits pour le comparateur)
+16. Remplir `lib/choisir-content.ts` (contenu éditorial des pages /choisir/)
+17. Mettre à jour les pages légales (mentions-legales + confidentialité)
+18. Créer `docs/AUTHOR-[slug].md` (profil auteur)
+
+### Étape 5 — Premier article
+19. Supprimer `content/articles/_example.mdx` et `content/produits/_example.yaml`
+20. Rédiger le premier article (800+ mots, 6+ FAQ, composants MDX)
     Lire `docs/SEO-GEO-REDACTION.md` et `docs/AUTHOR-[slug].md` AVANT de rédiger.
     Composants dispo : `<ArticleImage>`, `<ProductCTA>`, `<ProductCarousel>`,
     `<CompareBar>`, `<Tip>`, `<Warning>`, `<Verdict>`, `<ProConTable>`,
@@ -162,10 +173,10 @@ Présenter la proposition comme un tableau visuel avec les hex et demander valid
     ATTENTION : les props MDX sont des STRINGS uniquement.
     Ex: `<ProConTable pros="Avantage 1|Avantage 2" cons="Inconvénient 1" />`
 
-### Étape 5 — Vérification
-16. `tsc --noEmit` + `next lint`
-17. Vérifier le contraste WCAG AA pour chaque couleur accent sur les fonds
-18. Commit et push
+### Étape 6 — Vérification
+21. `tsc --noEmit` + `next lint`
+22. Vérifier le contraste WCAG AA pour chaque couleur accent sur les fonds
+23. Commit et push
 ```
 
 ---

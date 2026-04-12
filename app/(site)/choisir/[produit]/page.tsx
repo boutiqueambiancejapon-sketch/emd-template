@@ -6,6 +6,7 @@
 
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import Balancer from 'react-wrap-balancer'
 import { QuizEngine } from '@/components/quiz/QuizEngine'
 import { ChoisirEditorial } from '@/components/choisir/ChoisirEditorial'
 import { currentYear } from '@/lib/utils/year'
@@ -113,7 +114,7 @@ export default async function ChoisirPage({ params }: { params: Params }) {
               textWrap: 'balance',
             }}
           >
-            Quel {data.label} choisir en {year}&nbsp;?
+            <Balancer>Quel {data.label} choisir en {year}&nbsp;?</Balancer>
           </h1>
           <p
             style={{
@@ -149,7 +150,7 @@ export default async function ChoisirPage({ params }: { params: Params }) {
             textAlign: 'center',
           }}
         >
-          Trouve ton modèle en 4 questions
+          <Balancer>Trouve ton modèle en 4 questions</Balancer>
         </h2>
         <div
           style={{

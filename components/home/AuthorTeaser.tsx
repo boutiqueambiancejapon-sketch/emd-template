@@ -5,6 +5,7 @@
  */
 
 import Link from 'next/link'
+import Balancer from 'react-wrap-balancer'
 import { niche } from '@/niche.config'
 
 export function AuthorTeaser() {
@@ -97,7 +98,7 @@ export function AuthorTeaser() {
               lineHeight: 1.15,
             }}
           >
-            {niche.author.name} — {niche.author.title}
+            <Balancer>{niche.author.name} — {niche.author.title}</Balancer>
           </h2>
           <p
             style={{

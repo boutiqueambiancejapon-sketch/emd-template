@@ -1,40 +1,48 @@
+'use client'
+
 /**
- * AnimatedHeading — révèle le texte par wipe gauche→droite (clip-path).
- * CSS @keyframes uniquement — aucun JS, aucune dépendance.
- * Conçu pour above-fold : animation immédiate au chargement.
- * prefers-reduced-motion géré dans globals.css (animation-duration: 0.01ms).
- * Server Component.
+ * AnimatedHeading — reveal propre avec framer-motion.
+ * Animation d'entrée : fade + translate + slight scale.
+ * Respect prefers-reduced-motion automatique via framer-motion.
  */
+
+import { motion, useReducedMotion } from 'framer-motion'
 
 type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'p'
 
 type AnimatedHeadingProps = {
   children: React.ReactNode
   as?: HeadingTag
-  delay?: number   // ms
-  duration?: number // ms
+  delay?: number
+  duration?: number
   className?: string
   style?: React.CSSProperties
 }
 
 export function AnimatedHeading({
   children,
-  as: Tag = 'h1',
+  as = 'h1',
   delay = 0,
   duration = 900,
   className,
   style,
 }: AnimatedHeadingProps) {
+  const reduce = useReducedMotion()
+  const MotionTag = motion[as] as typeof motion.h1
+
   return (
-    <Tag
+    <MotionTag
       className={className}
-      style={{
-        animation: `heading-reveal ${duration}ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms both`,
-        willChange: 'clip-path',
-        ...style,
+      style={style}
+      initial={reduce ? false : { opacity: 0, y: 24, filter: 'blur(6px)' }}
+      animate={reduce ? undefined : { opacity: 1, y: 0, filter: 'blur(0px)' }}
+      transition={{
+        duration: duration / 1000,
+        delay: delay / 1000,
+        ease: [0.16, 1, 0.3, 1],
       }}
     >
       {children}
-    </Tag>
+    </MotionTag>
   )
 }

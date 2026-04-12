@@ -6,6 +6,7 @@
 
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import Balancer from 'react-wrap-balancer'
 import { niche } from '@/niche.config'
 
 export const metadata: Metadata = {
@@ -34,7 +35,7 @@ export default function MentionsLegalesPage() {
           marginBottom: 'var(--space-10)',
         }}
       >
-        Mentions légales
+        <Balancer>Mentions légales</Balancer>
       </h1>
 
       {/* Éditeur du site */}
@@ -48,7 +49,7 @@ export default function MentionsLegalesPage() {
             marginBottom: 'var(--space-4)',
           }}
         >
-          Éditeur du site
+          <Balancer>Éditeur du site</Balancer>
         </h2>
         <div style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
           <p>Site : {niche.siteName} — https://{niche.domain}</p>
@@ -70,7 +71,7 @@ export default function MentionsLegalesPage() {
             marginBottom: 'var(--space-4)',
           }}
         >
-          Hébergeur
+          <Balancer>Hébergeur</Balancer>
         </h2>
         <div style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
           <p>Vercel Inc.</p>
@@ -90,7 +91,7 @@ export default function MentionsLegalesPage() {
             marginBottom: 'var(--space-4)',
           }}
         >
-          Propriété intellectuelle
+          <Balancer>Propriété intellectuelle</Balancer>
         </h2>
         <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
           L&rsquo;ensemble du contenu de ce site (textes, images, graphismes, logo, icônes, etc.)
@@ -111,7 +112,7 @@ export default function MentionsLegalesPage() {
             marginBottom: 'var(--space-4)',
           }}
         >
-          Données personnelles
+          <Balancer>Données personnelles</Balancer>
         </h2>
         <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
           Les informations relatives à la collecte et au traitement des données personnelles sont
@@ -137,7 +138,7 @@ export default function MentionsLegalesPage() {
             marginBottom: 'var(--space-4)',
           }}
         >
-          Liens affiliés
+          <Balancer>Liens affiliés</Balancer>
         </h2>
         <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
           Certains liens présents sur {niche.siteName} sont des liens affiliés vers{' '}

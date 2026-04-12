@@ -9,6 +9,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
+import Balancer from 'react-wrap-balancer'
 import { compileMDX } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
 import { remarkAmazonAffiliate } from '@/lib/plugins/remarkAmazonAffiliate'
@@ -153,7 +154,7 @@ export default async function StandaloneArticlePage({ params }: { params: Params
               </span>
 
               <h1 style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontSize: 'clamp(28px, 5vw, 48px)', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.15, marginBottom: 'var(--space-5)', textWrap: 'balance' }}>
-                {meta.title}
+                <Balancer>{meta.title}</Balancer>
               </h1>
 
               <AuthorByline authorSlug={niche.author.slug || 'auteur'} publishedAt={meta.publishedAt} updatedAt={meta.updatedAt} readingTimeMin={meta.readingTimeMin} />
@@ -190,7 +191,7 @@ export default async function StandaloneArticlePage({ params }: { params: Params
             {meta.faq && meta.faq.length > 0 && (
               <section aria-labelledby="faq-titre" style={{ marginTop: 'var(--space-12)' }}>
                 <h2 id="faq-titre" style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 'var(--space-6)' }}>
-                  Questions fréquentes
+                  <Balancer>Questions fréquentes</Balancer>
                 </h2>
                 <FaqAccordion items={meta.faq} />
               </section>
@@ -200,7 +201,7 @@ export default async function StandaloneArticlePage({ params }: { params: Params
             {related.length > 0 && (
               <section aria-labelledby="related-titre" style={{ marginTop: 'var(--space-12)' }}>
                 <h2 id="related-titre" style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontSize: 'clamp(18px, 2.5vw, 22px)', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 'var(--space-5)' }}>
-                  Continuer votre lecture
+                  <Balancer>Continuer votre lecture</Balancer>
                 </h2>
                 <ul role="list" style={{ display: 'flex', flexDirection: 'column', gap: 0, listStyle: 'none', borderTop: '1px solid var(--border)' }}>
                   {related.map((a, i) => (

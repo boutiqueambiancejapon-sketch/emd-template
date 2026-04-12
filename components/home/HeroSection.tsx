@@ -5,6 +5,7 @@
  * Server Component (les enfants clients sont importés inline).
  */
 
+import Balancer from 'react-wrap-balancer'
 import { AuroraBackground } from '@/components/effects/AuroraBackground'
 import { NoiseOverlay } from '@/components/effects/NoiseOverlay'
 import { AnimatedHeading } from '@/components/effects/AnimatedHeading'
@@ -96,7 +97,7 @@ function HeroSplit() {
               marginBottom: '0.15em',
             }}
           >
-            {niche.heroPrefix}
+            <Balancer>{niche.heroPrefix}</Balancer>
           </AnimatedHeading>
 
           {/* H1 — ligne 2 avec mot rotatif */}
@@ -122,7 +123,7 @@ function HeroSplit() {
               interval={2600}
               style={{ color: 'var(--accent-1)' }}
             />
-            <span className="text-gradient-hero">{niche.heroSuffix}</span>
+            <Balancer><span className="text-gradient-hero">{niche.heroSuffix}</span></Balancer>
           </AnimatedHeading>
 
           {/* Sous-titre */}
@@ -207,7 +208,7 @@ function HeroCentered() {
             marginBottom: '0.15em',
           }}
         >
-          {niche.heroPrefix}
+          <Balancer>{niche.heroPrefix}</Balancer>
         </AnimatedHeading>
 
         {/* H1 — ligne 2 avec mot rotatif */}
@@ -234,7 +235,7 @@ function HeroCentered() {
             interval={2600}
             style={{ color: 'var(--accent-1)' }}
           />
-          <span className="text-gradient-hero">{niche.heroSuffix}</span>
+          <Balancer><span className="text-gradient-hero">{niche.heroSuffix}</span></Balancer>
         </AnimatedHeading>
 
         {/* Sous-titre */}
@@ -299,7 +300,7 @@ function HeroMinimal() {
             marginBottom: 'var(--space-8)',
           }}
         >
-          {niche.heroPrefix} <span className="text-gradient-hero">{niche.heroSuffix}</span>
+          <Balancer>{niche.heroPrefix} <span className="text-gradient-hero">{niche.heroSuffix}</span></Balancer>
         </AnimatedHeading>
 
         {/* Sous-titre */}

@@ -5,6 +5,7 @@
  */
 
 import type { Metadata } from 'next'
+import Balancer from 'react-wrap-balancer'
 import { niche } from '@/niche.config'
 
 export const metadata: Metadata = {
@@ -33,7 +34,7 @@ export default function ConfidentialitePage() {
           marginBottom: 'var(--space-10)',
         }}
       >
-        Politique de confidentialité
+        <Balancer>Politique de confidentialité</Balancer>
       </h1>
 
       {/* Responsable du traitement */}
@@ -47,7 +48,7 @@ export default function ConfidentialitePage() {
             marginBottom: 'var(--space-4)',
           }}
         >
-          Responsable du traitement
+          <Balancer>Responsable du traitement</Balancer>
         </h2>
         <div style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
           <p>Nom : [À compléter]</p>
@@ -67,7 +68,7 @@ export default function ConfidentialitePage() {
             marginBottom: 'var(--space-4)',
           }}
         >
-          Données collectées
+          <Balancer>Données collectées</Balancer>
         </h2>
         <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
           {niche.siteName} collecte un minimum de données, strictement nécessaires au fonctionnement
@@ -105,7 +106,7 @@ export default function ConfidentialitePage() {
             marginBottom: 'var(--space-4)',
           }}
         >
-          Cookies
+          <Balancer>Cookies</Balancer>
         </h2>
         <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
           Ce site utilise des cookies strictement nécessaires et des cookies analytiques :
@@ -141,7 +142,7 @@ export default function ConfidentialitePage() {
             marginBottom: 'var(--space-4)',
           }}
         >
-          Durée de conservation
+          <Balancer>Durée de conservation</Balancer>
         </h2>
         <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
           Les données analytiques sont conservées pendant 24 mois maximum. Les données issues des
@@ -161,7 +162,7 @@ export default function ConfidentialitePage() {
             marginBottom: 'var(--space-4)',
           }}
         >
-          Vos droits
+          <Balancer>Vos droits</Balancer>
         </h2>
         <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
           Conformément au RGPD, vous disposez des droits suivants :
@@ -204,7 +205,7 @@ export default function ConfidentialitePage() {
             marginBottom: 'var(--space-4)',
           }}
         >
-          Contact
+          <Balancer>Contact</Balancer>
         </h2>
         <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
           Pour toute question relative à cette politique de confidentialité, vous pouvez nous

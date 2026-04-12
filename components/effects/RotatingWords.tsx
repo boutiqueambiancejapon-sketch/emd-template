@@ -1,19 +1,17 @@
 'use client'
 
 /**
- * RotatingWords — mot qui change avec effet lamelle (clip-path vertical).
- * Machine d'état : idle → exit → enter → idle.
- * prefers-reduced-motion : changement instantané sans animation.
- * aria-live="polite" pour l'accessibilité.
+ * RotatingWords — mot qui change avec animation framer-motion.
+ * AnimatePresence gère entrée/sortie fluide.
+ * Respect prefers-reduced-motion (changement instantané).
  */
 
-import { useState, useEffect, useRef } from 'react'
-
-type Phase = 'idle' | 'exit' | 'enter'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 
 type RotatingWordsProps = {
   words: string[]
-  interval?: number  // ms entre chaque changement
+  interval?: number
   className?: string
   style?: React.CSSProperties
 }
@@ -25,76 +23,47 @@ export function RotatingWords({
   style,
 }: RotatingWordsProps) {
   const [current, setCurrent] = useState(0)
-  const [phase, setPhase] = useState<Phase>('idle')
-  const prefersReduced = useRef(false)
-  const t1 = useRef<ReturnType<typeof setTimeout>>(undefined)
-  const rafId = useRef<number>(0)
+  const reduce = useReducedMotion()
 
   useEffect(() => {
-    prefersReduced.current = matchMedia('(prefers-reduced-motion: reduce)').matches
-  }, [])
-
-  useEffect(() => {
+    if (words.length <= 1) return
     const tick = setInterval(() => {
-      if (prefersReduced.current) {
-        setCurrent(c => (c + 1) % words.length)
-        return
-      }
-
-      setPhase('exit')
-      clearTimeout(t1.current)
-
-      t1.current = setTimeout(() => {
-        setCurrent(c => (c + 1) % words.length)
-        setPhase('enter')
-        // Double rAF : laisse le DOM peindre l'état 'enter' avant la transition
-        rafId.current = requestAnimationFrame(() => {
-          rafId.current = requestAnimationFrame(() => setPhase('idle'))
-        })
-      }, 300)
+      setCurrent((c) => (c + 1) % words.length)
     }, interval)
-
-    return () => {
-      clearInterval(tick)
-      clearTimeout(t1.current)
-      cancelAnimationFrame(rafId.current)
-    }
+    return () => clearInterval(tick)
   }, [words.length, interval])
 
-  const isExit = phase === 'exit'
-  const isEnter = phase === 'enter'
-  const isAnimating = isExit || isEnter
+  const word = words[current] ?? ''
 
   return (
     <span
       className={className}
       style={{
         display: 'inline-block',
+        position: 'relative',
+        verticalAlign: 'baseline',
         overflow: 'hidden',
-        verticalAlign: 'bottom',
         ...style,
       }}
       aria-live="polite"
-      aria-label={words[current]}
+      aria-label={word}
     >
-      <span
-        aria-hidden="true"
-        style={{
-          display: 'block',
-          opacity: isAnimating ? 0 : 1,
-          transform: isExit
-            ? 'translateY(-8px) scaleY(0.9)'
-            : isEnter
-              ? 'translateY(8px) scaleY(0.9)'
-              : 'translateY(0) scaleY(1)',
-          transformOrigin: isExit ? 'top center' : 'bottom center',
-          transition: isEnter
-            ? 'none'
-            : 'opacity 280ms ease, transform 300ms cubic-bezier(0.16, 1, 0.3, 1)',
-        }}
-      >
-        {words[current]}
-      </span>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={current}
+          aria-hidden="true"
+          style={{ display: 'inline-block' }}
+          initial={reduce ? false : { y: '100%', opacity: 0 }}
+          animate={reduce ? undefined : { y: 0, opacity: 1 }}
+          exit={reduce ? undefined : { y: '-100%', opacity: 0 }}
+          transition={{
+            duration: 0.5,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+        >
+          {word}
+        </motion.span>
+      </AnimatePresence>
     </span>
   )
 }

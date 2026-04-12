@@ -6,6 +6,7 @@
 
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import Balancer from 'react-wrap-balancer'
 import { getAllArticles, getCategories, CATEGORY_ACCENT } from '@/lib/blog'
 import { currentYear } from '@/lib/utils/year'
 import { ArticleCard } from '@/components/blog/ArticleCard'
@@ -75,7 +76,7 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
             </ol>
           </nav>
           <h1 style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontSize: 'clamp(32px, 5vw, 60px)', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1, marginBottom: 'var(--space-3)' }}>
-            Blog
+            <Balancer>Blog</Balancer>
           </h1>
           <p style={{ fontSize: 'clamp(15px, 2vw, 17px)', color: 'var(--text-secondary)', maxWidth: '520px', lineHeight: 1.6 }}>
             Tests, guides et analyses.

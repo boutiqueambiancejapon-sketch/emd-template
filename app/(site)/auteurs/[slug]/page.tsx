@@ -7,6 +7,7 @@
 
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import Balancer from 'react-wrap-balancer'
 import { AuthorCard } from '@/components/ui/AuthorCard'
 import { niche } from '@/niche.config'
 
@@ -161,7 +162,7 @@ export default async function AuthorPage(
             position: 'relative',
           }}
         >
-          {author.name}
+          <Balancer>{author.name}</Balancer>
         </h1>
         <p
           style={{
@@ -201,7 +202,7 @@ export default async function AuthorPage(
             marginBottom: 'var(--space-6)',
           }}
         >
-          Pourquoi ce site ?
+          <Balancer>Pourquoi ce site ?</Balancer>
         </h2>
         <div
           style={{

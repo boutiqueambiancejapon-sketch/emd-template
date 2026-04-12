@@ -7,6 +7,7 @@
 
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import Balancer from 'react-wrap-balancer'
 import { currentYear } from '@/lib/utils/year'
 import { COMPARATEURS } from '@/lib/comparateur'
 import { niche } from '@/niche.config'
@@ -86,7 +87,7 @@ export default function ComparateurHubPage() {
               marginBottom: 'var(--space-4)',
             }}
           >
-            Comparateur
+            <Balancer>Comparateur</Balancer>
           </h1>
           <p style={{ fontSize: 'clamp(15px, 2vw, 18px)', color: 'var(--text-secondary)', maxWidth: '500px', lineHeight: 1.6 }}>
             Choisis une famille de produit pour comparer les modèles côte à côte.
@@ -132,7 +133,7 @@ export default function ComparateurHubPage() {
                           color: 'var(--text-primary)',
                         }}
                       >
-                        {p.label}
+                        <Balancer>{p.label}</Balancer>
                       </h2>
                       <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.55, flex: 1 }}>
                         {p.description}

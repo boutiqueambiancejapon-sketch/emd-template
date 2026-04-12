@@ -7,6 +7,7 @@
  */
 import Link from 'next/link'
 import Image from 'next/image'
+import Balancer from 'react-wrap-balancer'
 import type { ArticleMeta } from '@/lib/blog'
 import { CATEGORY_LABELS, CATEGORY_ACCENT, formatDate, articleHref } from '@/lib/blog'
 import { niche } from '@/niche.config'
@@ -154,7 +155,7 @@ export function ArticleCard({ article, featured = false, showCategory = true, in
             }}
             className="article-card-title"
           >
-            {article.title}
+            <Balancer>{article.title}</Balancer>
           </h2>
           {article.description && (
             <p style={{ fontSize: 'clamp(14px, 1.5vw, 16px)', color: 'var(--text-secondary)', lineHeight: 1.65, margin: '0 0 var(--space-4)', maxWidth: '680px' }}>
@@ -243,7 +244,7 @@ export function ArticleCard({ article, featured = false, showCategory = true, in
             transition: 'color 180ms ease',
           }}
         >
-          {article.title}
+          <Balancer>{article.title}</Balancer>
         </h2>
         <div style={{ display: 'flex', gap: 'var(--space-3)', fontSize: '11px', color: 'var(--text-muted)', marginTop: 'auto', alignItems: 'center' }}>
           <time dateTime={article.publishedAt}>{formatDate(article.publishedAt)}</time>

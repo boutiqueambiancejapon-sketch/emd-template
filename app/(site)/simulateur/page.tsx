@@ -6,6 +6,7 @@
 
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import Balancer from 'react-wrap-balancer'
 import { currentYear } from '@/lib/utils/year'
 import { AffiliateLink } from '@/components/ui/AffiliateLink'
 import { niche } from '@/niche.config'
@@ -135,7 +136,7 @@ export default function SimulateurPage() {
               marginBottom: 'var(--space-4)',
             }}
           >
-            Cycles de prix
+            <Balancer>Cycles de prix</Balancer>
           </h1>
           <p
             style={{
@@ -200,7 +201,7 @@ export default function SimulateurPage() {
                         marginBottom: 'var(--space-1)',
                       }}
                     >
-                      {c.modele}
+                      <Balancer>{c.modele}</Balancer>
                     </h2>
                     <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                       Lancé{' '}

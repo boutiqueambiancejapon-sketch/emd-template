@@ -7,6 +7,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import Balancer from 'react-wrap-balancer'
 import { getProduit, PRODUIT_SLUGS } from '@/lib/comparateur'
 import { ComparateurSelector } from '@/components/comparer/ComparateurSelector'
 import { currentYear } from '@/lib/utils/year'
@@ -122,7 +123,7 @@ export default async function ComparateurProduitPage({ params }: { params: Param
               marginBottom: 'var(--space-3)',
             }}
           >
-            Comparateur {data.label} {year}
+            <Balancer>Comparateur {data.label} {year}</Balancer>
           </h1>
           <p style={{ fontSize: '15px', color: 'var(--text-secondary)', maxWidth: '520px', lineHeight: 1.6, marginBottom: 'var(--space-2)' }}>
             {data.description}
