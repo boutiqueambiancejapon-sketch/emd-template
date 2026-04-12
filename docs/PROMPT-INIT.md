@@ -67,7 +67,22 @@ Sur base de la niche, propose-moi et demande validation :
 7. Ambiance visuelle ? (3 adjectifs, ex: premium, sombre, tech)
    2–3 sites de référence pour l'ambiance ? (optionnel)
 
-Sur base de la niche et de l'ambiance, proposer ET demander validation :
+**AVANT de proposer**, lire `docs/DA-PRESETS.md` et utiliser les helpers de `lib/da-presets`.
+Le template embarque une base de 161 palettes par niche, 72 paires typographiques, 75 styles UI
+et 161 règles de raisonnement par niche. Ne pas inventer une palette sans avoir d'abord cherché
+dans cette base. Exemple :
+
+```ts
+import { composePreset, findPalettes } from '@/lib/da-presets'
+
+// Soit on connaît la niche exacte ("Healthcare App", "E-commerce Luxury", etc.)
+const preset = composePreset('Healthcare App', ['calm', 'modern'])
+
+// Soit on cherche par mots-clés
+const matches = findPalettes(['robot', 'tech', 'home', 'appliance'], 5)
+```
+
+Ensuite, sur base du preset trouvé + de l'ambiance demandée, proposer ET demander validation :
 
 **Style structurel** (ce qui différencie visuellement les sites entre eux) :
 - mode : `dark` ou `light` — dark pour tech/gaming/premium, light pour santé/cuisine/lifestyle
