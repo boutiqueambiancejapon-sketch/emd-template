@@ -7,6 +7,7 @@
 import Link from 'next/link'
 import Balancer from 'react-wrap-balancer'
 import { niche } from '@/niche.config'
+import { FadeIn } from '@/components/motion/FadeIn'
 
 export function AuthorTeaser() {
   if (!niche.author.name) return null
@@ -21,6 +22,7 @@ export function AuthorTeaser() {
         padding: 'var(--space-20) var(--space-6)',
       }}
     >
+      <FadeIn>
       <div
         style={{
           display: 'grid',
@@ -129,6 +131,7 @@ export function AuthorTeaser() {
           )}
         </div>
       </div>
+      </FadeIn>
     </section>
   )
 }
