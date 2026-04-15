@@ -371,6 +371,240 @@ Si tu as configuré `BFL_API_KEY` (section 12 plus bas), tu peux :
 
 ---
 
-## Prochaine étape
+## 11. (Optionnel) Configurer GitHub OAuth pour les admins
 
-Partie 4 → OAuth GitHub optionnel, Flux IA, troubleshooting, référence rapide.
+Par défaut, tout le monde se connecte avec email/mot de passe. Si tu préfères que les admins se connectent directement avec leur compte GitHub (sans mot de passe à gérer), configure une OAuth App.
+
+### Étape 11.1 — Créer l'OAuth App
+
+1. GitHub → ton avatar → **Settings** → **Developer settings** → **OAuth Apps**
+2. **New OAuth App**
+3. Remplis :
+   - **Application name** : `CMS [nom-site]`
+   - **Homepage URL** : `https://ton-domaine.vercel.app`
+   - **Authorization callback URL** : `https://ton-domaine.vercel.app/api/cms/auth/callback`
+4. **Register application**
+
+### Étape 11.2 — Récupérer les credentials
+
+Sur la page de l'app qui vient d'être créée :
+
+1. Copie le **Client ID** (visible)
+2. Clique **Generate a new client secret** → copie le secret (ne sera plus visible ensuite)
+
+### Étape 11.3 — Ajouter dans Vercel
+
+Dans **Settings → Environment Variables** de ton projet Vercel, ajoute :
+
+- `GITHUB_CMS_CLIENT_ID` = le Client ID
+- `GITHUB_CMS_CLIENT_SECRET` = le Client secret
+- `CMS_ALLOWED_USERS` = liste des usernames GitHub autorisés, séparés par virgules (ex: `alice,bob`)
+
+**Environment** : Production + Preview + Development.
+
+Redéploie (section 7).
+
+### Étape 11.4 — Login via GitHub
+
+Sur `/admin`, un bouton **Se connecter avec GitHub** apparaît. Les users dont le username est dans `CMS_ALLOWED_USERS` peuvent s'y connecter — ils auront automatiquement le rôle **admin**.
+
+---
+
+## 12. (Optionnel) Activer la génération d'images IA (Flux)
+
+Le CMS intègre Flux 2 Pro (Black Forest Labs) pour générer automatiquement des images à partir d'un prompt texte.
+
+### Étape 12.1 — Obtenir une clé API BFL
+
+1. Va sur [api.bfl.ml](https://api.bfl.ml)
+2. Crée un compte ou connecte-toi
+3. **Dashboard** → **API Keys** → **Create new key**
+4. Copie la clé
+
+### Étape 12.2 — Ajouter dans Vercel
+
+Dans **Settings → Environment Variables** :
+
+- `BFL_API_KEY` = ta clé BFL
+
+Redéploie.
+
+### Étape 12.3 — Utiliser
+
+Dans n'importe quel champ **Image** du CMS, un bouton **✨ Générer avec IA** apparaît. Tu saisis un prompt, l'image est générée (1440×810, format blog), uploadée sur Vercel Blob, et liée automatiquement au champ.
+
+Coût indicatif : ~0,05€ par image selon le modèle Flux utilisé.
+
+---
+
+## 13. Troubleshooting
+
+### "Invalid session" ou déconnexion immédiate après login
+
+**Cause** : `CMS_SECRET` absent ou différent entre builds.
+
+**Fix** : vérifie que `CMS_SECRET` est bien dans les env vars Vercel, et qu'il n'a **pas** été modifié récemment (si tu le changes, toutes les sessions existantes sont invalidées).
+
+---
+
+### "GitHub API error 401" ou "Bad credentials"
+
+**Cause** : `CMS_GITHUB_TOKEN` expiré, invalide, ou sans les bonnes permissions.
+
+**Fix** :
+1. Vérifie que le token n'a pas expiré (GitHub → Settings → Developer settings → Fine-grained tokens)
+2. Vérifie les permissions : **Contents Read/Write** minimum
+3. Vérifie que le token a bien accès au repo concerné (**Only select repositories**)
+4. Si tu as régénéré le token, mets à jour `CMS_GITHUB_TOKEN` dans Vercel et redéploie
+
+---
+
+### "GitHub API error 404" quand on sauvegarde
+
+**Cause** : `cms.config.ts` pointe vers le mauvais repo ou la mauvaise branche.
+
+**Fix** : ouvre `cms.config.ts` et vérifie que `repo` et `branch` correspondent au vrai repo/branche GitHub. Par défaut ils lisent `niche.repo` et `niche.branch` — vérifie donc `niche.config.ts`.
+
+⚠️ **Piège fréquent** : la branche principale n'est pas toujours `main`. Elle peut être `master`, `production`, ou un nom custom. Vérifie avec `git branch -a` localement.
+
+---
+
+### Les images ne s'affichent pas après upload
+
+**Cause** : Blob Store pas en **Public access**.
+
+**Fix** :
+1. Dashboard Vercel → ton projet → **Storage** → clique sur le Blob Store
+2. **Settings** du store
+3. Vérifie **Public access** → doit être **enabled**
+4. Si tu dois le changer, recrée le store avec l'option cochée et reconnecte-le au projet
+
+---
+
+### "Failed to parse YAML" à l'ouverture d'une collection
+
+**Cause** : un fichier YAML du repo est mal formaté (caractère spécial, indentation cassée).
+
+**Fix** :
+1. Va sur GitHub dans le repo
+2. Ouvre le fichier concerné (ex: `content/articles/mon-article.mdx`)
+3. Vérifie le frontmatter YAML (entre les `---`) : guillemets manquants, indentation incohérente, etc.
+4. Corrige et commit
+
+---
+
+### Les articles publiés ne s'affichent pas sur le site
+
+**Cause** : Vercel n'a pas redéployé après la sauvegarde CMS.
+
+**Fix** :
+1. Dashboard Vercel → ton projet → **Deployments**
+2. Un nouveau déploiement devrait être en cours (déclenché par le commit fait par le CMS)
+3. Si rien ne se déclenche, vérifie que Vercel est bien connecté au bon repo et à la bonne branche
+4. Force un redéploiement manuel si besoin (section 7)
+
+---
+
+### "Missing BLOB_READ_WRITE_TOKEN" dans les logs
+
+**Cause** : le Blob Store n'a pas été connecté au projet.
+
+**Fix** : Dashboard Vercel → **Storage** → Blob Store → **Projects** → vérifie que ton projet est dans la liste. Sinon clique **Connect Project**.
+
+---
+
+### Build Vercel échoue après ajout des env vars
+
+**Cause** : le build n'utilise pas les nouvelles variables (cache).
+
+**Fix** :
+1. Deployments → dernier build → **⋯** → **Redeploy**
+2. **Décoche** "Use existing Build Cache"
+3. Confirme
+
+---
+
+## 14. Référence rapide
+
+### URL du CMS
+
+`https://ton-domaine.vercel.app/admin`
+
+### Variables d'environnement
+
+```
+# Obligatoires
+CMS_SECRET=<openssl rand -hex 32>
+CMS_GITHUB_TOKEN=<PAT fine-grained, Contents R/W>
+BLOB_READ_WRITE_TOKEN=<auto via Vercel Blob>
+
+# Optionnelles — OAuth GitHub admins
+GITHUB_CMS_CLIENT_ID=<Client ID OAuth App>
+GITHUB_CMS_CLIENT_SECRET=<Client Secret OAuth App>
+CMS_ALLOWED_USERS=username1,username2
+
+# Optionnelle — image IA
+BFL_API_KEY=<clé Black Forest Labs>
+```
+
+### Collections disponibles dans le CMS
+
+| Collection | Chemin fichiers | Format |
+|---|---|---|
+| Articles | `content/articles/` | MDX |
+| Auteurs | `content/authors/` | YAML |
+| Produits | `content/produits/` | YAML |
+| Catégories | `content/categories/` | YAML |
+| Pages | `content/pages/` | YAML |
+| Paramètres | `content/settings.yaml` | YAML (singleton) |
+| Utilisateurs | `content/users.yaml` | YAML (admin only) |
+| Médias | Vercel Blob | Images |
+| Images du site | Registre `lib/image-slots.ts` | Lecture seule |
+
+### Commandes utiles
+
+```bash
+# Générer un CMS_SECRET
+openssl rand -hex 32
+
+# Régénérer localement le hash d'un utilisateur
+node -e "const c=require('crypto');const s=c.randomBytes(16).toString('hex');const h=c.pbkdf2Sync('mon-mdp',s,100000,32,'sha256').toString('hex');console.log('salt:',s,'\nhash:',h)"
+
+# Vérifier quelle branche est utilisée par le CMS
+grep branch niche.config.ts
+grep branch cms.config.ts
+
+# Voir les variables d'environnement Vercel en CLI (si Vercel CLI installée)
+vercel env ls
+```
+
+### Flow complet : de la création d'un article à sa mise en ligne
+
+```
+Rédacteur se connecte → /admin
+    ↓
+Crée un nouvel article → remplit les champs + body MDX
+    ↓
+Clique "Enregistrer"
+    ↓
+CMS API → GitHub API → crée content/articles/[slug].mdx sur la branche principale
+    ↓
+Vercel détecte le commit → lance un build
+    ↓
+Build terminé → déploiement prod
+    ↓
+Article visible sur https://ton-domaine.vercel.app/blog/[categorie]/[slug]
+```
+
+Durée typique : 30 à 60 secondes entre le clic "Enregistrer" et l'article en ligne.
+
+---
+
+## Questions restantes ?
+
+Si un point n'est pas clair ou si tu rencontres une erreur non listée dans le Troubleshooting, regarde :
+- `docs/CMS-SPEC.md` — spécification technique complète du CMS
+- `docs/TEMPLATE-SPEC.md` — architecture du template
+- Le code dans `packages/cms/` — implémentation
+
+Ou demande à Claude Code en pointant vers ce fichier.
