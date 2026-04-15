@@ -22,7 +22,7 @@ export type ImageSlot = {
   alt: string
   description: string
   prompt: string
-  section: 'home' | 'tools' | 'author' | 'brand'
+  section: 'home' | 'tools' | 'author' | 'brand' | 'blog'
 }
 
 /** Placeholder pour remplacer dans les prompts : [niche] */
@@ -145,6 +145,23 @@ function dynamicSlots(): ImageSlot[] {
         `Editorial image representing ${cat.label} in the context of [niche], shallow depth of field, premium magazine photography, balanced composition --ar 3:2 --style raw`
       ),
       section: 'home',
+    })
+  })
+
+  // Background d'article de blog par catégorie (hero cinématique dramatique)
+  // Utilisée en fond d'en-tête d'article — inspiration : acheter-du-cbd, toutou-gourmet.
+  niche.categories.forEach((cat) => {
+    slots.push({
+      id: `blog-category-background-${cat.slug}`,
+      path: `/images/blog/category-${cat.slug}.webp`,
+      width: 2400,
+      height: 1200,
+      alt: `Arrière-plan des articles ${cat.label}`,
+      description: `Image de fond cinématique affichée derrière le titre de chaque article de la catégorie "${cat.label}". Doit être atmosphérique, avec de l'espace pour un overlay sombre et du texte par-dessus (titre serif dramatique).`,
+      prompt: p(
+        `Cinematic editorial hero background photo representing ${cat.label} for a ${niche.entity} guide blog, dark moody atmospheric lighting, shallow depth of field, rich muted color grading, negative space for dark overlay and large text, ultra wide 2:1 format, premium magazine photography, textured surfaces, shot on 35mm lens --ar 2:1 --style raw`
+      ),
+      section: 'blog',
     })
   })
 
