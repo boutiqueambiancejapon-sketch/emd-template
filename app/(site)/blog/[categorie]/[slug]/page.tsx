@@ -7,7 +7,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Balancer from 'react-wrap-balancer'
 import { compileMDX } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
@@ -301,24 +300,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
           </header>
           </div>{/* /article-hero-band */}
 
-          {/* Feature Image */}
-          {meta.featureImage && (
-            <div style={{ maxWidth: '960px', margin: '0 auto', padding: '0 var(--space-6) var(--space-8)' }}>
-              <Image
-                src={meta.featureImage}
-                alt={meta.title}
-                width={960}
-                height={540}
-                priority
-                style={{
-                  width: '100%',
-                  height: 'auto',
-                  borderRadius: 'var(--radius-lg)',
-                  border: '1px solid var(--border)',
-                }}
-              />
-            </div>
-          )}
+          {/* featureImage n'est plus affichée ici — elle sert uniquement à l'OpenGraph (partage social). */}
 
           {/* Body */}
           <div
