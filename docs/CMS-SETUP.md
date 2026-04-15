@@ -203,6 +203,174 @@ Si le build échoue avec une erreur liée au CMS, va voir la section **Troublesh
 
 ---
 
+## 8. Premier accès au CMS
+
+Une fois le redéploiement terminé (statut **Ready** sur Vercel), tu peux accéder au CMS.
+
+### Étape 8.1 — Ouvrir l'interface admin
+
+Va sur : `https://ton-domaine.vercel.app/admin`
+
+Tu vois un écran de login avec deux onglets (ou deux zones) :
+- **GitHub OAuth** (si tu l'as configuré — optionnel, voir section 11 plus bas)
+- **Email / mot de passe** (toujours disponible)
+
+### Étape 8.2 — Créer le premier admin
+
+Au tout premier accès, **aucun utilisateur n'existe**. Il faut créer le premier admin à la main en ajoutant un fichier dans le repo.
+
+**Méthode 1 — Via le script local** (recommandée)
+
+Dans un terminal, sur ton projet local :
+
+```bash
+node -e "
+const crypto = require('crypto');
+const salt = crypto.randomBytes(16).toString('hex');
+const email = 'ton-email@exemple.com';
+const password = 'ton-mot-de-passe-12-chars-mini';
+const hash = crypto.pbkdf2Sync(password, salt, 100000, 32, 'sha256').toString('hex');
+console.log('- email:', email);
+console.log('  name: \"Ton Nom\"');
+console.log('  displayName: \"Ton Nom\"');
+console.log('  role: admin');
+console.log('  hash:', hash);
+console.log('  salt:', salt);
+"
+```
+
+Copie le résultat et colle-le dans `content/users.yaml` :
+
+```yaml
+- email: "ton-email@exemple.com"
+  name: "Ton Nom"
+  displayName: "Ton Nom"
+  role: admin
+  hash: "a3f7c9e8b2d4f1..."
+  salt: "56c2148f8d9f74..."
+```
+
+Commit et push ce fichier :
+
+```bash
+git add content/users.yaml
+git commit -m "chore: add first admin user"
+git push
+```
+
+Vercel redéploie automatiquement.
+
+**Méthode 2 — Via le CMS d'un autre site**
+
+Si tu as déjà un site avec le CMS qui tourne, tu peux t'y connecter et utiliser la section **Users** pour créer un nouvel utilisateur dont les données seront accessibles.
+
+### Étape 8.3 — Login
+
+Retourne sur `https://ton-domaine.vercel.app/admin`, saisis ton email et ton mot de passe, et clique **Se connecter**.
+
+Tu arrives sur le dashboard admin avec la sidebar de gauche qui liste toutes les collections (Articles, Auteurs, Produits, Catégories, Pages, Médias, Images du site) et la section Administration (Paramètres, Utilisateurs).
+
+**Ça marche ?** Passe à l'étape 9.
+**Ça ne marche pas ?** Va voir le Troubleshooting en fin de tuto.
+
+---
+
+## 9. Créer un rédacteur
+
+Une fois connecté en admin, tu peux créer des comptes rédacteurs directement depuis l'interface.
+
+### Étape 9.1 — Accéder à la gestion des utilisateurs
+
+1. Dans la sidebar, **Administration** → **Utilisateurs**
+2. Tu vois la liste des utilisateurs existants (au minimum toi)
+3. Clique **+ Nouvel utilisateur** en haut à droite
+
+### Étape 9.2 — Remplir le formulaire
+
+| Champ | Valeur |
+|---|---|
+| **Email** | L'email réel du rédacteur (sert de login) |
+| **Nom** | Nom complet ou pseudo |
+| **Nom affiché** | Version user-friendly (affichée dans l'éditeur et la sidebar) |
+| **Mot de passe** | Minimum 12 caractères. Génère-en un solide. |
+| **Rôle** | **Rédacteur** (ne pas mettre Admin sauf si vraiment besoin) |
+
+Clique **Créer**.
+
+### Étape 9.3 — Transmettre les identifiants au rédacteur
+
+Communique le login + mot de passe au rédacteur de manière sécurisée (**pas par email en clair**) :
+
+- Gestionnaire de mots de passe partagé
+- Message chiffré (Signal, ProtonMail)
+- Appel + SMS séparé
+
+Dis-lui de se connecter sur `https://ton-domaine.vercel.app/admin` et de changer son mot de passe au premier login (s'il le souhaite).
+
+### Différences admin vs rédacteur
+
+L'interface est **identique** pour les deux rôles. Les différences sont uniquement au niveau des permissions API :
+
+- **Admin** : tout (créer, éditer, supprimer, gérer users, modifier settings)
+- **Rédacteur** : créer et éditer articles/produits/auteurs, mais pas supprimer, pas toucher aux settings ni aux users
+
+---
+
+## 10. Workflow éditorial
+
+### Créer un article
+
+1. Sidebar → **Articles** → **+ Nouvel article**
+2. Remplis les champs :
+   - **Titre** (obligatoire)
+   - **Description SEO** (max 155 caractères, obligatoire)
+   - **Image principale** (upload, URL, ou génération IA si Flux configuré)
+   - **Date de publication**
+   - **Catégorie** (select depuis les catégories de ton `niche.config.ts`)
+   - **Auteur** (select depuis les auteurs créés)
+   - **Tags** (séparés par virgules)
+   - **En bref** : 3 bullets qui s'afficheront dans le bloc AI Summary
+   - **FAQ** : 6 questions minimum pour le SEO
+   - **Sticky CTA** : bouton affilié qui reste collé en bas de l'article
+3. Dans l'éditeur principal à gauche, rédige le corps de l'article en WYSIWYG (ou colle du Markdown, ou importe un `.md`)
+4. Utilise les shortcodes MDX disponibles (`<ProductCTA>`, `<ProductCarousel>`, `<ArticleImage>`, `<Tip>`, `<Warning>`, `<Verdict>`, `<ProConTable>`, etc.)
+5. **Statut** en haut à droite : **Brouillon** (ne sera pas visible) ou **Publier** (sera live)
+6. Clique **Enregistrer**
+
+Chaque sauvegarde commit le fichier `content/articles/[slug].mdx` sur ton repo GitHub. Vercel redéploie automatiquement et l'article apparaît sur le site en 30-60 secondes.
+
+### Uploader une image
+
+1. Sidebar → **Médias**
+2. Clique **Upload** et sélectionne une image (PNG, JPEG, WebP, SVG)
+3. L'image est uploadée sur Vercel Blob et immédiatement disponible
+4. Copie son URL et colle-la dans le champ `featureImage` d'un article
+
+### Générer une image avec l'IA
+
+Si tu as configuré `BFL_API_KEY` (section 12 plus bas), tu peux :
+
+1. Dans l'éditeur d'article, champ **Image principale** → bouton **✨ Générer avec IA**
+2. Un champ texte apparaît, pré-rempli avec le titre de l'article
+3. Adapte le prompt si nécessaire
+4. Clique **Générer**
+5. L'image est générée via Flux 2 Pro, uploadée sur Blob, et liée à l'article
+
+### Gérer les catégories
+
+1. Sidebar → **Catégories**
+2. Tu peux créer/éditer les catégories (label affiché, description SEO)
+3. Les slugs des catégories doivent correspondre à ceux définis dans `niche.config.ts`
+
+### Éditer les textes de la home
+
+1. Sidebar → **Pages**
+2. Clique sur **home** dans la liste
+3. Tu peux éditer : eyebrow, H1 prefix, H1 suffix, rotating words, subtitle, CTAs, textes de la section outils
+4. Enregistre → le site se met à jour
+
+---
+
 ## Prochaine étape
 
-Partie 3 → premier login admin, création de rédacteurs, workflow éditorial.
+Partie 4 → OAuth GitHub optionnel, Flux IA, troubleshooting, référence rapide.
