@@ -7,7 +7,7 @@
 
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
 import type { Metadata } from 'next'
 import Balancer from 'react-wrap-balancer'
 import { compileMDX } from 'next-mdx-remote/rsc'
@@ -137,8 +137,49 @@ export default async function StandaloneArticlePage({ params }: { params: Params
       <ReadingProgress />
       <main id="main-content">
         <article>
-          <div className="article-hero-band">
-            <header style={{ maxWidth: '760px', margin: '0 auto', padding: 'var(--space-12) var(--space-6) var(--space-8)' }}>
+          {/* Header — background image cinématique par catégorie + overlay + texte */}
+          <div
+            className="article-hero-band"
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              minHeight: '520px',
+              display: 'flex',
+              alignItems: 'flex-end',
+            }}
+          >
+            {/* Image de fond par catégorie */}
+            <div aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+              <ImagePlaceholder
+                slotId={`blog-category-background-${meta.categorie}`}
+                priority
+                fit="cover"
+                style={{ width: '100%', height: '100%' }}
+              />
+            </div>
+
+            {/* Overlay sombre pour lisibilité */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background:
+                  'linear-gradient(180deg, rgba(10,10,15,0.55) 0%, rgba(10,10,15,0.75) 60%, rgba(10,10,15,0.92) 100%)',
+                zIndex: 1,
+              }}
+            />
+
+            <header
+              style={{
+                maxWidth: '760px',
+                margin: '0 auto',
+                padding: 'var(--space-12) var(--space-6) var(--space-10)',
+                position: 'relative',
+                zIndex: 2,
+                width: '100%',
+              }}
+            >
               <nav aria-label="Fil d'Ariane" style={{ marginBottom: 'var(--space-6)' }}>
                 <ol style={{ display: 'flex', gap: 'var(--space-2)', listStyle: 'none', fontSize: '13px', color: 'var(--text-muted)', flexWrap: 'wrap' }}>
                   <li><Link href="/" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Accueil</Link></li>
@@ -161,19 +202,7 @@ export default async function StandaloneArticlePage({ params }: { params: Params
             </header>
           </div>
 
-          {/* Feature Image */}
-          {meta.featureImage && (
-            <div style={{ maxWidth: '760px', margin: '0 auto', padding: '0 var(--space-6) var(--space-6)' }}>
-              <Image
-                src={meta.featureImage}
-                alt={meta.title}
-                width={760}
-                height={400}
-                priority
-                style={{ width: '100%', height: 'auto', borderRadius: 'var(--radius-lg, 12px)', objectFit: 'cover' }}
-              />
-            </div>
-          )}
+          {/* featureImage n'est plus affichée ici — elle sert uniquement à l'OpenGraph (partage social). */}
 
           <div style={{ maxWidth: '760px', margin: '0 auto', padding: '0 var(--space-6) var(--space-12)' }}>
             {meta.aiSummary && meta.aiSummary.length > 0 && (
