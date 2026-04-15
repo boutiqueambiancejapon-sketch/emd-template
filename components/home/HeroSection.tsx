@@ -13,6 +13,7 @@ import { RotatingWords } from '@/components/effects/RotatingWords'
 import { HeroVisual } from './HeroVisual'
 import Link from 'next/link'
 import { niche } from '@/niche.config'
+import { MagneticButton } from '@/components/motion/MagneticButton'
 
 /* ── Shared styles ── */
 
@@ -154,8 +155,12 @@ function HeroSplit() {
               alignItems: 'center',
             }}
           >
-            <Link href={niche.ctaPrimary.url} style={primaryCtaStyle} className="btn-primary">
-              {niche.ctaPrimary.text}
+            <Link href={niche.ctaPrimary.url} style={{ textDecoration: 'none' }}>
+              <MagneticButton strength={0.25}>
+                <span style={primaryCtaStyle} className="btn-primary">
+                  {niche.ctaPrimary.text}
+                </span>
+              </MagneticButton>
             </Link>
             <Link href={niche.ctaSecondary.url} style={secondaryCtaStyle}>
               {niche.ctaSecondary.text}
@@ -267,8 +272,12 @@ function HeroCentered() {
             justifyContent: 'center',
           }}
         >
-          <Link href={niche.ctaPrimary.url} style={primaryCtaStyle} className="btn-primary">
-            {niche.ctaPrimary.text}
+          <Link href={niche.ctaPrimary.url} style={{ textDecoration: 'none' }}>
+            <MagneticButton strength={0.25}>
+              <span style={primaryCtaStyle} className="btn-primary">
+                {niche.ctaPrimary.text}
+              </span>
+            </MagneticButton>
           </Link>
           <Link href={niche.ctaSecondary.url} style={secondaryCtaStyle}>
             {niche.ctaSecondary.text}
@@ -329,8 +338,12 @@ function HeroMinimal() {
             justifyContent: 'center',
           }}
         >
-          <Link href={niche.ctaPrimary.url} style={primaryCtaStyle} className="btn-primary">
-            {niche.ctaPrimary.text}
+          <Link href={niche.ctaPrimary.url} style={{ textDecoration: 'none' }}>
+            <MagneticButton strength={0.25}>
+              <span style={primaryCtaStyle} className="btn-primary">
+                {niche.ctaPrimary.text}
+              </span>
+            </MagneticButton>
           </Link>
         </AnimatedHeading>
       </div>
