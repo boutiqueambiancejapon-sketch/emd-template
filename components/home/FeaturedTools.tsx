@@ -8,6 +8,8 @@
 import Link from 'next/link'
 import Balancer from 'react-wrap-balancer'
 import { niche } from '@/niche.config'
+import { FadeIn } from '@/components/motion/FadeIn'
+import { Stagger, StaggerItem } from '@/components/motion/Stagger'
 
 type ToolCardProps = {
   href: string
@@ -166,82 +168,92 @@ export function FeaturedTools() {
         padding: 'var(--space-20) var(--space-6)',
       }}
     >
-      {/* En-tête de section */}
-      <div style={{ marginBottom: 'var(--space-10)', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
-        <div>
-          <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent-1)', marginBottom: 'var(--space-2)' }}>
-            Outils interactifs
-          </p>
-          <h2
-            style={{
-              fontFamily: 'var(--next-font-display), system-ui, sans-serif',
-              fontSize: 'clamp(1.3rem, 2.5vw, 2rem)',
-              fontWeight: 700,
-              letterSpacing: '0',
-              color: 'var(--text-primary)',
-              lineHeight: 1.2,
-            }}
+      {/* En-tête de section — fade-in au scroll */}
+      <FadeIn>
+        <div style={{ marginBottom: 'var(--space-10)', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
+          <div>
+            <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent-1)', marginBottom: 'var(--space-2)' }}>
+              Outils interactifs
+            </p>
+            <h2
+              style={{
+                fontFamily: 'var(--next-font-display), system-ui, sans-serif',
+                fontSize: 'clamp(1.3rem, 2.5vw, 2rem)',
+                fontWeight: 700,
+                letterSpacing: '0',
+                color: 'var(--text-primary)',
+                lineHeight: 1.2,
+              }}
+            >
+              <Balancer>Décidez en connaissance<br />de cause</Balancer>
+            </h2>
+          </div>
+          <Link
+            href="/blog"
+            style={{ fontSize: '14px', color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}
           >
-            <Balancer>Décidez en connaissance<br />de cause</Balancer>
-          </h2>
+            Voir tous les guides →
+          </Link>
         </div>
-        <Link
-          href="/blog"
-          style={{ fontSize: '14px', color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}
+      </FadeIn>
+
+      {/* Grille bento asymétrique — stagger cascade */}
+      <Stagger delay={120} staggerDelay={110}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 'var(--space-4)',
+          }}
+          className="bento-grid"
         >
-          Voir tous les guides →
-        </Link>
-      </div>
+          {/* Grande cellule Comparateur */}
+          <StaggerItem>
+            <div className="bento-featured">
+              <ToolCard
+                href="/comparer"
+                eyebrow="Comparateur"
+                title={comparatorTitle}
+                description={`Comparez côte à côte les specs, prix et usages. Filtres par budget et besoin.`}
+                cta="Lancer le comparateur"
+                accent="var(--accent-1)"
+                large
+                icon={<IconCompare />}
+              />
+            </div>
+          </StaggerItem>
 
-      {/* Grille bento asymétrique */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: 'var(--space-4)',
-        }}
-        className="bento-grid"
-      >
-        {/* Grande cellule Comparateur */}
-        <div className="bento-featured">
-          <ToolCard
-            href="/comparer"
-            eyebrow="Comparateur"
-            title={comparatorTitle}
-            description={`Comparez côte à côte les specs, prix et usages. Filtres par budget et besoin.`}
-            cta="Lancer le comparateur"
-            accent="var(--accent-1)"
-            large
-            icon={<IconCompare />}
-          />
+          {/* Quiz */}
+          {niche.quiz.enabled && (
+            <StaggerItem>
+              <ToolCard
+                href="/quiz"
+                eyebrow="Quiz"
+                title={quizTitle}
+                description={`Quelques questions pour identifier le ${niche.entity} fait pour vous.`}
+                cta="Démarrer le quiz"
+                accent="var(--accent-2)"
+                icon={<IconQuiz />}
+              />
+            </StaggerItem>
+          )}
+
+          {/* Simulateur */}
+          {niche.simulator.enabled && (
+            <StaggerItem>
+              <ToolCard
+                href="/simulateur"
+                eyebrow="Simulateur"
+                title={simulatorTitle}
+                description={simulatorDesc}
+                cta="Simuler"
+                accent="var(--accent-3)"
+                icon={<IconSimulator />}
+              />
+            </StaggerItem>
+          )}
         </div>
-
-        {/* Quiz */}
-        {niche.quiz.enabled && (
-          <ToolCard
-            href="/quiz"
-            eyebrow="Quiz"
-            title={quizTitle}
-            description={`Quelques questions pour identifier le ${niche.entity} fait pour vous.`}
-            cta="Démarrer le quiz"
-            accent="var(--accent-2)"
-            icon={<IconQuiz />}
-          />
-        )}
-
-        {/* Simulateur */}
-        {niche.simulator.enabled && (
-          <ToolCard
-            href="/simulateur"
-            eyebrow="Simulateur"
-            title={simulatorTitle}
-            description={simulatorDesc}
-            cta="Simuler"
-            accent="var(--accent-3)"
-            icon={<IconSimulator />}
-          />
-        )}
-      </div>
+      </Stagger>
     </section>
   )
 }
