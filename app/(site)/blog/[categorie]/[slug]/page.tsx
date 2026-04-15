@@ -35,6 +35,7 @@ import { FaqAccordion } from '@/components/blog/FaqAccordion'
 import { getCTAsForCategory } from '@/lib/article-ctas'
 import { AuthorByline } from '@/components/ui/AuthorByline'
 import { AuthorCard } from '@/components/ui/AuthorCard'
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
 import { StickyCTA } from '@/components/blog/StickyCTA'
 import type { ReactNode } from 'react'
 
@@ -177,13 +178,54 @@ export default async function ArticlePage({ params }: { params: Params }) {
       <ReadingProgress />
       <main id="main-content">
         <article>
-          {/* Header — bande gradient accent-4 pleine largeur */}
-          <div className="article-hero-band">
+          {/* Header — background image cinématique par catégorie + overlay + texte */}
+          <div
+            className="article-hero-band"
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              minHeight: '520px',
+              display: 'flex',
+              alignItems: 'flex-end',
+            }}
+          >
+            {/* Image de fond par catégorie */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                zIndex: 0,
+              }}
+            >
+              <ImagePlaceholder
+                slotId={`blog-category-background-${categorie}`}
+                priority
+                fit="cover"
+                style={{ width: '100%', height: '100%' }}
+              />
+            </div>
+
+            {/* Overlay sombre pour lisibilité */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background:
+                  'linear-gradient(180deg, rgba(10,10,15,0.55) 0%, rgba(10,10,15,0.75) 60%, rgba(10,10,15,0.92) 100%)',
+                zIndex: 1,
+              }}
+            />
+
           <header
             style={{
               maxWidth: '760px',
               margin: '0 auto',
-              padding: 'var(--space-12) var(--space-6) var(--space-8)',
+              padding: 'var(--space-12) var(--space-6) var(--space-10)',
+              position: 'relative',
+              zIndex: 2,
+              width: '100%',
             }}
           >
             {/* Breadcrumb */}
