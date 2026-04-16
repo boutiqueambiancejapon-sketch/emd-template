@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import type { FieldDef } from '../types'
 import { WysiwygEditor } from './WysiwygEditor'
-import { markdownToHtml, htmlToMarkdown } from '../lib/html-md'
+import { markdownToHtml, htmlToMarkdown, extractMdxBlocks, reinsertMdxBlocks } from '../lib/html-md'
 import { addPendingChange } from '../lib/pending'
 
 // --- Slugify ---
@@ -85,8 +85,19 @@ type Props = {
 export function ContentEditor({ collection, slug, fields, format, initialData, initialBody, sha, isNew }: Props) {
   const router = useRouter()
   const [data, setData] = useState<Record<string, unknown>>(initialData)
-  const [bodyMd, setBodyMd] = useState(initialBody)
-  const [bodyHtml, setBodyHtml] = useState(() => markdownToHtml(initialBody))
+  const [mdxBlocks, setMdxBlocks] = useState<Record<string, string>>(() => {
+    const { blocks } = extractMdxBlocks(initialBody)
+    return blocks
+  })
+  const [bodyMd, setBodyMd] = useState(() => {
+    const { cleaned } = extractMdxBlocks(initialBody)
+    return cleaned
+  })
+  const [bodyHtml, setBodyHtml] = useState(() => {
+    const { cleaned } = extractMdxBlocks(initialBody)
+    return markdownToHtml(cleaned)
+  })
+  const [bodyMode, setBodyMode] = useState<'wysiwyg' | 'source'>('wysiwyg')
   const [entrySlug, setEntrySlug] = useState(slug)
   const [slugManual, setSlugManual] = useState(!isNew) // user manually edited slug?
   const [saving, setSaving] = useState(false)
@@ -348,11 +359,12 @@ export function ContentEditor({ collection, slug, fields, format, initialData, i
         ? `content/articles/${catSlug}/${finalSlug}${ext}`
         : `content/${collection === 'articles' ? 'articles/' : collection === 'produits' ? 'produits/' : collection + '/'}${finalSlug}${ext}`
 
+      const finalBody = format === 'mdx' ? reinsertMdxBlocks(bodyMd, mdxBlocks) : ''
       addPendingChange({
         collection,
         filePath,
         frontmatter: data,
-        body: format === 'mdx' ? bodyMd : '',
+        body: finalBody,
         savedAt: Date.now(),
       })
 
@@ -451,15 +463,76 @@ export function ContentEditor({ collection, slug, fields, format, initialData, i
           {/* Title field */}
           {fields.title && <div style={{ marginBottom: 16 }}>{renderField('title', fields.title)}</div>}
 
-          {/* Body editor for MDX — WYSIWYG like WordPress */}
+          {/* Body editor for MDX — dual mode WYSIWYG / Source */}
           {format === 'mdx' && (
-            <WysiwygEditor
-              value={bodyHtml}
-              onChange={(html) => {
-                setBodyHtml(html)
-                setBodyMd(htmlToMarkdown(html))
-              }}
-            />
+            <div>
+              <div style={{ display: 'flex', gap: 0, marginBottom: 8 }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (bodyMode === 'source') {
+                      const { cleaned, blocks } = extractMdxBlocks(bodyMd)
+                      setMdxBlocks(blocks)
+                      setBodyHtml(markdownToHtml(cleaned))
+                      setBodyMode('wysiwyg')
+                    }
+                  }}
+                  style={{
+                    padding: '6px 14px', fontSize: 12, fontWeight: 600, fontFamily: 'inherit',
+                    background: bodyMode === 'wysiwyg' ? '#1C1C26' : 'transparent',
+                    color: bodyMode === 'wysiwyg' ? '#F0F0F5' : '#55556A',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    borderRadius: '6px 0 0 6px', cursor: 'pointer',
+                  }}
+                >
+                  Éditeur
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (bodyMode === 'wysiwyg') {
+                      const md = htmlToMarkdown(bodyHtml)
+                      const full = reinsertMdxBlocks(md, mdxBlocks)
+                      setBodyMd(full)
+                      setBodyMode('source')
+                    }
+                  }}
+                  style={{
+                    padding: '6px 14px', fontSize: 12, fontWeight: 600, fontFamily: 'inherit',
+                    background: bodyMode === 'source' ? '#1C1C26' : 'transparent',
+                    color: bodyMode === 'source' ? '#F0F0F5' : '#55556A',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    borderLeft: 'none',
+                    borderRadius: '0 6px 6px 0', cursor: 'pointer',
+                  }}
+                >
+                  Source MDX
+                </button>
+              </div>
+
+              {bodyMode === 'wysiwyg' ? (
+                <WysiwygEditor
+                  value={bodyHtml}
+                  onChange={(html) => {
+                    setBodyHtml(html)
+                    setBodyMd(htmlToMarkdown(html))
+                  }}
+                />
+              ) : (
+                <textarea
+                  value={bodyMd}
+                  onChange={(e) => setBodyMd(e.target.value)}
+                  spellCheck={false}
+                  style={{
+                    width: '100%', minHeight: 500, padding: 16,
+                    background: '#0D0D14', color: '#D4D4D8',
+                    border: '1px solid rgba(255,255,255,0.07)', borderRadius: 8,
+                    fontFamily: 'var(--next-font-mono, monospace)', fontSize: 13,
+                    lineHeight: 1.6, resize: 'vertical', boxSizing: 'border-box',
+                  }}
+                />
+              )}
+            </div>
           )}
 
           {/* FAQ preview (read-only) */}

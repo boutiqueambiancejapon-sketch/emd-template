@@ -1,11 +1,61 @@
 /**
  * Lightweight HTML ↔ Markdown converter for TipTap editor.
- * Preserves MDX/JSX components as raw blocks.
+ *
+ * Block extraction strategy:
+ * - MDX/JSX components, shortcodes [[…]], and GFM tables are extracted
+ *   BEFORE MD→HTML conversion and stored with [[MDXBLOCK0]] placeholders.
+ * - Placeholders survive the round-trip as plain text in TipTap.
+ * - On save, blocks are reinserted at their original positions.
  */
 
 // MDX component tags to preserve as-is (not converted)
-const MDX_TAGS = ['Tip', 'Warning', 'Verdict', 'PullQuote', 'StatCard', 'StatRow', 'CompareBar', 'CompareBarGroup', 'ProductCTA']
+const MDX_TAGS = ['Tip', 'Warning', 'Verdict', 'PullQuote', 'StatCard', 'StatRow', 'CompareBar', 'CompareBarGroup', 'ProductCTA', 'ArticleImage', 'ProductCarousel', 'AISummarize', 'ProConTable']
 const MDX_TAG_REGEX = new RegExp(`(<(?:${MDX_TAGS.join('|')})[\\s\\S]*?(?:\\/>|<\\/(?:${MDX_TAGS.join('|')})>))`, 'g')
+
+// ─── Block extraction ──────────────────────────────────────────────────
+
+const MDX_PLACEHOLDER_RE = /\[\[MDXBLOCK(\d+)\]\]/g
+
+const JSX_BLOCK_RE =
+  /(?:^|\n)(<[A-Z][a-zA-Z0-9]*(?:\s[^>]*)?\/>|<([A-Z][a-zA-Z0-9]*)(?:\s[^>]*)?>[\s\S]*?<\/\2>)/g
+
+const GFM_TABLE_RE =
+  /(?:^|\n)((?:\|[^\n]+\|\s*\n)\|[\s:|-]+\|\s*\n(?:\|[^\n]+\|\s*\n?)+)/g
+
+const SHORTCODE_BLOCK_RE =
+  /(?:^|\n)(\[\[[a-z]+[^\]]*\]\][\s\S]*?\[\[\/[a-z]+\]\])/g
+
+const SHORTCODE_INLINE_RE =
+  /(\[\[[a-z]+(?::[^\]]+|[^\]]*)\]\])/g
+
+export function extractMdxBlocks(markdown: string): {
+  cleaned: string
+  blocks: Record<string, string>
+} {
+  const blocks: Record<string, string> = {}
+  let idx = 0
+
+  function extract(_m: string, captured: string): string {
+    const key = `[[MDXBLOCK${idx++}]]`
+    blocks[key.slice(2, -2)] = captured.trim()
+    return `\n\n${key}\n\n`
+  }
+
+  let cleaned = markdown
+  cleaned = cleaned.replace(JSX_BLOCK_RE, (_m, p1) => extract(_m, p1))
+  cleaned = cleaned.replace(GFM_TABLE_RE, (_m, p1) => extract(_m, p1))
+  cleaned = cleaned.replace(SHORTCODE_BLOCK_RE, (_m, p1) => extract(_m, p1))
+  cleaned = cleaned.replace(SHORTCODE_INLINE_RE, (_m, p1) => extract(_m, p1))
+
+  return { cleaned: cleaned.trim(), blocks }
+}
+
+export function reinsertMdxBlocks(markdown: string, blocks: Record<string, string>): string {
+  return markdown.replace(MDX_PLACEHOLDER_RE, (match) => {
+    const key = match.slice(2, -2)
+    return blocks[key] ?? match
+  })
+}
 
 /** Convert Markdown (with possible MDX) to HTML for TipTap */
 export function markdownToHtml(md: string): string {
