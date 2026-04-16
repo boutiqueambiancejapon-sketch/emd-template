@@ -163,6 +163,10 @@ Ne jamais tout générer d'un coup — itérer page par page.
 **→ "Voici la DA appliquée. Les couleurs, fonts et effets te conviennent ? Si non, dis-moi quoi ajuster."**
 **→ Attendre validation avant de continuer.**
 
+**Si multilingue** : vérifier que `content/translations/[locale].json` est complet pour la locale
+principale. Si EN, relire `en.json` et s'assurer que chaque clé a un texte naturel (pas une
+traduction mot-à-mot). Adapter le ton au marché cible.
+
 ### Étape 3 — Images structurelles
 
 **IMPORTANT** : les prompts IA du registre d'images (`lib/image-slots.ts`) sont des templates
@@ -198,7 +202,9 @@ Les prompts doivent être utilisables directement dans Midjourney/DALL-E/Flux sa
 10. Mettre à jour `content/pages/home.yaml` (rotating_words, subtitle, CTAs)
 11. Vérifier que le hero, les sections catégories, les outils et l'auteur s'affichent correctement
 
-**→ "Voici la home. Le hero, les sections, les outils te conviennent ? Des ajustements ?"**
+**→ Si multilingue** : vérifier que tous les textes visibles sur la home viennent de `t()` et
+sont corrects dans la locale cible. Montrer les textes clés traduits à l'utilisateur.
+**→ "Voici la home. Le hero, les sections, les outils te conviennent ? Les textes sont corrects ?"**
 **→ Attendre validation.**
 
 ### Étape 4 — Hub blog + article type
@@ -214,7 +220,9 @@ Les prompts doivent être utilisables directement dans Midjourney/DALL-E/Flux sa
     Ex: `<ProConTable pros="Avantage 1|Avantage 2" cons="Inconvénient 1" />`
 16. Vérifier le rendu de l'article : hero cinématique, sidebar, composants MDX, FAQ, related articles
 
-**→ "Voici le premier article publié. Le rendu du hub blog et de l'article (sidebar, hero, FAQ) te plaît ?"**
+**→ Si multilingue** : vérifier les labels du hub (filtres, eyebrow, promo outils), de la sidebar
+(TOC, CTA, auteur), et les textes récurrents (byline, reading time, dates).
+**→ "Voici le hub blog + l'article. Layout, sidebar, traductions — tout est bon ?"**
 **→ Attendre validation.**
 
 ### Étape 5 — Pages outils (une par une)
@@ -238,7 +246,9 @@ Pour chaque outil activé (comparateur → quiz → simulateur → deals) :
 
 20. **Vérifier la DA** — même palette/fonts/effets que le reste
 
-**→ "Voici la page [comparateur]. Le tableau, le contenu SEO, les CTAs affiliés — ça te va ?"**
+**→ Si multilingue** : vérifier le contenu éditorial de l'outil (intro, verdict, FAQ) dans la
+bonne langue. Pas de mélange FR/EN dans une même page.
+**→ "Voici la page [comparateur]. Le tableau, le contenu SEO, les traductions — ça te va ?"**
 **→ Attendre validation avant de passer à l'outil suivant.**
 
 ### Étape 6 — Pages légales + finitions
