@@ -6,6 +6,8 @@ import type { FieldDef } from '../types'
 import { WysiwygEditor } from './WysiwygEditor'
 import { markdownToHtml, htmlToMarkdown, extractMdxBlocks, reinsertMdxBlocks } from '../lib/html-md'
 import { addPendingChange } from '../lib/pending'
+import { SeoScore } from './SeoScore'
+import { ShortcodeAutocomplete } from './ShortcodeAutocomplete'
 
 // --- Slugify ---
 function slugify(text: string): string {
@@ -519,17 +521,9 @@ export function ContentEditor({ collection, slug, fields, format, initialData, i
                   }}
                 />
               ) : (
-                <textarea
+                <ShortcodeAutocomplete
                   value={bodyMd}
-                  onChange={(e) => setBodyMd(e.target.value)}
-                  spellCheck={false}
-                  style={{
-                    width: '100%', minHeight: 500, padding: 16,
-                    background: '#0D0D14', color: '#D4D4D8',
-                    border: '1px solid rgba(255,255,255,0.07)', borderRadius: 8,
-                    fontFamily: 'var(--next-font-mono, monospace)', fontSize: 13,
-                    lineHeight: 1.6, resize: 'vertical', boxSizing: 'border-box',
-                  }}
+                  onChange={setBodyMd}
                 />
               )}
             </div>
@@ -544,6 +538,14 @@ export function ContentEditor({ collection, slug, fields, format, initialData, i
         {/* SEO sidebar */}
         <div style={{ width: 320, flexShrink: 0 }} className="cms-editor-sidebar">
           <div style={{ position: 'sticky', top: 16, display: 'flex', flexDirection: 'column', gap: 14, padding: 16, background: '#111', border: '1px solid #222', borderRadius: 10 }}>
+            {format === 'mdx' && (
+              <SeoScore
+                title={(data.title as string) ?? ''}
+                description={(data.description as string) ?? (data.excerpt as string) ?? ''}
+                body={bodyMd}
+                faq={Array.isArray(data.faq) ? data.faq : []}
+              />
+            )}
             <div style={{ fontSize: 13, fontWeight: 700, color: '#aaa', marginBottom: 2 }}>SEO &amp; Meta</div>
             {Object.entries(fields).filter(([key]) => key !== 'title' && SIDEBAR_FIELDS.has(key)).map(([key, field]) => renderField(key, field))}
             {/* Remaining fields not in sidebar set and not title */}
