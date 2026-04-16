@@ -9,6 +9,7 @@ import { getAllArticles } from '@/lib/blog'
 import { ArticleCarousel } from './ArticleCarousel'
 import { categoryAccent } from '@/niche.config'
 import { FadeIn } from '@/components/motion/FadeIn'
+import { t } from '@/lib/i18n'
 
 type CategorySectionProps = {
   slug: string
@@ -32,12 +33,12 @@ export function CategorySection({ slug, label, index }: CategorySectionProps) {
                 {label}
               </span>
               <h2 style={{ fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontSize: 'clamp(22px, 3vw, 38px)', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1, margin: 0 }}>
-                <Balancer>Guides &amp; tests {label.toLowerCase()}</Balancer>
+                <Balancer>{t('categorySection.guidesAndTests', { label: label.toLowerCase() })}</Balancer>
               </h2>
             </div>
             <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap', alignItems: 'center' }}>
               <Link href={`/comparer/${slug}`} style={{ fontSize: '13px', fontWeight: 700, color: '#fff', textDecoration: 'none', background: accent, borderRadius: 'var(--radius-full)', padding: 'var(--space-2) var(--space-4)', whiteSpace: 'nowrap' }}>
-                Comparer →
+                {t('categorySection.compare')}
               </Link>
             </div>
           </div>
@@ -48,11 +49,11 @@ export function CategorySection({ slug, label, index }: CategorySectionProps) {
           {articles.length > 0 ? (
             <ArticleCarousel articles={articles} />
           ) : (
-            <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Articles {label.toLowerCase()} en cours de rédaction.</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{t('categorySection.inProgress', { label: label.toLowerCase() })}</p>
           )}
 
           <Link href={`/blog/${slug}`} style={{ fontSize: '12px', color: 'var(--text-muted)', textDecoration: 'none', display: 'block', textAlign: 'center', paddingTop: 'var(--space-4)' }}>
-            Tous les articles {label.toLowerCase()} →
+            {t('categorySection.viewAll', { label: label.toLowerCase() })}
           </Link>
         </FadeIn>
       </div>

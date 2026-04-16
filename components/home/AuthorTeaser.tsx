@@ -7,6 +7,7 @@
 import Link from 'next/link'
 import Balancer from 'react-wrap-balancer'
 import { niche } from '@/niche.config'
+import { t } from '@/lib/i18n'
 import { FadeIn } from '@/components/motion/FadeIn'
 
 export function AuthorTeaser() {
@@ -87,7 +88,7 @@ export function AuthorTeaser() {
               marginBottom: 'var(--space-3)',
             }}
           >
-            L&rsquo;auteur
+            {t('authorTeaser.eyebrow')}
           </p>
           <h2
             style={{
@@ -126,7 +127,7 @@ export function AuthorTeaser() {
                 gap: 'var(--space-1)',
               }}
             >
-              En savoir plus →
+              {t('authorTeaser.learnMore')}
             </Link>
           )}
         </div>

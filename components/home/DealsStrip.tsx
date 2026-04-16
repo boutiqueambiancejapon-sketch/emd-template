@@ -6,6 +6,7 @@
 
 import { MarqueeStrip } from '@/components/effects/MarqueeStrip'
 import { niche } from '@/niche.config'
+import { t } from '@/lib/i18n'
 
 type Deal = {
   label: string
@@ -15,8 +16,8 @@ type Deal = {
 
 // Placeholder deals — will be replaced by CMS content
 const DEALS: Deal[] = [
-  { label: `${niche.dealWord.charAt(0).toUpperCase() + niche.dealWord.slice(1)} en cours`, badge: 'Bientôt', badgeColor: 'var(--accent-3)' },
-  { label: 'Contenu à venir', badge: 'Template', badgeColor: 'var(--accent-2)' },
+  { label: `${niche.dealWord.charAt(0).toUpperCase() + niche.dealWord.slice(1)} en cours`, badge: t('deals.comingSoon'), badgeColor: 'var(--accent-3)' },
+  { label: t('deals.placeholder'), badge: t('deals.template'), badgeColor: 'var(--accent-2)' },
 ]
 
 function DealChip({ label, badge, badgeColor = 'var(--accent-1)' }: Deal) {
@@ -57,7 +58,7 @@ function DealChip({ label, badge, badgeColor = 'var(--accent-1)' }: Deal) {
 
 export function DealsStrip() {
   return (
-    <section aria-label="Bons plans du moment" style={{ paddingBlock: 'var(--space-4)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden' }}>
+    <section aria-label={t('deals.ariaLabel')} style={{ paddingBlock: 'var(--space-4)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', overflow: 'hidden' }}>
       <MarqueeStrip speed="slow" gap="var(--space-3)">
         {DEALS.map((deal) => (
           <DealChip key={deal.label} {...deal} />

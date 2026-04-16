@@ -13,6 +13,7 @@ import { RotatingWords } from '@/components/effects/RotatingWords'
 import { HeroVisual } from './HeroVisual'
 import Link from 'next/link'
 import { niche } from '@/niche.config'
+import { t } from '@/lib/i18n'
 import { MagneticButton } from '@/components/motion/MagneticButton'
 
 /* ── Shared styles ── */
@@ -80,7 +81,7 @@ function HeroSplit() {
               marginBottom: 'var(--space-5)',
             }}
           >
-            Guides indépendants · Comparatifs honnêtes
+            {t('hero.eyebrow')}
           </AnimatedHeading>
 
           {/* H1 — ligne 1 */}
@@ -195,7 +196,7 @@ function HeroCentered() {
             marginBottom: 'var(--space-5)',
           }}
         >
-          Guides indépendants · Comparatifs honnêtes
+          {t('hero.eyebrow')}
         </AnimatedHeading>
 
         {/* H1 — ligne 1 */}

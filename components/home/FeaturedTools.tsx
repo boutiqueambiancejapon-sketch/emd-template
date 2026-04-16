@@ -8,6 +8,7 @@
 import Link from 'next/link'
 import Balancer from 'react-wrap-balancer'
 import { niche } from '@/niche.config'
+import { t } from '@/lib/i18n'
 import { FadeIn } from '@/components/motion/FadeIn'
 import { Stagger, StaggerItem } from '@/components/motion/Stagger'
 
@@ -173,7 +174,7 @@ export function FeaturedTools() {
         <div style={{ marginBottom: 'var(--space-10)', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
           <div>
             <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent-1)', marginBottom: 'var(--space-2)' }}>
-              Outils interactifs
+              {t('tools.eyebrow')}
             </p>
             <h2
               style={{
@@ -185,14 +186,14 @@ export function FeaturedTools() {
                 lineHeight: 1.2,
               }}
             >
-              <Balancer>Décidez en connaissance<br />de cause</Balancer>
+              <Balancer>{t('tools.title')}</Balancer>
             </h2>
           </div>
           <Link
             href="/blog"
             style={{ fontSize: '14px', color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}
           >
-            Voir tous les guides →
+            {t('tools.viewGuides')}
           </Link>
         </div>
       </FadeIn>
@@ -212,10 +213,10 @@ export function FeaturedTools() {
             <div className="bento-featured">
               <ToolCard
                 href="/comparer"
-                eyebrow="Comparateur"
+                eyebrow={t('tools.comparator.eyebrow')}
                 title={comparatorTitle}
-                description={`Comparez côte à côte les specs, prix et usages. Filtres par budget et besoin.`}
-                cta="Lancer le comparateur"
+                description={t('tools.comparator.description')}
+                cta={t('tools.comparator.cta')}
                 accent="var(--accent-1)"
                 large
                 icon={<IconCompare />}
@@ -228,10 +229,10 @@ export function FeaturedTools() {
             <StaggerItem>
               <ToolCard
                 href="/quiz"
-                eyebrow="Quiz"
+                eyebrow={t('tools.quiz.eyebrow')}
                 title={quizTitle}
                 description={`Quelques questions pour identifier le ${niche.entity} fait pour vous.`}
-                cta="Démarrer le quiz"
+                cta={t('tools.quiz.cta')}
                 accent="var(--accent-2)"
                 icon={<IconQuiz />}
               />
@@ -243,10 +244,10 @@ export function FeaturedTools() {
             <StaggerItem>
               <ToolCard
                 href="/simulateur"
-                eyebrow="Simulateur"
+                eyebrow={t('tools.simulator.eyebrow')}
                 title={simulatorTitle}
                 description={simulatorDesc}
-                cta="Simuler"
+                cta={t('tools.simulator.cta')}
                 accent="var(--accent-3)"
                 icon={<IconSimulator />}
               />
