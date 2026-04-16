@@ -159,14 +159,35 @@ Présenter la proposition comme un tableau visuel avec les hex et demander valid
 6. **Admin CMS** (`app/admin/layout.tsx`) — Mettre à jour les couleurs aurora de la sidebar si la palette change significativement
 
 ### Étape 3 — Images structurelles
-Le template a un système de placeholders pour les images fixes du site (hero, headers d'outils, illustrations catégories, photo auteur).
 
-7. Lire `lib/image-slots.ts` — registre central avec ID, dimensions et prompt IA pour chaque image
-8. Visiter `/admin/images` une fois le site lancé pour voir le statut de chaque image
-9. Adapter les prompts IA dans `lib/image-slots.ts` à la niche spécifique :
-   - Personnaliser chaque prompt pour qu'il reflète l'ambiance choisie au Bloc 6
-   - Ajouter le style visuel de la niche (aesthetic keywords, lighting, mood)
-10. Générer les images via Midjourney / DALL-E / Flux / Gemini avec les prompts
+**IMPORTANT** : les prompts IA du registre d'images (`lib/image-slots.ts`) sont des templates
+génériques qui utilisent `[niche]` et `[nicheEn]` comme placeholders. À l'init, Claude Code
+**DOIT** réécrire chaque prompt pour qu'il reflète exactement :
+- La **niche** choisie au Bloc 1 (ex: "CBD", "aspirateurs robots", "cartes de crédit")
+- L'**ambiance visuelle** choisie au Bloc 6 (ex: "moody", "clean", "warm", "premium")
+- La **palette** choisie (mentionner les couleurs dominantes dans les prompts)
+- Le **style** choisi (dark/light, editorial/tech/playful)
+
+Exemple de prompt AVANT init (générique) :
+```
+Cinematic editorial hero background photo, [niche] theme, moody atmospheric lighting...
+```
+
+Exemple de prompt APRÈS init (adapté à un site CBD) :
+```
+Cinematic editorial photo of premium CBD oil bottles and hemp leaves on a textured
+wooden surface, warm amber and sage green tones, shallow depth of field, soft natural
+lighting with dramatic shadows, magazine-quality still life composition --ar 2:1 --style raw
+```
+
+Les prompts doivent être utilisables directement dans Midjourney/DALL-E/Flux sans modification.
+
+7. Lire `lib/image-slots.ts` — comprendre chaque slot (ID, dimensions, usage)
+8. **Réécrire chaque `prompt` du registre** pour l'adapter à la niche + ambiance + palette.
+   Ne pas laisser les prompts génériques `[niche]` — les remplacer par du contenu descriptif
+   précis qui donne un résultat cohérent avec la DA choisie.
+9. Visiter `/admin/images` une fois le site lancé pour voir le statut de chaque image
+10. Générer les images via Midjourney / DALL-E / Flux / Gemini avec les prompts réécrits
 11. Renommer chaque image avec le nom exact attendu et déposer dans `public/images/...`
 
 ### Étape 4 — Contenu
