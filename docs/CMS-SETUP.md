@@ -29,7 +29,7 @@ Avant de commencer, tu dois avoir :
 - [ ] `openssl` disponible localement (macOS/Linux → déjà là, Windows → WSL ou Git Bash)
 
 **Optionnel** (pour la génération d'images IA) :
-- [ ] Un compte **Black Forest Labs** avec une clé API Flux
+- [ ] Une clé **Google AI Studio** (Gemini — recommandé) ou un compte **Black Forest Labs** (Flux — fallback)
 
 ---
 
@@ -43,7 +43,7 @@ Le CMS a besoin de **3 variables** pour fonctionner. Tu vas les générer dans l
 | `CMS_GITHUB_TOKEN` | Permet au CMS de lire/écrire dans ton repo GitHub | Personal Access Token (étape 4) |
 | `BLOB_READ_WRITE_TOKEN` | Permet au CMS d'uploader des images sur Vercel Blob | Créé automatiquement (étape 5) |
 
-Tu peux aussi ajouter plus tard (optionnel) : `GITHUB_CMS_CLIENT_ID`, `GITHUB_CMS_CLIENT_SECRET` (OAuth GitHub pour admins), `BFL_API_KEY` (génération d'images IA).
+Tu peux aussi ajouter plus tard (optionnel) : `GITHUB_CMS_CLIENT_ID`, `GITHUB_CMS_CLIENT_SECRET` (OAuth GitHub pour admins), `GEMINI_API_KEY` (génération images Gemini — recommandé), `BFL_API_KEY` (génération images Flux — fallback).
 
 ---
 
@@ -410,30 +410,58 @@ Sur `/admin`, un bouton **Se connecter avec GitHub** apparaît. Les users dont l
 
 ---
 
-## 12. (Optionnel) Activer la génération d'images IA (Flux)
+## 12. (Optionnel) Activer la génération d'images IA
 
-Le CMS intègre Flux 2 Pro (Black Forest Labs) pour générer automatiquement des images à partir d'un prompt texte.
+Le CMS intègre deux providers pour générer des images à partir d'un prompt :
 
-### Étape 12.1 — Obtenir une clé API BFL
+| Provider | Modèle | Recommandé | Coût indicatif |
+|---|---|---|---|
+| **Gemini** (Google) | gemini-2.0-flash-exp | Oui — rapide, gratuit en tier free | Gratuit (limites API) |
+| **Flux** (Black Forest Labs) | flux-2-pro-preview | Fallback | ~0,05€ / image |
+
+Le système détecte automatiquement le provider disponible (Gemini prioritaire).
+
+### Étape 12.1 — Option A : Gemini (recommandé)
+
+1. Va sur [aistudio.google.com](https://aistudio.google.com)
+2. Crée un projet ou utilise un existant
+3. **Get API key** → copie la clé
+4. Dans Vercel **Settings → Environment Variables** : `GEMINI_API_KEY` = ta clé
+
+### Étape 12.1 — Option B : Flux (fallback)
 
 1. Va sur [api.bfl.ml](https://api.bfl.ml)
-2. Crée un compte ou connecte-toi
-3. **Dashboard** → **API Keys** → **Create new key**
-4. Copie la clé
+2. **Dashboard** → **API Keys** → **Create new key**
+3. Dans Vercel **Settings → Environment Variables** : `BFL_API_KEY` = ta clé BFL
 
-### Étape 12.2 — Ajouter dans Vercel
+Redéploie après avoir ajouté la clé.
 
-Dans **Settings → Environment Variables** :
+### Étape 12.2 — Utiliser dans le CMS
 
-- `BFL_API_KEY` = ta clé BFL
+Dans n'importe quel champ **Image** du CMS, un bouton **Générer avec IA** apparaît. Tu saisis un prompt, l'image est générée, uploadée sur Vercel Blob, et liée automatiquement au champ.
 
-Redéploie.
+### Étape 12.3 — Génération batch (images structurelles)
 
-### Étape 12.3 — Utiliser
+Pour générer toutes les images du site d'un coup (hero, catégories, etc.) :
 
-Dans n'importe quel champ **Image** du CMS, un bouton **✨ Générer avec IA** apparaît. Tu saisis un prompt, l'image est générée (1440×810, format blog), uploadée sur Vercel Blob, et liée automatiquement au champ.
+```bash
+# Toutes les images
+npx tsx scripts/generate-images.ts
 
-Coût indicatif : ~0,05€ par image selon le modèle Flux utilisé.
+# Seulement les images home
+npx tsx scripts/generate-images.ts --section home
+
+# Un slot précis
+npx tsx scripts/generate-images.ts --slot home-hero-background
+
+# Voir les prompts sans générer
+npx tsx scripts/generate-images.ts --dry-run
+
+# Forcer un provider
+npx tsx scripts/generate-images.ts --provider gemini
+```
+
+Les images sont stockées sur Vercel Blob (si `BLOB_READ_WRITE_TOKEN` est configuré) ou en local dans `public/`.
 
 ---
 
@@ -543,7 +571,8 @@ GITHUB_CMS_CLIENT_ID=<Client ID OAuth App>
 GITHUB_CMS_CLIENT_SECRET=<Client Secret OAuth App>
 CMS_ALLOWED_USERS=username1,username2
 
-# Optionnelle — image IA
+# Optionnelle — image IA (Gemini recommandé, Flux en fallback)
+GEMINI_API_KEY=<clé Google AI Studio>
 BFL_API_KEY=<clé Black Forest Labs>
 ```
 
@@ -573,6 +602,12 @@ node -e "const c=require('crypto');const s=c.randomBytes(16).toString('hex');con
 # Vérifier quelle branche est utilisée par le CMS
 grep branch niche.config.ts
 grep branch cms.config.ts
+
+# Générer toutes les images structurelles (hero, catégories, etc.)
+npx tsx scripts/generate-images.ts
+
+# Générer avec aperçu des prompts seulement
+npx tsx scripts/generate-images.ts --dry-run
 
 # Voir les variables d'environnement Vercel en CLI (si Vercel CLI installée)
 vercel env ls
