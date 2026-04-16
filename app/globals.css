@@ -871,6 +871,27 @@ body {
   color: var(--text-primary) !important;
 }
 
+/* ── Blog grid — magazine layout ──────────────────────────── */
+.blog-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+.blog-grid-large {
+  grid-column: span 1;
+}
+@media (max-width: 900px) {
+  .blog-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 600px) {
+  .blog-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+.blog-hero-featured:hover h1 {
+  color: var(--accent-1);
+}
+
 /* ── Article 2-column layout (main + sidebar) ──────────────── */
 .article-layout {
   display: grid;
