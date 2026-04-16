@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import type { FieldDef } from '../types'
 import { WysiwygEditor } from './WysiwygEditor'
 import { markdownToHtml, htmlToMarkdown } from '../lib/html-md'
+import { addPendingChange } from '../lib/pending'
 
 // --- Slugify ---
 function slugify(text: string): string {
@@ -341,16 +342,21 @@ export function ContentEditor({ collection, slug, fields, format, initialData, i
 
     setSaving(true)
     try {
-      const res = await fetch(`/api/cms/content/${collection}/${finalSlug}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, body: format === 'mdx' ? bodyMd : undefined, sha: isNew ? undefined : sha }),
+      const ext = format === 'mdx' ? '.mdx' : '.yaml'
+      const catSlug = (data.categorie as string) ?? (data.categorySlug as string) ?? ''
+      const filePath = catSlug
+        ? `content/articles/${catSlug}/${finalSlug}${ext}`
+        : `content/${collection === 'articles' ? 'articles/' : collection === 'produits' ? 'produits/' : collection + '/'}${finalSlug}${ext}`
+
+      addPendingChange({
+        collection,
+        filePath,
+        frontmatter: data,
+        body: format === 'mdx' ? bodyMd : '',
+        savedAt: Date.now(),
       })
-      if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error ?? 'Save failed')
-      }
-      setToast({ message: isDraft ? 'Brouillon sauvegardé' : 'Publié !', type: 'success' })
+
+      setToast({ message: 'Sauvegardé (en attente de publication)', type: 'success' })
       if (isNew) router.push(`/admin/${collection}/${finalSlug}`)
     } catch (e) {
       setToast({ message: e instanceof Error ? e.message : 'Erreur', type: 'error' })

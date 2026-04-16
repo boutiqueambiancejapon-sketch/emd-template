@@ -4,6 +4,7 @@ import { getSession } from '@/packages/cms/lib/get-session'
 import { isGitHubOAuthEnabled } from '@/packages/cms/lib/auth'
 import { cmsConfig } from '@/cms.config'
 import { LoginForm } from '@/packages/cms/components/LoginForm'
+import { PublishBar } from '@/packages/cms/components/PublishBar'
 
 export const metadata: Metadata = {
   title: `Admin — ${cmsConfig.siteName}`,
@@ -108,8 +109,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               </div>
             )}
 
+            {/* Publish bar */}
+            <div style={{ marginTop: 'auto' }}>
+              <PublishBar />
+            </div>
+
             {/* User */}
-            <div style={{ marginTop: 'auto', padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                 <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg, #1C1C26, #13131A)', border: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, color: '#9090A8', fontWeight: 700 }}>
                   {(session.displayName ?? session.user).charAt(0).toUpperCase()}

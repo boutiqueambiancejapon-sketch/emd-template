@@ -118,6 +118,57 @@ export async function deleteFile(
   if (!res.ok) throw new Error(`GitHub DELETE error: ${res.status}`)
 }
 
+/** Batch commit multiple files atomically via Git Trees API */
+export type BatchFileChange = { path: string; content: string }
+
+export async function batchPutFiles(
+  token: string,
+  repo: string,
+  branch: string,
+  files: BatchFileChange[],
+  message: string
+): Promise<{ commitSha: string }> {
+  if (files.length === 0) throw new Error('No files to commit')
+  const h = { ...headers(token), 'Content-Type': 'application/json' }
+
+  const refRes = await fetch(`${API}/repos/${repo}/git/ref/heads/${branch}`, { headers: headers(token) })
+  if (!refRes.ok) throw new Error(`git/ref failed: ${refRes.status}`)
+  const refData = (await refRes.json()) as { object: { sha: string } }
+  const baseCommitSha = refData.object.sha
+
+  const commitRes = await fetch(`${API}/repos/${repo}/git/commits/${baseCommitSha}`, { headers: headers(token) })
+  if (!commitRes.ok) throw new Error(`git/commits failed: ${commitRes.status}`)
+  const commitData = (await commitRes.json()) as { tree: { sha: string } }
+
+  const treeRes = await fetch(`${API}/repos/${repo}/git/trees`, {
+    method: 'POST',
+    headers: h,
+    body: JSON.stringify({
+      base_tree: commitData.tree.sha,
+      tree: files.map((f) => ({ path: f.path, mode: '100644' as const, type: 'blob' as const, content: f.content })),
+    }),
+  })
+  if (!treeRes.ok) throw new Error(`git/trees failed: ${treeRes.status}`)
+  const treeData = (await treeRes.json()) as { sha: string }
+
+  const newCommitRes = await fetch(`${API}/repos/${repo}/git/commits`, {
+    method: 'POST',
+    headers: h,
+    body: JSON.stringify({ message, tree: treeData.sha, parents: [baseCommitSha] }),
+  })
+  if (!newCommitRes.ok) throw new Error(`git/commits create failed: ${newCommitRes.status}`)
+  const newCommitData = (await newCommitRes.json()) as { sha: string }
+
+  const updateRes = await fetch(`${API}/repos/${repo}/git/refs/heads/${branch}`, {
+    method: 'PATCH',
+    headers: h,
+    body: JSON.stringify({ sha: newCommitData.sha }),
+  })
+  if (!updateRes.ok) throw new Error(`git/refs update failed: ${updateRes.status}`)
+
+  return { commitSha: newCommitData.sha }
+}
+
 /** Upload a binary file (for images) */
 export async function uploadBinary(
   token: string,
