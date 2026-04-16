@@ -145,34 +145,23 @@ Présenter la proposition comme un tableau visuel avec les hex et demander valid
 ### Bloc 8 — Premier article
 10. Quel sujet pour le premier article ? (calibre le template blog)
 
-## Après les réponses
+## Après les réponses — workflow page par page
 
-### Étape 1 — Config
-1. Remplir `niche.config.ts` avec TOUTES les valeurs (identité, vocabulaire, catégories, outils, auteur, palette, fonts, affiliation, technique)
+**Principe** : on avance typologie par typologie. Chaque étape se termine par une validation
+de l'utilisateur AVANT de passer à la suivante. Si l'utilisateur n'est pas satisfait, on ajuste.
+Ne jamais tout générer d'un coup — itérer page par page.
 
-### Étape 2 — Appliquer la DA
-**C'est l'étape critique.** Le template a une DA par défaut qui DOIT être remplacée.
+### Étape 1 — Config + DA
+1. Remplir `niche.config.ts` avec TOUTES les valeurs
+2. **`app/globals.css`** — Réécrire TOUTES les variables CSS (palette, aurora, light mode)
+3. **`app/layout.tsx`** — Remplacer les fonts
+4. **`public/icons/brand/`** — Régénérer logo.svg, favicon.svg, og-default.svg
+5. **`app/opengraph-image.tsx`** — Mettre à jour les couleurs
+6. **Admin CMS** — Mettre à jour les couleurs aurora sidebar si besoin
 
-2. **`app/globals.css`** — Réécrire TOUTES les variables CSS :
-   - Les 5 accents + 3 backgrounds + 3 textes
-   - Les 3 couleurs aurora (--aurora-1, --aurora-2, --aurora-3)
-   - Les couleurs success/warning/error (basées sur la palette)
-   - Les variantes light mode (accents assombris pour WCAG AA sur fond blanc)
-   - Le --noise-opacity
-
-3. **`app/layout.tsx`** — Remplacer les imports de fonts :
-   - Importer les fonts choisies depuis `next/font/google`
-   - Mettre à jour les variables `--next-font-primary` et `--next-font-display`
-   - adjustFontFallback:true obligatoire
-
-4. **`public/icons/brand/`** — Régénérer les SVGs :
-   - `logo.svg` : "10min·[niche]" avec les bonnes fonts et couleurs
-   - `favicon.svg` : "10" sur fond accent1
-   - `og-default.svg` : tagline + domaine avec la nouvelle palette
-
-5. **`app/opengraph-image.tsx`** — Mettre à jour les couleurs du gradient et du texte
-
-6. **Admin CMS** (`app/admin/layout.tsx`) — Mettre à jour les couleurs aurora de la sidebar si la palette change significativement
+**→ Lancer `npm run dev` et montrer le résultat à l'utilisateur.**
+**→ "Voici la DA appliquée. Les couleurs, fonts et effets te conviennent ? Si non, dis-moi quoi ajuster."**
+**→ Attendre validation avant de continuer.**
 
 ### Étape 3 — Images structurelles
 
@@ -198,64 +187,71 @@ lighting with dramatic shadows, magazine-quality still life composition --ar 2:1
 
 Les prompts doivent être utilisables directement dans Midjourney/DALL-E/Flux sans modification.
 
-7. Lire `lib/image-slots.ts` — comprendre chaque slot (ID, dimensions, usage)
-8. **Réécrire chaque `prompt` du registre** pour l'adapter à la niche + ambiance + palette.
-   Ne pas laisser les prompts génériques `[niche]` — les remplacer par du contenu descriptif
-   précis qui donne un résultat cohérent avec la DA choisie.
-9. Visiter `/admin/images` une fois le site lancé pour voir le statut de chaque image
-10. Générer les images via Midjourney / DALL-E / Flux / Gemini avec les prompts réécrits
-11. Renommer chaque image avec le nom exact attendu et déposer dans `public/images/...`
+7. Réécrire chaque `prompt` dans `lib/image-slots.ts` pour la niche + ambiance + palette
+8. Lister les images à générer à l'utilisateur avec les prompts finaux
 
-### Étape 4 — Contenu
-12. Mettre à jour `content/settings.yaml` (nav avec les catégories)
-13. Mettre à jour `content/pages/home.yaml` (rotating_words, subtitle, CTAs)
-14. Mettre à jour `content/pages/quiz.yaml` (questions et options du quiz)
-15. Remplir `lib/comparateur.ts` (données produits pour le comparateur)
-16. Remplir `lib/choisir-content.ts` (contenu éditorial des pages /choisir/)
-17. Mettre à jour les pages légales (mentions-legales + confidentialité)
-18. Créer `docs/AUTHOR-[slug].md` (profil auteur)
+**→ "Voici les emplacements d'images avec les prompts IA. Tu peux les générer maintenant ou plus tard. On continue ?"**
+**→ Attendre validation.**
 
-### Étape 5 — Pages outils optimisées SEO/GEO
+### Étape 3 — Home
+9. Mettre à jour `content/settings.yaml` (nav avec les catégories)
+10. Mettre à jour `content/pages/home.yaml` (rotating_words, subtitle, CTAs)
+11. Vérifier que le hero, les sections catégories, les outils et l'auteur s'affichent correctement
 
-**Chaque page outil doit être traitée comme une vraie page de contenu, pas juste un outil nu.**
-Le contenu éditorial autour de l'outil est ce qui permet à Google et aux LLM de comprendre et citer la page.
+**→ "Voici la home. Le hero, les sections, les outils te conviennent ? Des ajustements ?"**
+**→ Attendre validation.**
 
-Pour chaque outil activé (comparateur, quiz, simulateur, deals) :
-
-19. **Remplir les données** :
-    - Comparateur : remplir `lib/comparateur.ts` avec les vrais produits (5+ modèles par catégorie, specs réelles, prix, liens affiliés)
-    - Quiz : adapter `content/pages/quiz.yaml` avec les questions spécifiques à la niche et les recommandations produit
-    - Simulateur : créer le calculateur adapté dans la page simulateur
-    - Deals : remplir avec les vraies offres ou placeholder CMS-editable
-
-20. **Ajouter le contenu éditorial** autour de chaque outil :
-    - Intro H2 interrogative (ex: "Comment comparer les [entities] en {year} ?") — réponse directe < 60 mots
-    - Verdict H2 après l'outil (ex: "Quel [entity] choisir en {year} ?") — recommandation concrète
-    - FAQ spécifique à l'outil (4-6 questions) — pas les mêmes que les articles
-    - Le tout dans la page TSX directement, pas en MDX
-
-21. **Ajouter les JSON-LD enrichis** :
-    - Comparateur : `ItemList` avec les produits comparés
-    - Quiz : `HowTo` (les étapes du quiz comme un processus)
-    - Deals : `Offer` ou `AggregateOffer` par deal
-    - Chaque page a déjà `BreadcrumbList`, ajouter les schemas spécifiques en plus
-
-22. **Vérifier la DA** : les pages outils doivent avoir la même palette/fonts/effets que le reste du site. Pas de style "outil générique" — cohérence totale.
-
-### Étape 6 — Premier article
-19. Supprimer `content/articles/_example.mdx` et `content/produits/_example.yaml`
-20. Rédiger le premier article (800+ mots, 6+ FAQ, composants MDX)
+### Étape 4 — Hub blog + article type
+12. Vérifier que `/blog` affiche le hub magazine (featured + grille + filtres + promo outils)
+13. Créer `docs/AUTHOR-[slug].md` (profil auteur)
+14. Supprimer `content/articles/_example.mdx` et `content/produits/_example.yaml`
+15. Rédiger le premier article (800+ mots, 6+ FAQ, composants MDX)
     Lire `docs/SEO-GEO-REDACTION.md` et `docs/AUTHOR-[slug].md` AVANT de rédiger.
     Composants dispo : `<ArticleImage>`, `<ProductCTA>`, `<ProductCarousel>`,
     `<CompareBar>`, `<Tip>`, `<Warning>`, `<Verdict>`, `<ProConTable>`,
     `<PullQuote>`, `<StatCard>`, `<StatRow>`
     ATTENTION : les props MDX sont des STRINGS uniquement.
     Ex: `<ProConTable pros="Avantage 1|Avantage 2" cons="Inconvénient 1" />`
+16. Vérifier le rendu de l'article : hero cinématique, sidebar, composants MDX, FAQ, related articles
 
-### Étape 7 — Vérification
-24. `tsc --noEmit` + `next lint`
-25. Vérifier le contraste WCAG AA pour chaque couleur accent sur les fonds
-26. Vérifier que chaque page outil a du contenu textuel (intro + verdict + FAQ) — pas juste un widget
+**→ "Voici le premier article publié. Le rendu du hub blog et de l'article (sidebar, hero, FAQ) te plaît ?"**
+**→ Attendre validation.**
+
+### Étape 5 — Pages outils (une par une)
+
+**Chaque page outil est traitée séparément avec validation.**
+
+Pour chaque outil activé (comparateur → quiz → simulateur → deals) :
+
+17. **Remplir les données** de l'outil :
+    - Comparateur : `lib/comparateur.ts` avec 5+ modèles par catégorie
+    - Quiz : `content/pages/quiz.yaml` avec questions + recommandations
+    - Simulateur : calculateur adapté
+    - Deals : offres réelles ou placeholders CMS
+
+18. **Ajouter le contenu éditorial** autour :
+    - Intro H2 interrogative — réponse directe < 60 mots
+    - Verdict H2 après l'outil — recommandation concrète
+    - FAQ spécifique (4-6 questions, pas les mêmes que les articles)
+
+19. **Ajouter les JSON-LD** enrichis (ItemList, HowTo, Offer)
+
+20. **Vérifier la DA** — même palette/fonts/effets que le reste
+
+**→ "Voici la page [comparateur]. Le tableau, le contenu SEO, les CTAs affiliés — ça te va ?"**
+**→ Attendre validation avant de passer à l'outil suivant.**
+
+### Étape 6 — Pages légales + finitions
+21. Mettre à jour les pages légales (mentions-legales + confidentialité)
+22. Remplir `lib/choisir-content.ts` (contenu éditorial /choisir/)
+
+**→ "Mentions légales et confidentialité à jour. Tout est bon ?"**
+
+### Étape 7 — Vérification finale
+23. `tsc --noEmit` + `next lint`
+24. Vérifier le contraste WCAG AA pour chaque couleur accent sur les fonds
+25. Vérifier chaque page outil a du contenu textuel (pas juste un widget nu)
+26. Vérifier les margins/paddings sur mobile
 27. Commit et push
 ```
 
