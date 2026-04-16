@@ -7,10 +7,12 @@
  *   npx tsx scripts/generate-images.ts --slot home-hero-background  # single slot
  *   npx tsx scripts/generate-images.ts --provider gemini  # force provider
  *   npx tsx scripts/generate-images.ts --dry-run          # show prompts only
+ *   npx tsx scripts/generate-images.ts --local            # force local output (public/)
+ *   npx tsx scripts/generate-images.ts --prompt-override "custom prompt"  # override slot prompt
  *
  * Env vars required:
  *   GEMINI_API_KEY or BFL_API_KEY  — image generation
- *   BLOB_READ_WRITE_TOKEN          — Vercel Blob storage
+ *   BLOB_READ_WRITE_TOKEN          — Vercel Blob storage (optional, falls back to local)
  */
 
 import { getAllImageSlots, type ImageSlot } from '../lib/image-slots'
@@ -38,6 +40,7 @@ async function main() {
   const sectionFilter = flags['section']
   const slotFilter = flags['slot']
   const providerFlag = flags['provider'] as GenerationProvider | undefined
+  const promptOverride = flags['prompt-override']
   const useBlob = !!process.env.BLOB_READ_WRITE_TOKEN
   const localOut = flags['local'] === 'true' || !useBlob
 
@@ -77,8 +80,9 @@ async function main() {
   let failed = 0
 
   for (const slot of slots) {
+    const prompt = promptOverride ?? slot.prompt
     console.log(`[${slot.id}] ${slot.width}x${slot.height}`)
-    console.log(`  Prompt: ${slot.prompt.slice(0, 120)}...`)
+    console.log(`  Prompt: ${prompt.slice(0, 120)}...`)
 
     if (dryRun) {
       console.log('  → skipped (dry run)\n')
@@ -86,7 +90,7 @@ async function main() {
     }
 
     try {
-      const result = await generateImage(slot.prompt, provider)
+      const result = await generateImage(prompt, provider)
 
       const ext = result.contentType.includes('png') ? 'png' : result.contentType.includes('webp') ? 'webp' : 'jpg'
 
