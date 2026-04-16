@@ -215,7 +215,34 @@ Les prompts doivent être utilisables directement dans Midjourney/DALL-E/Flux sa
 17. Mettre à jour les pages légales (mentions-legales + confidentialité)
 18. Créer `docs/AUTHOR-[slug].md` (profil auteur)
 
-### Étape 5 — Premier article
+### Étape 5 — Pages outils optimisées SEO/GEO
+
+**Chaque page outil doit être traitée comme une vraie page de contenu, pas juste un outil nu.**
+Le contenu éditorial autour de l'outil est ce qui permet à Google et aux LLM de comprendre et citer la page.
+
+Pour chaque outil activé (comparateur, quiz, simulateur, deals) :
+
+19. **Remplir les données** :
+    - Comparateur : remplir `lib/comparateur.ts` avec les vrais produits (5+ modèles par catégorie, specs réelles, prix, liens affiliés)
+    - Quiz : adapter `content/pages/quiz.yaml` avec les questions spécifiques à la niche et les recommandations produit
+    - Simulateur : créer le calculateur adapté dans la page simulateur
+    - Deals : remplir avec les vraies offres ou placeholder CMS-editable
+
+20. **Ajouter le contenu éditorial** autour de chaque outil :
+    - Intro H2 interrogative (ex: "Comment comparer les [entities] en {year} ?") — réponse directe < 60 mots
+    - Verdict H2 après l'outil (ex: "Quel [entity] choisir en {year} ?") — recommandation concrète
+    - FAQ spécifique à l'outil (4-6 questions) — pas les mêmes que les articles
+    - Le tout dans la page TSX directement, pas en MDX
+
+21. **Ajouter les JSON-LD enrichis** :
+    - Comparateur : `ItemList` avec les produits comparés
+    - Quiz : `HowTo` (les étapes du quiz comme un processus)
+    - Deals : `Offer` ou `AggregateOffer` par deal
+    - Chaque page a déjà `BreadcrumbList`, ajouter les schemas spécifiques en plus
+
+22. **Vérifier la DA** : les pages outils doivent avoir la même palette/fonts/effets que le reste du site. Pas de style "outil générique" — cohérence totale.
+
+### Étape 6 — Premier article
 19. Supprimer `content/articles/_example.mdx` et `content/produits/_example.yaml`
 20. Rédiger le premier article (800+ mots, 6+ FAQ, composants MDX)
     Lire `docs/SEO-GEO-REDACTION.md` et `docs/AUTHOR-[slug].md` AVANT de rédiger.
@@ -225,10 +252,11 @@ Les prompts doivent être utilisables directement dans Midjourney/DALL-E/Flux sa
     ATTENTION : les props MDX sont des STRINGS uniquement.
     Ex: `<ProConTable pros="Avantage 1|Avantage 2" cons="Inconvénient 1" />`
 
-### Étape 6 — Vérification
-21. `tsc --noEmit` + `next lint`
-22. Vérifier le contraste WCAG AA pour chaque couleur accent sur les fonds
-23. Commit et push
+### Étape 7 — Vérification
+24. `tsc --noEmit` + `next lint`
+25. Vérifier le contraste WCAG AA pour chaque couleur accent sur les fonds
+26. Vérifier que chaque page outil a du contenu textuel (intro + verdict + FAQ) — pas juste un widget
+27. Commit et push
 ```
 
 ---
