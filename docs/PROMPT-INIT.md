@@ -31,10 +31,26 @@ Si la détection échoue, demander :
 **IMPORTANT** : Le CMS utilise cette branche pour lire/écrire le contenu via l'API GitHub.
 Mettre à jour `niche.config.ts` (champs `repo` et `branch`) ET vérifier que `cms.config.ts` les propage.
 
-### Bloc 1 — Identité
+### Bloc 1 — Identité & Langue
 1. Quel est le sujet/niche du site ? (ex: voyage, cartes de crédit, aspirateurs, crypto)
 2. Quel nom de domaine ? (ex: 10minutesvoyage.com)
 3. Tagline en une phrase ? (ex: "Trouvez votre destination en 10 minutes")
+4. Quelle langue principale ? (ex: FR, EN)
+   Le site sera-t-il multilingue à terme ? Si oui, quelles langues ?
+
+**Si la langue principale n'est pas FR** :
+- Mettre à jour `niche.defaultLocale` (ex: `'en'`)
+- Les textes UI (nav, footer, boutons, labels) s'adaptent automatiquement
+  via `content/translations/[locale].json`
+- Le contenu éditorial (articles, pages YAML) doit être rédigé dans la langue choisie
+- Les textes dans `niche.config.ts` (tagline, subtitle, heroPrefix, etc.) doivent être
+  dans la langue principale
+
+**Si multilingue prévu** :
+- Ajouter les locales dans `niche.locales` (ex: `['fr', 'en']`)
+- Le hreflang se configure automatiquement dans layout.tsx
+- Les fichiers de traduction existent déjà : `content/translations/fr.json` et `en.json`
+- Le routing `[locale]` sera ajouté plus tard (session dédiée)
 
 ### Bloc 2 — Vocabulaire
 Sur base de la niche, propose-moi et demande validation :
