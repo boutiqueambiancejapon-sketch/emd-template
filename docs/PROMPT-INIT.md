@@ -182,16 +182,37 @@ Tu valides ou tu ajustes ?
 de l'utilisateur AVANT de passer à la suivante. Si l'utilisateur n'est pas satisfait, on ajuste.
 Ne jamais tout générer d'un coup — itérer page par page.
 
-### Étape 1 — Config + DA
+### Étape 1 — Config + DA + Style UI
 1. Remplir `niche.config.ts` avec TOUTES les valeurs
-2. **`app/globals.css`** — Réécrire TOUTES les variables CSS (palette, aurora, light mode)
-3. **`app/layout.tsx`** — Remplacer les fonts
-4. **`public/icons/brand/`** — Régénérer logo.svg, favicon.svg, og-default.svg
-5. **`app/opengraph-image.tsx`** — Mettre à jour les couleurs
-6. **Admin CMS** — Mettre à jour les couleurs aurora sidebar si besoin
+2. **`app/globals.css`** — Réécrire TOUTES les variables CSS :
+   - Palette (11 couleurs)
+   - Aurora (si effects = aurora)
+   - Light mode overrides
+   - **STYLE UI** — c'est le plus important. Lire le style trouvé via `findUIStyles()`
+     et appliquer les modifications CSS concrètes décrites dans `docs/DA-ANTI-IA.md`
+     section "APPLICATION CSS CONCRÈTE PAR STYLE UI" :
+     - `--radius-*` : 0 pour brutalism/editorial, 12-16px pour glass, etc.
+     - `--shadow` : dure (brutalism), diffuse (glass), double (neumorphism), aucune (minimal)
+     - Transitions, borders, spacing, backdrop-filter, glow
+     - Section `/* ── Style UI ── */` avec les variables custom du style
+3. **Composants** — Adapter le CSS des cards, boutons, hero selon le style UI :
+   - Brutalism → border-radius: 0, border 2-3px, shadow dure, typo massive
+   - Glassmorphism → backdrop-blur, borders rgba, shadow diffuse, radius 12px+
+   - Editorial → serif display, grille asymétrique, filets, lettrine
+   - Neumorphism → double shadow raised/inset, pas de borders
+   - Etc. — voir DA-ANTI-IA.md pour chaque style
+4. **`app/layout.tsx`** — Remplacer les fonts
+5. **`public/icons/brand/`** — Régénérer logo.svg, favicon.svg, og-default.svg
+6. **`app/opengraph-image.tsx`** — Mettre à jour les couleurs
+7. **Admin CMS** — Mettre à jour les couleurs aurora sidebar si besoin
+
+**IMPORTANT** : ne pas se limiter à remplir les 4 variantes (`hero`, `cards`,
+`effects`, `mode`). Le style UI va plus loin — il modifie la FORME du site,
+pas seulement sa couleur. Deux sites "split hero + dark mode" mais l'un en
+Brutalism et l'autre en Glassmorphism doivent avoir un aspect radicalement différent.
 
 **→ Lancer `npm run dev` et montrer le résultat à l'utilisateur.**
-**→ "Voici la DA appliquée. Les couleurs, fonts et effets te conviennent ? Si non, dis-moi quoi ajuster."**
+**→ "Voici la DA appliquée : style [nom du style UI], palette [nom], fonts [display+body]. Les formes, les ombres, la densité te conviennent ?"**
 **→ Attendre validation avant de continuer.**
 
 **Si multilingue** : vérifier que `content/translations/[locale].json` est complet pour la locale

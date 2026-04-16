@@ -203,3 +203,169 @@ Claude Code utilise cette table comme point de départ. Il peut adapter.
 | Éducation | note pédagogique marge | cards sans icônes décoratives | editorialFootnote, tabularStat |
 | Immobilier | chiffres clés tabulaires | jamais de stock photo | tabularStat, editorialFootnote |
 | Auto / moto | specs tabulaires | fond noir teinté, jamais #000 | tabularStat, lettrine |
+
+---
+
+## APPLICATION CSS CONCRÈTE PAR STYLE UI
+
+C'est la section la plus importante. Quand Claude Code choisit un UI style
+via `findUIStyles()`, il **DOIT** modifier `globals.css` et les composants
+en conséquence. Pas juste changer les couleurs — changer la **forme**.
+
+Le style UI est trouvé dans la base via :
+```ts
+const styles = findUIStyles(['tech', 'premium', 'dark'], 3)
+// → ex: styles[0].category = "Dark Mode (OLED)"
+// → styles[0].cssKeywords = "backdrop-filter, border: 1px solid rgba(...)..."
+// → styles[0].variables = "--border-radius: 12px, --shadow: 0 0 20px..."
+```
+
+Claude lit le `cssKeywords`, `variables`, `effects` et `checklist` du style
+et applique les transformations ci-dessous.
+
+### Brutalism / Neubrutalism
+```css
+--radius-sm: 0; --radius-md: 0; --radius-lg: 0; --radius-full: 0;
+--shadow: 4px 4px 0 var(--text-primary);
+/* Borders épaisses, typo massive, couleurs crues */
+```
+- `border-radius: 0` partout — cartes, boutons, inputs
+- `box-shadow: 4px 4px 0` — ombre dure, pas de blur
+- Titres en uppercase ou extra-bold (800+)
+- Borders 2-3px solid, pas 1px
+- Pas de transitions douces — `transition: none` ou très court (100ms)
+
+### Glassmorphism / Liquid Glass
+```css
+--glass-bg: rgba(255,255,255,0.05);
+--glass-border: rgba(255,255,255,0.08);
+--glass-blur: 16px;
+```
+- Cards : `backdrop-filter: blur(16px); background: var(--glass-bg)`
+- Borders semi-transparentes `rgba(255,255,255,0.08)`
+- Ombres diffuses `0 8px 32px rgba(0,0,0,0.3)`
+- Border-radius généreux (12-16px)
+- Fond avec gradient subtil sous le blur
+
+### Minimalism / Swiss Style
+```css
+--radius-sm: 0; --radius-md: 2px; --radius-lg: 4px;
+/* Pas de shadows, pas d'effets, grid strict */
+```
+- Zéro ombre, zéro gradient, zéro animation décorative
+- Grid 12 colonnes strictes
+- Beaucoup de whitespace (spacing ×1.5)
+- Typo mono-weight ou 2 weights max (400, 700)
+- Couleurs : noir, blanc, 1 accent unique
+
+### Editorial / Magazine
+```css
+--radius-sm: 0; --radius-md: 0; --radius-lg: 0;
+/* Serif pour titres, grille asymétrique */
+```
+- Font display **serif** (Playfair, Cormorant, Libre Baskerville)
+- Grille asymétrique (pas 3 colonnes égales)
+- Pull quotes et lettrines systématiques
+- Filets horizontaux entre sections
+- Espacement aéré, ligne de base visible
+
+### Aurora UI
+```css
+/* Gradients animés, glow effects */
+--aurora-1: var(--accent-1); --aurora-2: var(--accent-4); --aurora-3: var(--accent-3);
+```
+- Gradient animé en background (déjà implémenté via AuroraBackground)
+- Glow sur les éléments hover : `box-shadow: 0 0 20px rgba(accent, 0.3)`
+- Transitions fluides (300-400ms)
+- Border-radius moyens (8-12px)
+
+### Dark Mode OLED
+```css
+--bg-primary: #000000; /* exception : vrai noir pour OLED */
+--bg-surface: #0A0A0A;
+```
+- Fond vrai noir `#000` (économie batterie OLED)
+- Accents vifs sur fond noir (contraste maximum)
+- Borders très subtiles `rgba(255,255,255,0.04)`
+- Pas de surface grise — soit noir soit accent
+
+### Neumorphism / Soft UI
+```css
+--shadow-raised: 6px 6px 12px rgba(0,0,0,0.2), -6px -6px 12px rgba(255,255,255,0.03);
+--shadow-inset: inset 4px 4px 8px rgba(0,0,0,0.2), inset -4px -4px 8px rgba(255,255,255,0.03);
+```
+- Double shadow (ombre + lumière) sur les cards et boutons
+- Fond et cards de couleur très proche (pas de border)
+- Border-radius généreux (12-20px)
+- Inputs avec `box-shadow: inset` (apparence enfoncée)
+
+### Bento Box / Bento Grid
+```css
+/* Grille asymétrique façon macOS widgets */
+```
+- Home : grille CSS irrégulière avec `grid-template-areas`
+- Cards de tailles variées (span 1, span 2, tall, wide)
+- Border-radius uniforme (16px)
+- Gap constant entre les blocs
+- Pas de hero traditionnel — le hero EST la grille
+
+### Retro / Y2K / Vaporwave
+```css
+--radius-sm: 0; --radius-md: 0;
+/* Couleurs saturées, typo pixelisée ou condensée */
+```
+- Couleurs très saturées (magenta, cyan, jaune)
+- Typo condensée ou pixel-art
+- Borders visibles, parfois doubles
+- Gradients linéaires (pas radiaux)
+- Textures : scan lines, noise fort
+
+### Cyberpunk / HUD / Sci-Fi
+```css
+/* Angles coupés, glow neon, fond très sombre */
+--glow: 0 0 10px var(--accent-1), 0 0 30px rgba(accent, 0.2);
+```
+- Coins coupés via `clip-path` au lieu de border-radius
+- Glow neon sur les accents (`text-shadow`, `box-shadow`)
+- Fond très sombre avec accent vif (cyan, magenta, lime)
+- Typo monospace pour les données
+- Animations : glitch, scan lines, flicker
+
+### Conversion-Optimized / Trust & Authority
+```css
+/* Plus conservateur, focus lisibilité et confiance */
+```
+- Pas d'effets décoratifs — focus contenu
+- CTA très visibles (taille, couleur, position)
+- Badges de confiance, étoiles, témoignages
+- Typo large et lisible (16px+ body)
+- Whitespace généreux autour des CTA
+
+---
+
+## COMMENT CLAUDE APPLIQUE LE STYLE UI
+
+Pendant l'init, étape 1 (Config + DA), Claude Code :
+
+1. **Identifie le style** via `findUIStyles()` + niche rule `stylePriority`
+2. **Lit les `cssKeywords` et `variables`** du style trouvé
+3. **Réécrit `globals.css`** avec les variables CSS adaptées :
+   - `--radius-*` (0 pour brutalism, 12-16px pour glass, etc.)
+   - `--shadow` / `--glass-bg` / `--glow` selon le style
+   - transitions, spacing, borders
+4. **Adapte les composants** si nécessaire :
+   - Cards : shadows, borders, radius, backdrop-filter
+   - Boutons : flat vs gradient vs neumorphic
+   - Hero : layout selon le `pattern` de la niche rule
+   - Navigation : style des liens, active states
+5. **Ajoute du CSS custom** dans la section `/* ── Style UI ── */` de globals.css
+   pour les effets spécifiques au style (glow, glassmorphism, clip-path, etc.)
+
+**IMPORTANT** : Ne pas se limiter aux 4 variantes structurelles (`hero`, `cards`,
+`effects`, `mode`). Le style UI va PLUS LOIN — il modifie le border-radius, les
+ombres, les transitions, la densité, et parfois le layout même des composants.
+Les 4 variantes sont un minimum, le style UI les complète et les dépasse.
+
+**Le résultat** : deux sites avec le même hero `split` mais l'un en Brutalism et
+l'autre en Glassmorphism auront une apparence radicalement différente — pas juste
+des couleurs différentes sur le même squelette.

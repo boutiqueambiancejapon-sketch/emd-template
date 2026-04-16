@@ -54,6 +54,7 @@ export type NicheConfig = {
     hero: 'split' | 'centered' | 'minimal' // layout du hero
     effects: 'aurora' | 'subtle' | 'none'  // intensité des effets visuels
     cards: 'bordered' | 'filled' | 'minimal' // style des cartes article
+    uiStyle: string                    // style UI depuis da-presets (ex: "Glassmorphism", "Brutalism", "Editorial Grid / Magazine")
   }
   palette: {
     accent1: string
@@ -142,6 +143,7 @@ export const niche: NicheConfig = {
     hero: 'split',
     effects: 'aurora',
     cards: 'bordered',
+    uiStyle: '',
   },
   palette: {
     accent1: '#FF3D57',
