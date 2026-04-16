@@ -90,8 +90,35 @@ export function ImagePlaceholder({ slotId, priority = false, className, style, f
     )
   }
 
-  // Image absente + prod → silencieux
-  if (!isDev) return null
+  // Image absente + prod → placeholder épuré avec prompt
+  if (!isDev) {
+    return (
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          aspectRatio: `${slot.width} / ${slot.height}`,
+          background: 'var(--bg-surface)',
+          border: '1px dashed var(--border)',
+          borderRadius: 'var(--radius-md)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 'var(--space-6)',
+          textAlign: 'center',
+          ...style,
+        }}
+      >
+        <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)', marginBottom: 'var(--space-1)' }}>
+          {slot.id}
+        </div>
+        <div style={{ fontSize: '11px', color: 'var(--text-muted)', opacity: 0.6 }}>
+          {slot.width}×{slot.height} · {slot.path}
+        </div>
+      </div>
+    )
+  }
 
   // Image absente + dev → placeholder visuel
   return (

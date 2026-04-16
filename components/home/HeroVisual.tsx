@@ -1,11 +1,11 @@
 /**
  * HeroVisual — colonne droite du héro.
- * Navigation typographique éditoriale : catégories en grand type.
- * Pas d'images, pas de boîtes — pure typographie + séparateurs.
+ * Image placeholder + navigation typographique catégories.
  * Server Component.
  */
 import Link from 'next/link'
 import { niche, categoryAccent } from '@/niche.config'
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
 
 export function HeroVisual() {
   const families = niche.categories.map((cat, i) => ({
@@ -19,14 +19,20 @@ export function HeroVisual() {
   if (families.length === 0) return null
 
   return (
-    <nav
-      aria-label={`Catégories de ${niche.entities}`}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 0,
-      }}
-    >
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+      <ImagePlaceholder
+        slotId="home-hero-visual"
+        priority
+        style={{ borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}
+      />
+      <nav
+        aria-label={`Catégories de ${niche.entities}`}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 0,
+        }}
+      >
       {families.map(({ label, sub, href, accent, index }) => (
         <Link
           key={index}
@@ -103,8 +109,9 @@ export function HeroVisual() {
         </Link>
       ))}
 
-      {/* Dernière ligne séparatrice */}
-      <div style={{ borderTop: '1px solid var(--border)' }} />
-    </nav>
+        {/* Dernière ligne séparatrice */}
+        <div style={{ borderTop: '1px solid var(--border)' }} />
+      </nav>
+    </div>
   )
 }
