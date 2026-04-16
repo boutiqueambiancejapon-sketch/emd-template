@@ -75,10 +75,35 @@
   },
   "blog": {
     "hub": "The journal",
-    "allArticles": "All articles"
+    "allArticles": "All articles",
+    "breadcrumbHome": "Home",
+    "breadcrumbBlog": "Blog",
+    "heroSubtitle": "Tests, guides and analysis.",
+    "filterAll": "All",
+    "filterLabel": "Filter by category",
+    "emptyState": "First articles coming soon.",
+    "readArticle": "Read article →",
+    "promoComparator": "Compare your options",
+    "promoComparatorDesc": "Our interactive side-by-side comparator.",
+    "promoQuiz": "Find the right pick",
+    "promoQuizDesc": "A few questions to narrow your needs.",
+    "promoSimulator": "Simulate your budget",
+    "promoSimulatorDesc": "Estimate the real cost in a few clicks.",
+    "toolsSectionTitle": "Your tools",
+    "toolsSectionEyebrow": "Go further",
+    "featuredLabel": "Featured article"
+  },
+  "sidebar": {
+    "tocTitle": "In this article",
+    "tocSummary": "Key takeaways",
+    "tocFaq": "FAQ",
+    "tocRelated": "Related articles",
+    "toolPromo": "Compare {label}",
+    "toolPromoCta": "Launch comparator \u2192"
   },
   "authorCard": {
-    "viewAllArticles": "View all articles →"
+    "viewAllArticles": "View all articles \u2192",
+    "viewProfile": "View profile \u2192"
   },
   "common": {
     "skipToContent": "Skip to main content"

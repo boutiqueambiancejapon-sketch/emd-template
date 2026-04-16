@@ -13,7 +13,8 @@ import remarkGfm from 'remark-gfm'
 import { remarkAmazonAffiliate } from '@/lib/plugins/remarkAmazonAffiliate'
 import { getAllArticles, getArticleRaw, articleExists, getRelatedArticles, articleHref } from '@/lib/blog'
 import { currentYear } from '@/lib/utils/year'
-import { niche } from '@/niche.config'
+import { niche, categoryAccent } from '@/niche.config'
+import { t } from '@/lib/i18n'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${niche.domain}`
 import { AISummarize } from '@/components/blog/AISummarize'
@@ -36,6 +37,8 @@ import { AuthorByline } from '@/components/ui/AuthorByline'
 import { AuthorCard } from '@/components/ui/AuthorCard'
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
 import { StickyCTA } from '@/components/blog/StickyCTA'
+import { FadeIn } from '@/components/motion/FadeIn'
+import { addAffiliateTag } from '@/lib/utils/affiliate'
 import type { ReactNode } from 'react'
 
 export const revalidate = 86400

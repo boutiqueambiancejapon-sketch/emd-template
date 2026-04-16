@@ -75,10 +75,35 @@
   },
   "blog": {
     "hub": "Le journal",
-    "allArticles": "Tous les articles"
+    "allArticles": "Tous les articles",
+    "breadcrumbHome": "Accueil",
+    "breadcrumbBlog": "Blog",
+    "heroSubtitle": "Tests, guides et analyses.",
+    "filterAll": "Tous",
+    "filterLabel": "Filtrer par catégorie",
+    "emptyState": "Premiers articles en cours de rédaction.",
+    "readArticle": "Lire l'article →",
+    "promoComparator": "Comparez vos options",
+    "promoComparatorDesc": "Notre comparateur interactif côte à côte.",
+    "promoQuiz": "Trouvez le bon choix",
+    "promoQuizDesc": "Quelques questions pour cibler votre besoin.",
+    "promoSimulator": "Simulez votre budget",
+    "promoSimulatorDesc": "Estimez le coût réel en quelques clics.",
+    "toolsSectionTitle": "Vos outils",
+    "toolsSectionEyebrow": "Aller plus loin",
+    "featuredLabel": "Article vedette"
+  },
+  "sidebar": {
+    "tocTitle": "Dans cet article",
+    "tocSummary": "En bref",
+    "tocFaq": "FAQ",
+    "tocRelated": "Articles li\u00e9s",
+    "toolPromo": "Comparer les {label}",
+    "toolPromoCta": "Lancer le comparateur \u2192"
   },
   "authorCard": {
-    "viewAllArticles": "Voir tous les articles →"
+    "viewAllArticles": "Voir tous les articles \u2192",
+    "viewProfile": "Voir le profil \u2192"
   },
   "common": {
     "skipToContent": "Aller au contenu principal"
