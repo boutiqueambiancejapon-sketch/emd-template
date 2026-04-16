@@ -11,6 +11,7 @@ import Balancer from 'react-wrap-balancer'
 import { compileMDX } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
 import { remarkAmazonAffiliate } from '@/lib/plugins/remarkAmazonAffiliate'
+import { processShortcodes } from '@/lib/content/shortcodes'
 import { getAllArticles, getArticleRaw, articleExists, getRelatedArticles, articleHref } from '@/lib/blog'
 import { currentYear } from '@/lib/utils/year'
 import { niche, categoryAccent } from '@/niche.config'
@@ -91,7 +92,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
 
   const { meta, content } = getArticleRaw(categorie, slug)
   const { content: mdxContent } = await compileMDX({
-    source: content,
+    source: processShortcodes(content),
     options: { mdxOptions: { remarkPlugins: [remarkGfm, remarkAmazonAffiliate] } },
     components: {
       Tip,

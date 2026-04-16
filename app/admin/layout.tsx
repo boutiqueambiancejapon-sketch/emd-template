@@ -86,6 +86,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 <span className="cms-nav-icon">📷</span>
                 <span>Images du site</span>
               </Link>
+              <Link href="/admin/shortcodes" className="cms-nav-link">
+                <span className="cms-nav-icon">⚡</span>
+                <span>Shortcodes</span>
+              </Link>
             </div>
 
             {isAdmin && (

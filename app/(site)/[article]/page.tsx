@@ -13,6 +13,7 @@ import Balancer from 'react-wrap-balancer'
 import { compileMDX } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
 import { remarkAmazonAffiliate } from '@/lib/plugins/remarkAmazonAffiliate'
+import { processShortcodes } from '@/lib/content/shortcodes'
 import { getRelatedArticles, articleHref, CATEGORY_LABELS } from '@/lib/blog'
 import { AISummarize } from '@/components/blog/AISummarize'
 import { getCTAsForCategory } from '@/lib/article-ctas'
@@ -77,7 +78,7 @@ export default async function StandaloneArticlePage({ params }: { params: Params
 
   const { meta, content } = data
   const { content: mdxContent } = await compileMDX({
-    source: content,
+    source: processShortcodes(content),
     options: { mdxOptions: { remarkPlugins: [remarkGfm, remarkAmazonAffiliate] } },
     components: {
       Tip, Warning, Verdict, ProConTable, PullQuote, StatCard, StatRow, CompareBar, CompareBarGroup, ProductCTA, ArticleImage, ProductCarousel,
