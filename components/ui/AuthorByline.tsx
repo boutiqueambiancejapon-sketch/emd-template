@@ -44,7 +44,7 @@ export function AuthorByline({
         color: 'var(--text-secondary)',
       }}
     >
-      <span>Par</span>
+      <span>{t('article.by')}</span>
       <Link
         href={`/auteurs/${authorSlug}`}
         style={{
@@ -61,14 +61,14 @@ export function AuthorByline({
       {readingTimeMin !== undefined && (
         <>
           <span aria-hidden="true">·</span>
-          <span>{readingTimeMin} min de lecture</span>
+          <span>{t('article.readingTime', { min: readingTimeMin })}</span>
         </>
       )}
 
       <span aria-hidden="true">·</span>
 
       <time dateTime={displayDate}>
-        {updatedAt && updatedAt !== publishedAt ? 'Màj le ' : ''}
+        {updatedAt && updatedAt !== publishedAt ? t('article.updatedOn') : ''}
         {formatDate(displayDate)}
       </time>
     </div>

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Space_Grotesk, Unbounded } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { niche } from '@/niche.config'
+import { t } from '@/lib/i18n'
 import './globals.css'
 
 // ── Fonts — remplacer à l'init par les fonts choisies pour la niche ──
@@ -67,7 +68,7 @@ export default function RootLayout({
       </head>
       <body>
         <a href="#main-content" className="skip-to-content">
-          Aller au contenu principal
+          {t('common.skipToContent')}
         </a>
         {children}
         <Analytics />

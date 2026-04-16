@@ -6,6 +6,7 @@
  */
 
 import Link from 'next/link'
+import { t } from '@/lib/i18n'
 
 type AuthorCardVariant = 'inline' | 'full'
 
@@ -99,7 +100,7 @@ export function AuthorCard({
               textDecoration: 'none',
             }}
           >
-            Voir tous les articles →
+            {t('authorCard.viewAllArticles')}
           </Link>
         )}
       </div>

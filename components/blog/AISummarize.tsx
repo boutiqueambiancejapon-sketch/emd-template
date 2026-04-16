@@ -7,6 +7,7 @@
  */
 
 import { niche } from '@/niche.config'
+import { t } from '@/lib/i18n'
 
 // ── AI providers — vérifier les URLs périodiquement ──
 const AI_PROVIDERS = [
@@ -58,7 +59,7 @@ export function AISummarize({ points, articleTitle, articleUrl }: AISummarizePro
           marginBottom: 'var(--space-3)',
         }}
       >
-        En bref
+        {t('aiSummary.title')}
       </div>
       <ul
         style={{
@@ -113,7 +114,7 @@ export function AISummarize({ points, articleTitle, articleUrl }: AISummarizePro
               letterSpacing: '0.04em',
             }}
           >
-            Résumer avec :
+            {t('aiSummary.summarizeWith')}
           </span>
           {AI_PROVIDERS.map(({ name, urlTemplate, icon }) => (
             <a
