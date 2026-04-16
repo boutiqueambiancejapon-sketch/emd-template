@@ -224,7 +224,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
             style={{
               maxWidth: '760px',
               margin: '0 auto',
-              padding: 'var(--space-12) var(--space-6) var(--space-10)',
+              padding: 'var(--space-16) var(--space-6) var(--space-12)',
               position: 'relative',
               zIndex: 2,
               width: '100%',
@@ -305,139 +305,370 @@ export default async function ArticlePage({ params }: { params: Params }) {
 
           {/* featureImage n'est plus affichée ici — elle sert uniquement à l'OpenGraph (partage social). */}
 
-          {/* Body */}
+          {/* Body — 2-column layout: main + sidebar */}
           <div
+            className="article-layout"
             style={{
-              maxWidth: '760px',
+              maxWidth: '1280px',
               margin: '0 auto',
               padding: '0 var(--space-6) var(--space-12)',
             }}
           >
-            {/* AISummarize */}
-            {meta.aiSummary && meta.aiSummary.length > 0 && (
-              <AISummarize
-                points={meta.aiSummary}
-                articleTitle={meta.title}
-                articleUrl={`${SITE_URL}/blog/${categorie}/${slug}`}
-              />
-            )}
+            {/* Main content */}
+            <div style={{ maxWidth: '760px', minWidth: 0 }}>
+              {/* AISummarize */}
+              {meta.aiSummary && meta.aiSummary.length > 0 && (
+                <section id="en-bref">
+                  <AISummarize
+                    points={meta.aiSummary}
+                    articleTitle={meta.title}
+                    articleUrl={`${SITE_URL}/blog/${categorie}/${slug}`}
+                  />
+                </section>
+              )}
 
-            {/* MDX content */}
-            <div className="prose-article">{mdxContent}</div>
-            <AutoProductCTAs ctas={getCTAsForCategory(categorie)} />
+              {/* MDX content */}
+              <div className="prose-article">{mdxContent}</div>
+              <AutoProductCTAs ctas={getCTAsForCategory(categorie)} />
 
-            {/* CTA outil contextuel */}
-            <ToolCTA categorie={categorie} />
+              {/* CTA outil contextuel */}
+              <ToolCTA categorie={categorie} />
 
-            {/* FAQ */}
-            {meta.faq && meta.faq.length > 0 && (
-              <section
-                aria-labelledby="faq-titre"
-                style={{ marginTop: 'var(--space-12)' }}
-              >
-                <h2
-                  id="faq-titre"
-                  style={{
-                    fontFamily: 'var(--next-font-display), system-ui, sans-serif',
-                    fontSize: 'clamp(20px, 3vw, 28px)',
-                    fontWeight: 800,
-                    color: 'var(--text-primary)',
-                    marginBottom: 'var(--space-6)',
-                    textWrap: 'balance',
-                  }}
+              {/* FAQ */}
+              {meta.faq && meta.faq.length > 0 && (
+                <section
+                  id="faq-section"
+                  aria-labelledby="faq-titre"
+                  style={{ marginTop: 'var(--space-12)' }}
                 >
-                  <Balancer>Questions fréquentes</Balancer>
-                </h2>
-                <FaqAccordion items={meta.faq} />
-              </section>
-            )}
+                  <h2
+                    id="faq-titre"
+                    style={{
+                      fontFamily: 'var(--next-font-display), system-ui, sans-serif',
+                      fontSize: 'clamp(20px, 3vw, 28px)',
+                      fontWeight: 800,
+                      color: 'var(--text-primary)',
+                      marginBottom: 'var(--space-6)',
+                      textWrap: 'balance',
+                    }}
+                  >
+                    <Balancer>Questions fréquentes</Balancer>
+                  </h2>
+                  <FaqAccordion items={meta.faq} />
+                </section>
+              )}
 
-            {/* Continuer votre lecture */}
-            {related.length > 0 && (
-              <section
-                aria-labelledby="related-titre"
-                style={{ marginTop: 'var(--space-12)' }}
-              >
-                <h2
-                  id="related-titre"
-                  style={{
-                    fontFamily: 'var(--next-font-display), system-ui, sans-serif',
-                    fontSize: 'clamp(18px, 2.5vw, 22px)',
-                    fontWeight: 800,
-                    color: 'var(--text-primary)',
-                    marginBottom: 'var(--space-5)',
-                    letterSpacing: '-0.01em',
-                  }}
+              {/* Continuer votre lecture */}
+              {related.length > 0 && (
+                <section
+                  id="related-section"
+                  aria-labelledby="related-titre"
+                  style={{ marginTop: 'var(--space-12)' }}
                 >
-                  <Balancer>Continuer votre lecture</Balancer>
-                </h2>
-                <ul
-                  role="list"
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 0,
-                    listStyle: 'none',
-                    borderTop: '1px solid var(--border)',
-                  }}
-                >
-                  {related.map((a, i) => (
-                    <li key={`${a.categorie}/${a.slug}`} style={{ borderBottom: '1px solid var(--border)' }}>
-                      <Link
-                        href={articleHref(a)}
-                        className="related-link"
-                        style={{
-                          textDecoration: 'none',
-                          display: 'flex',
-                          alignItems: 'baseline',
-                          gap: 'var(--space-4)',
-                          padding: 'var(--space-4) 0',
-                        }}
-                      >
-                        <span
+                  <h2
+                    id="related-titre"
+                    style={{
+                      fontFamily: 'var(--next-font-display), system-ui, sans-serif',
+                      fontSize: 'clamp(18px, 2.5vw, 22px)',
+                      fontWeight: 800,
+                      color: 'var(--text-primary)',
+                      marginBottom: 'var(--space-5)',
+                      letterSpacing: '-0.01em',
+                    }}
+                  >
+                    <Balancer>{t('article.relatedArticles')}</Balancer>
+                  </h2>
+                  <ul
+                    role="list"
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 0,
+                      listStyle: 'none',
+                      borderTop: '1px solid var(--border)',
+                    }}
+                  >
+                    {related.map((a, i) => (
+                      <li key={`${a.categorie}/${a.slug}`} style={{ borderBottom: '1px solid var(--border)' }}>
+                        <Link
+                          href={articleHref(a)}
+                          className="related-link"
                           style={{
-                            fontFamily: 'var(--next-font-mono), monospace',
-                            fontSize: '12px',
-                            color: 'var(--text-muted)',
-                            flexShrink: 0,
-                            minWidth: '24px',
+                            textDecoration: 'none',
+                            display: 'flex',
+                            alignItems: 'baseline',
+                            gap: 'var(--space-4)',
+                            padding: 'var(--space-4) 0',
                           }}
                         >
-                          {String(i + 1).padStart(2, '0')}
-                        </span>
-                        <span style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '2px' }}>
                           <span
                             style={{
-                              fontFamily: 'var(--next-font-primary), system-ui, sans-serif',
-                              fontSize: '15px',
+                              fontFamily: 'var(--next-font-mono), monospace',
+                              fontSize: '12px',
+                              color: 'var(--text-muted)',
+                              flexShrink: 0,
+                              minWidth: '24px',
+                            }}
+                          >
+                            {String(i + 1).padStart(2, '0')}
+                          </span>
+                          <span style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                            <span
+                              style={{
+                                fontFamily: 'var(--next-font-primary), system-ui, sans-serif',
+                                fontSize: '15px',
+                                fontWeight: 600,
+                                color: 'var(--text-primary)',
+                                lineHeight: 1.35,
+                              }}
+                            >
+                              {a.title}
+                            </span>
+                            <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                              {CATEGORY_LABELS[a.categorie] ?? a.categorie} · {a.readingTimeMin} min
+                            </span>
+                          </span>
+                          <span style={{ color: 'var(--text-muted)', fontSize: '14px', flexShrink: 0 }} aria-hidden="true">→</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {/* AuthorCard */}
+              <div style={{ marginTop: 'var(--space-12)' }}>
+                <AuthorCard
+                  authorSlug={niche.author.slug || 'auteur'}
+                  authorName={niche.author.name || 'Auteur'}
+                  bio={niche.author.bio || ''}
+                  variant="inline"
+                />
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <aside
+              className="article-sidebar"
+              style={{
+                position: 'sticky',
+                top: '80px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--space-8)',
+                paddingTop: 'var(--space-6)',
+              }}
+            >
+              {/* Table of Contents */}
+              <FadeIn delay={100}>
+                <nav aria-label={t('sidebar.tocTitle')}>
+                  <p
+                    style={{
+                      fontFamily: 'var(--next-font-display), system-ui, sans-serif',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      color: 'var(--text-muted)',
+                      marginBottom: 'var(--space-3)',
+                    }}
+                  >
+                    {t('sidebar.tocTitle')}
+                  </p>
+                  <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    {meta.aiSummary && meta.aiSummary.length > 0 && (
+                      <li>
+                        <a href="#en-bref" className="sidebar-toc-link">
+                          {t('sidebar.tocSummary')}
+                        </a>
+                      </li>
+                    )}
+                    {meta.faq && meta.faq.length > 0 && (
+                      <li>
+                        <a href="#faq-section" className="sidebar-toc-link">
+                          {t('sidebar.tocFaq')}
+                        </a>
+                      </li>
+                    )}
+                    {related.length > 0 && (
+                      <li>
+                        <a href="#related-section" className="sidebar-toc-link">
+                          {t('sidebar.tocRelated')}
+                        </a>
+                      </li>
+                    )}
+                  </ul>
+                </nav>
+              </FadeIn>
+
+              {/* Product CTAs (if stickyCta exists) */}
+              {meta.stickyCta && meta.stickyCta.length > 0 && (
+                <FadeIn delay={200}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 'var(--space-3)',
+                    }}
+                  >
+                    {meta.stickyCta.map((item, i) => {
+                      const isAmazon = item.url.includes('amazon.fr') || item.url.includes('amzn.to')
+                      const href = isAmazon ? addAffiliateTag(item.url) : item.url
+                      return (
+                        <a
+                          key={i}
+                          href={href}
+                          rel={isAmazon ? 'nofollow sponsored noopener' : 'noopener'}
+                          target="_blank"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 'var(--space-3)',
+                            padding: 'var(--space-3) var(--space-4)',
+                            background: 'var(--bg-surface)',
+                            border: '1px solid var(--border)',
+                            borderRadius: 'var(--radius-md)',
+                            textDecoration: 'none',
+                            transition: 'border-color var(--duration) var(--ease-out)',
+                          }}
+                          className="product-affiliate"
+                        >
+                          <span
+                            style={{
+                              flex: 1,
+                              fontSize: '13px',
                               fontWeight: 600,
                               color: 'var(--text-primary)',
                               lineHeight: 1.35,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
                             }}
                           >
-                            {a.title}
+                            {item.label}
                           </span>
-                          <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                            {CATEGORY_LABELS[a.categorie] ?? a.categorie} · {a.readingTimeMin} min
+                          <span
+                            style={{
+                              flexShrink: 0,
+                              fontSize: '11px',
+                              fontWeight: 700,
+                              color: 'var(--accent-1)',
+                              letterSpacing: '0.02em',
+                            }}
+                          >
+                            Voir →
                           </span>
-                        </span>
-                        <span style={{ color: 'var(--text-muted)', fontSize: '14px', flexShrink: 0 }} aria-hidden="true">→</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
+                        </a>
+                      )
+                    })}
+                  </div>
+                </FadeIn>
+              )}
 
-            {/* AuthorCard */}
-            <div style={{ marginTop: 'var(--space-10)' }}>
-              <AuthorCard
-                authorSlug={niche.author.slug || 'auteur'}
-                authorName={niche.author.name || 'Auteur'}
-                bio={niche.author.bio || ''}
-                variant="inline"
-              />
-            </div>
+              {/* Tool promo — comparateur/quiz for this category */}
+              <FadeIn delay={300}>
+                <Link
+                  href={`/comparer/${categorie}`}
+                  style={{
+                    display: 'block',
+                    padding: 'var(--space-4)',
+                    background: 'var(--bg-surface)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius-md)',
+                    textDecoration: 'none',
+                    transition: 'border-color var(--duration) var(--ease-out)',
+                  }}
+                  className="tool-card"
+                >
+                  <p
+                    style={{
+                      fontFamily: 'var(--next-font-display), system-ui, sans-serif',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      letterSpacing: '0.07em',
+                      textTransform: 'uppercase',
+                      color: 'var(--accent-1)',
+                      marginBottom: 'var(--space-2)',
+                    }}
+                  >
+                    {t('sidebar.toolPromo', { label: catLabel })}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      color: 'var(--text-primary)',
+                    }}
+                  >
+                    {t('sidebar.toolPromoCta')}
+                  </p>
+                </Link>
+              </FadeIn>
+
+              {/* Author card mini */}
+              <FadeIn delay={400}>
+                <Link
+                  href={`/auteurs/${niche.author.slug || 'auteur'}`}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--space-3)',
+                    padding: 'var(--space-4)',
+                    borderTop: '1px solid var(--border)',
+                    textDecoration: 'none',
+                  }}
+                >
+                  {/* Monogram */}
+                  <div
+                    aria-hidden="true"
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 'var(--radius-full)',
+                      background: 'linear-gradient(135deg, rgba(255,61,87,0.15) 0%, rgba(123,97,255,0.10) 100%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: 'var(--next-font-display), system-ui, sans-serif',
+                        fontSize: 13,
+                        fontWeight: 800,
+                        color: 'var(--text-primary)',
+                        lineHeight: 1,
+                        opacity: 0.85,
+                      }}
+                    >
+                      {(niche.author.name || 'A').charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p
+                      style={{
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        color: 'var(--text-primary)',
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {niche.author.name || 'Auteur'}
+                    </p>
+                    <p
+                      style={{
+                        fontSize: '11px',
+                        color: 'var(--text-muted)',
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {t('authorCard.viewProfile')}
+                    </p>
+                  </div>
+                </Link>
+              </FadeIn>
+            </aside>
           </div>
         </article>
       </main>
