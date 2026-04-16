@@ -6,15 +6,16 @@
 
 import Link from 'next/link'
 import { niche } from '@/niche.config'
+import { t } from '@/lib/i18n'
 
 function currentYear() {
   return new Date().getFullYear()
 }
 
 const COL_OUTILS = [
-  { href: '/comparer', label: 'Comparer' },
-  ...(niche.quiz.enabled ? [{ href: '/quiz', label: 'Quiz' }] : []),
-  ...(niche.simulator.enabled ? [{ href: '/simulateur', label: 'Simulateur' }] : []),
+  { href: '/comparer', label: t('nav.compare') },
+  ...(niche.quiz.enabled ? [{ href: '/quiz', label: t('tools.quiz.eyebrow') }] : []),
+  ...(niche.simulator.enabled ? [{ href: '/simulateur', label: t('nav.simulator') }] : []),
   { href: '/deals', label: niche.dealWord.charAt(0).toUpperCase() + niche.dealWord.slice(1) },
 ]
 
@@ -24,9 +25,9 @@ const COL_BLOG = niche.categories.slice(0, 4).map((cat) => ({
 }))
 
 const COL_APROPOS = [
-  ...(niche.author.slug ? [{ href: `/auteurs/${niche.author.slug}`, label: 'Auteur' }] : []),
-  { href: '/mentions-legales', label: 'Mentions légales' },
-  { href: '/confidentialite', label: 'Confidentialité' },
+  ...(niche.author.slug ? [{ href: `/auteurs/${niche.author.slug}`, label: t('footer.author') }] : []),
+  { href: '/mentions-legales', label: t('footer.legalNotice') },
+  { href: '/confidentialite', label: t('footer.privacy') },
 ]
 
 type FooterColProps = {
@@ -124,9 +125,9 @@ export function Footer() {
             </p>
           </div>
 
-          <FooterCol title="Outils" links={COL_OUTILS} />
-          {COL_BLOG.length > 0 && <FooterCol title="Blog" links={COL_BLOG} />}
-          <FooterCol title="À propos" links={COL_APROPOS} />
+          <FooterCol title={t('footer.tools')} links={COL_OUTILS} />
+          {COL_BLOG.length > 0 && <FooterCol title={t('nav.blog')} links={COL_BLOG} />}
+          <FooterCol title={t('footer.about')} links={COL_APROPOS} />
         </div>
 
         {/* Bas — séparateur + disclaimer */}
@@ -142,10 +143,10 @@ export function Footer() {
           }}
         >
           <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
-            © {currentYear()} {niche.siteName} — Site indépendant.
+            © {currentYear()} {niche.siteName} — {t('footer.independent')}
           </p>
           <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0, textAlign: 'right' }}>
-            Liens affiliés {niche.defaultStore}. En achetant via nos liens, vous soutenez le site sans surcoût.
+            {t('footer.affiliateDisclaimer', { store: niche.defaultStore })}
           </p>
         </div>
       </div>
