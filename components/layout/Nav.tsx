@@ -13,6 +13,7 @@ import { useState, useEffect } from 'react'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { ThemeToggle } from './ThemeToggle'
 import { niche } from '@/niche.config'
+import { t } from '@/lib/i18n'
 
 const CHOISIR = niche.categories.map((cat) => ({
   href: `/choisir/${cat.slug}`,
@@ -25,9 +26,9 @@ const COMPARER = niche.categories.map((cat) => ({
 }))
 
 const FLAT_LINKS = [
-  { href: '/blog',        label: 'Blog' },
+  { href: '/blog',        label: t('nav.blog') },
   { href: '/deals',       label: niche.dealWord.charAt(0).toUpperCase() + niche.dealWord.slice(1) },
-  ...(niche.simulator.enabled ? [{ href: '/simulateur', label: 'Simulateur' }] : []),
+  ...(niche.simulator.enabled ? [{ href: '/simulateur', label: t('nav.simulator') }] : []),
 ]
 
 const navLinkBase = {
@@ -97,7 +98,7 @@ export function Nav() {
           transition: 'background-color 300ms ease, backdrop-filter 300ms ease, border-color 300ms ease',
         }}
       >
-        <nav aria-label="Navigation principale" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 var(--space-6)', height: '60px', display: 'flex', alignItems: 'center', gap: 'var(--space-6)' }}>
+        <nav aria-label={t('nav.mainNav')} style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 var(--space-6)', height: '60px', display: 'flex', alignItems: 'center', gap: 'var(--space-6)' }}>
 
           {/* Logo */}
           <Link href="/" aria-label={`${niche.siteName} — accueil`} style={{ textDecoration: 'none', flexShrink: 0, display: 'flex', alignItems: 'baseline', gap: '2px' }}>
@@ -115,7 +116,7 @@ export function Nav() {
             {CHOISIR.length > 0 && (
               <li className="dropdown-trigger">
                 <button style={navBtnStyle(isGroupActive(CHOISIR))} aria-haspopup="true">
-                  Choisir <ChevronDown size={12} aria-hidden="true" />
+                  {t('nav.choose')} <ChevronDown size={12} aria-hidden="true" />
                 </button>
                 <div className="dropdown-panel" role="menu">
                   {CHOISIR.map(({ href, label }) => (
@@ -129,7 +130,7 @@ export function Nav() {
             {COMPARER.length > 0 && (
               <li className="dropdown-trigger">
                 <Link href="/comparer" style={navLinkStyle(isActive('/comparer'))} aria-haspopup="true">
-                  Comparer <ChevronDown size={12} aria-hidden="true" />
+                  {t('nav.compare')} <ChevronDown size={12} aria-hidden="true" />
                 </Link>
                 <div className="dropdown-panel" role="menu">
                   {COMPARER.map(({ href, label }) => (
@@ -151,7 +152,7 @@ export function Nav() {
           <ThemeToggle />
 
           {/* Hamburger */}
-          <button aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'} aria-expanded={open} onClick={() => setOpen(o => !o)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-primary)', padding: 'var(--space-2)', display: 'flex' }} className="nav-hamburger">
+          <button aria-label={open ? t('nav.closeMenu') : t('nav.openMenu')} aria-expanded={open} onClick={() => setOpen(o => !o)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-primary)', padding: 'var(--space-2)', display: 'flex' }} className="nav-hamburger">
             {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
           </button>
         </nav>
@@ -172,13 +173,13 @@ export function Nav() {
 
       {/* Mobile overlay */}
       {open && (
-        <div style={{ position: 'fixed', inset: '60px 0 0 0', backgroundColor: 'var(--nav-mobile-bg)', borderTop: '1px solid var(--border)', padding: 'var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', zIndex: 39, overflowY: 'auto' }} aria-label="Menu mobile" role="dialog">
+        <div style={{ position: 'fixed', inset: '60px 0 0 0', backgroundColor: 'var(--nav-mobile-bg)', borderTop: '1px solid var(--border)', padding: 'var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', zIndex: 39, overflowY: 'auto' }} aria-label={t('nav.mobileMenu')} role="dialog">
 
           {/* Section Choisir */}
           {CHOISIR.length > 0 && (
             <>
               <button onClick={() => setMobileSection(s => s === 'choisir' ? null : 'choisir')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'var(--space-3) 0', width: '100%' }}>
-                <span style={{ fontSize: '22px', fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontWeight: isGroupActive(CHOISIR) ? 700 : 400, color: isGroupActive(CHOISIR) ? 'var(--accent-1)' : 'var(--text-primary)' }}>Choisir</span>
+                <span style={{ fontSize: '22px', fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontWeight: isGroupActive(CHOISIR) ? 700 : 400, color: isGroupActive(CHOISIR) ? 'var(--accent-1)' : 'var(--text-primary)' }}>{t('nav.choose')}</span>
                 <ChevronDown size={18} style={{ color: 'var(--text-secondary)', transform: mobileSection === 'choisir' ? 'rotate(180deg)' : 'none', transition: 'transform 200ms ease' }} aria-hidden="true" />
               </button>
               {mobileSection === 'choisir' && (
@@ -195,7 +196,7 @@ export function Nav() {
           {COMPARER.length > 0 && (
             <>
               <button onClick={() => setMobileSection(s => s === 'comparer' ? null : 'comparer')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'var(--space-3) 0', width: '100%' }}>
-                <span style={{ fontSize: '22px', fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontWeight: isGroupActive(COMPARER) ? 700 : 400, color: isGroupActive(COMPARER) ? 'var(--accent-1)' : 'var(--text-primary)' }}>Comparer</span>
+                <span style={{ fontSize: '22px', fontFamily: 'var(--next-font-display), system-ui, sans-serif', fontWeight: isGroupActive(COMPARER) ? 700 : 400, color: isGroupActive(COMPARER) ? 'var(--accent-1)' : 'var(--text-primary)' }}>{t('nav.compare')}</span>
                 <ChevronDown size={18} style={{ color: 'var(--text-secondary)', transform: mobileSection === 'comparer' ? 'rotate(180deg)' : 'none', transition: 'transform 200ms ease' }} aria-hidden="true" />
               </button>
               {mobileSection === 'comparer' && (
