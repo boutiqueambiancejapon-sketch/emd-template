@@ -79,40 +79,40 @@ Sur base de la niche, propose-moi et demande validation :
    - Formulations récurrentes (ex: "Honnêtement,")
    - No-go (formulations interdites)
 
-### Bloc 6 — DA & Branding
-7. Ambiance visuelle ? (3 adjectifs, ex: premium, sombre, tech)
-   2–3 sites de référence pour l'ambiance ? (optionnel)
+### Bloc 6 — DA & Branding (AUTONOME)
 
-**AVANT de proposer**, lire `docs/DA-PRESETS.md` et utiliser les helpers de `lib/da-presets`.
-Le template embarque une base de 161 palettes par niche, 72 paires typographiques, 75 styles UI
-et 161 règles de raisonnement par niche. Ne pas inventer une palette sans avoir d'abord cherché
-dans cette base. Exemple :
+**La question** : "As-tu une ambiance en tête ? (3 mots-clés, ou laisse-moi décider)"
+
+Si l'utilisateur donne des mots-clés → les utiliser comme input.
+Si l'utilisateur dit "décide" / "je te fais confiance" → Claude décide TOUT seul.
+
+**AVANT de proposer** :
+1. Lire `docs/DA-PRESETS.md` — base de 161 palettes, 72 fonts, 75 styles, 161 règles
+2. Lire `docs/DA-ANTI-IA.md` — guide anti-IA avec signature et patterns interdits
+3. Utiliser les helpers de `lib/da-presets` :
 
 ```ts
 import { composePreset, findPalettes } from '@/lib/da-presets'
-
-// Soit on connaît la niche exacte ("Healthcare App", "E-commerce Luxury", etc.)
 const preset = composePreset('Healthcare App', ['calm', 'modern'])
-
-// Soit on cherche par mots-clés
+// ou
 const matches = findPalettes(['robot', 'tech', 'home', 'appliance'], 5)
 ```
 
-Ensuite, sur base du preset trouvé + de l'ambiance demandée, proposer ET demander validation :
+**Claude Code compose TOUT et présente en bloc.** Ne pas poser de sous-questions
+sur la palette, les fonts, ou les effets. Tout proposer d'un coup.
 
-**Style structurel** (ce qui différencie visuellement les sites entre eux) :
+#### Ce que Claude Code décide seul :
+
+**Style structurel** :
 - mode : `dark` ou `light` — dark pour tech/gaming/premium, light pour santé/cuisine/lifestyle
-- hero : `split` (texte + nav catégories), `centered` (tout centré), `minimal` (titre + 1 CTA, épuré)
-- effects : `aurora` (gradient animé bold), `subtle` (noise léger seulement), `none` (propre et minimal)
-- cards : `bordered` (border-top accent + watermark), `filled` (fond accent subtil), `minimal` (texte pur)
+- hero : `split` (texte + nav catégories), `centered` (tout centré), `minimal` (titre + 1 CTA)
+- effects : `aurora` (gradient animé bold), `subtle` (noise léger), `none` (minimal)
+- cards : `bordered` (border-top accent + watermark), `filled` (fond accent), `minimal` (texte pur)
 
-**Logo** : texte libre. Si contient `·`, le point sert de séparateur visuel (ex: "10min·voyage").
-Sinon, le nom s'affiche en gras (ex: "ASPIRO", "MonSite").
+**Logo** : texte libre. `·` = séparateur visuel (ex: "10min·voyage"). Sinon, gras.
 
-**Ordre des sections home** : proposer un ordre adapté.
+**Ordre sections home** : adapté à la niche.
 Options : `ticker`, `deals`, `articles`, `categories`, `tools`, `author`
-Ex: un site deals-first → `['deals', 'articles', 'categories', 'tools', 'author']`
-Ex: un site contenu-first → `['articles', 'categories', 'tools', 'deals', 'author']`
 
 **Palette complète** (11 couleurs) :
 - accent1 → couleur principale (CTAs, liens, éléments actifs)
@@ -120,23 +120,54 @@ Ex: un site contenu-first → `['articles', 'categories', 'tools', 'deals', 'aut
 - accent3 → couleur tertiaire (succès, validation)
 - accent4 → couleur quaternaire (quiz, éléments interactifs)
 - accent5 → couleur quinaire (liens secondaires)
-- bgPrimary → fond principal (dark: #0A0A0F, light: #FAFAFA)
-- bgSurface → fond cartes (dark: #13131A, light: #FFFFFF)
-- bgSurface2 → fond cartes secondaire (dark: #1C1C26, light: #F0F0F5)
-- textPrimary → texte principal
-- textSecondary → texte secondaire
-- textMuted → texte discret
+- bgPrimary → fond principal (dark: noir teinté, JAMAIS #000000 ; light: off-white, JAMAIS #FFFFFF)
+- bgSurface → fond cartes
+- bgSurface2 → fond cartes secondaire
+- textPrimary / textSecondary / textMuted
 
-**Fonts** (2 familles max) :
-- display : pour les titres (ex: Unbounded, Syne, Plus Jakarta Sans, Outfit, Manrope)
-- body : pour le texte courant (ex: Space Grotesk, Inter, DM Sans, Geist)
-IMPORTANT : uniquement des fonts Google Fonts compatibles next/font.
+**Fonts** (2 familles, contraste obligatoire) :
+- display : titres (ex: Unbounded, Syne, Outfit, Manrope, Plus Jakarta Sans)
+- body : texte courant (ex: Space Grotesk, Inter, DM Sans, Geist)
+IMPORTANT : uniquement Google Fonts compatibles next/font.
 
 **Effets visuels** (si effects != 'none') :
-- Aurora : 3 couleurs du gradient animé (généralement accent1 + accent4 + accent3)
-- Noise : opacité (0.03–0.05, 0 pour désactiver)
+- Aurora : 3 couleurs du gradient (accent1 + accent4 + accent3)
+- Noise : opacité 0.03–0.05
 
-Présenter la proposition comme un tableau visuel avec les hex et demander validation.
+**Signature anti-IA** (voir `docs/DA-ANTI-IA.md`) :
+- `anchor` : choisir l'élément éditorial distinctif
+- `oneRule` : choisir 1 règle contrariante
+- `inspiration` : choisir 2-3 magazines/sites de référence
+- `forbidden` : patterns IA interdits (min 3)
+- `components` : activer les composants signature pertinents
+
+#### Format de présentation à l'utilisateur :
+
+```
+Voici la DA que je propose pour [siteName] :
+
+■ Style : [mode] / [hero] hero / effets [effects] / cards [cards]
+■ Logo : [logo]
+■ Sections home : [liste ordonnée]
+
+■ Palette :
+  accent1 [hex] — [usage]
+  accent2 [hex] — [usage]
+  ... (les 11 couleurs en tableau)
+
+■ Fonts : [display] (titres) + [body] (texte)
+
+■ Signature anti-IA :
+  · Ancre : [anchor]
+  · Règle : [oneRule]
+  · Inspirations : [inspiration]
+  · Composants : [components]
+  · Interdits : [forbidden]
+
+Raisonnement : [2 phrases max — pourquoi ces choix pour cette niche]
+
+Tu valides ou tu ajustes ?
+```
 
 ### Bloc 7 — Affiliation
 8. Tag affilié Amazon ? (ex: monsite-21)
@@ -194,7 +225,14 @@ Les prompts doivent être utilisables directement dans Midjourney/DALL-E/Flux sa
 7. Réécrire chaque `prompt` dans `lib/image-slots.ts` pour la niche + ambiance + palette
 8. Lister les images à générer à l'utilisateur avec les prompts finaux
 
-**→ "Voici les emplacements d'images avec les prompts IA. Tu peux les générer maintenant ou plus tard. On continue ?"**
+**Si `GEMINI_API_KEY` ou `BFL_API_KEY` est configuré** :
+9. Proposer de générer les images automatiquement via `npx tsx scripts/generate-images.ts`
+   Le script lit les slots, appelle le provider disponible, et stocke sur Vercel Blob.
+   On peut aussi générer slot par slot : `--slot home-hero-background`
+
+**→ "Voici les emplacements d'images avec les prompts IA adaptés à ta niche."**
+**→ "Tu veux que je lance la génération automatique ? (nécessite GEMINI_API_KEY ou BFL_API_KEY dans les env vars Vercel)"**
+**→ "Sinon, tu peux copier les prompts et les utiliser dans Midjourney/DALL-E. On continue ?"**
 **→ Attendre validation.**
 
 ### Étape 3 — Home
@@ -353,5 +391,10 @@ CMS_GITHUB_TOKEN=<PAT GitHub>
 BLOB_READ_WRITE_TOKEN=<auto via Vercel Blob>
 GITHUB_CMS_CLIENT_ID=<OAuth App>
 GITHUB_CMS_CLIENT_SECRET=<OAuth App secret>
-BFL_API_KEY=<Flux pour génération images>
+GEMINI_API_KEY=<Google AI Studio — génération images Gemini>
+BFL_API_KEY=<Flux — fallback si pas de Gemini>
 ```
+
+**Images** : le système détecte automatiquement le provider disponible (Gemini prioritaire, Flux en fallback).
+Pour générer les images structurelles en batch : `npx tsx scripts/generate-images.ts`
+Options : `--section home`, `--slot home-hero-background`, `--provider gemini`, `--dry-run`

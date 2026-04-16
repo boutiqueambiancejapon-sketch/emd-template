@@ -92,6 +92,15 @@ export type NicheConfig = {
   affiliateTag: string     // "monsite-21"
   defaultStore: string     // "Amazon"
 
+  // Signature DA anti-IA — personnalité visuelle unique
+  signature: {
+    anchor: string           // élément visuel distinctif (ex: "lettrine éditoriale façon Monocle")
+    oneRule: string          // 1 règle qui casse le look IA (ex: "jamais de gradient sur les boutons")
+    inspiration: string[]    // 2-3 vrais magazines/sites pour le ton visuel
+    forbidden: string[]      // patterns visuels interdits (ceux qui crient "IA")
+    components: string[]     // composants signature activés: 'lettrine' | 'pullQuote' | 'editorialFootnote' | 'tabularStat'
+  }
+
   // Langue & i18n
   defaultLocale: string    // "fr"
   locales: string[]        // ["fr"] — ajouter "en" quand la traduction est prête
@@ -153,6 +162,14 @@ export const niche: NicheConfig = {
 
   logo: '10min·template',
   homeSections: ['ticker', 'deals', 'articles', 'categories', 'tools', 'author'],
+
+  signature: {
+    anchor: '',
+    oneRule: '',
+    inspiration: [],
+    forbidden: [],
+    components: [],
+  },
 
   affiliateTag: '',
   defaultStore: 'Amazon',
