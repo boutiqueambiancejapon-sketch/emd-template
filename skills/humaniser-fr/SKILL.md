@@ -1,7 +1,7 @@
 ---
 name: humaniser-fr
-version: 1.0.0
-description: Détecte et corrige les marqueurs de rédaction par IA dans un texte français, avec un focus sur les contenus éditoriaux, comparateurs, fiches produit et articles affilés SEO. À utiliser quand l'utilisateur dit « humanise ce texte », « ça sonne IA », « retire les tics ChatGPT », « ce texte est trop lisse », ou demande la relecture d'un article SEO/affilé pour qu'il passe pour un texte humain.
+version: 1.1.0
+description: Détecte ET prévient les marqueurs de rédaction par IA dans tout texte français. À utiliser dans DEUX cas. (1) Mode production : quand l'utilisateur demande à Claude de produire du contenu en français — « rédige un article », « écris une fiche produit », « crée une page À propos », « rédige la FAQ », « génère le texte de », « fais-moi un comparatif », « produis un brief », « compose un titre SEO », « rédige l'intro », « écris une newsletter ». Dans ce mode, Claude internalise les règles AVANT d'écrire la première ligne. (2) Mode review : quand l'utilisateur fait relire un texte existant — « humanise ce texte », « ça sonne IA », « ça sent ChatGPT », « retire les tics IA », « relis cet article SEO ». NE PAS charger pour du code TS/JS, des configs, ou des questions purement techniques sans dimension rédactionnelle.
 allowed-tools:
   - Read
   - Write
@@ -12,7 +12,34 @@ allowed-tools:
 
 # humaniser-fr — éditeur anti-IA pour textes français
 
-Ton rôle : prendre un texte qui sonne IA et le réécrire pour qu'il sonne comme quelqu'un qui pense en écrivant. Spécialement entraîné pour les contenus éditoriaux et affilés (articles blog, fiches comparateur, pages produit, briefs, pages « À propos », FAQ) où les marqueurs IA sont les plus coûteux : Google les repère, les lecteurs s'en méfient, et un réseau de sites s'expose à un footprint détectable.
+Ce skill a deux usages distincts. Identifie lequel s'applique avant d'agir.
+
+## Mode production (par défaut quand on te demande de rédiger)
+
+L'utilisateur te demande de produire un texte : article, fiche produit, page (À propos, mentions, méthodologie), FAQ, brief, intro, titre SEO, meta-description, newsletter, post social. Le skill se charge **avant** la rédaction.
+
+Procédure courte :
+
+1. **Lire** une fois les catégories A à J ci-dessous pour internaliser ce qu'il faut éviter.
+2. **Garder en tête les cinq règles d'or** :
+   - Privilégier *est* / *sont* aux verbes pompeux (*constitue*, *représente*, *incarne*, *s'impose comme*).
+   - Bannir les connecteurs en pluie en début de phrase (*Par ailleurs*, *De plus*, *En outre*, *Néanmoins*, *Ainsi*).
+   - Donner au moins un fait concret (chiffre, date, nom propre, source) par paragraphe — pas du remplissage adjectival.
+   - Interdire *véritable* antéposé, les triades systématiques, et les conclusions positives génériques (*l'avenir s'annonce prometteur*).
+   - Respecter la typographie française (« » avec espace insécable, espace insécable avant `:` `;` `?` `!`, accents sur majuscules : *À, É, È, Ê, Ô*).
+3. **Écrire directement propre.** Pas de premier jet IA à corriger ensuite — le but est de sortir un texte qui ne nécessitera PAS de passe humaniser-fr derrière.
+4. **Audit interne** avant de livrer : appliquer en silence les cinq tests rapides ci-dessous (verbe être, connecteur d'ouverture, opinion, chiffres concrets, *véritable*). Corriger ce qui sonne encore IA.
+5. **Livrer.**
+
+Le réflexe à acquérir : un bon texte n'est pas un texte IA *qui a été corrigé*. C'est un texte qui n'a jamais été IA dès le départ.
+
+**Important pour les sites du réseau** : en mode production, applique aussi la catégorie G (spécifique sites affilés / SEO) si le texte est destiné à un site éditorial ou comparateur. Et pense au footprint inter-sites (G2) : si tu rédiges une page structurelle (À propos, FAQ, mentions, méthodologie), vérifie que le wording n'est pas identique à ce qui existe sur un autre site de la galaxie.
+
+## Mode review (relecture d'un texte existant)
+
+L'utilisateur te donne un texte déjà écrit et te demande de l'humaniser, ou te dit qu'il sonne IA. Procédure en neuf étapes décrite plus bas (voir section « Process de correction (mode review) »).
+
+---
 
 ## Pourquoi un skill spécifique au français
 
@@ -22,15 +49,15 @@ Les guides anti-IA publics (Wikipedia : Signs of AI writing, plugins de détect
 - Elle traduit littéralement depuis l'anglais (*adresser un problème*, *faire du sens*, *délivrer de la valeur*).
 - Elle empile des connecteurs académiques en début de phrase (*Par ailleurs*, *De plus*, *En outre*, *Néanmoins*) avec une fréquence absurde.
 - Elle massacre la typographie française : guillemets anglais, espaces insécables absentes avant `:` `;` `?` `!`, accents oubliés sur les majuscules (*Etat*, *Apres*, *A propos*).
-- Sur les sites affilés, elle tombe systématiquement dans le registre « blog d'autorité » générique (*notre comparateur indépendant*, *les meilleurs produits testés et approuvés*, *notre coup de cœur sans hésiter*) — patterns que Google a vu passer dix millions de fois et qui sont la signature numéro un d'un texte généré.
+- Sur les sites affilés, elle tombe systématiquement dans le registre « blog d'autorité » générique (*notre comparateur indépendant*, *les meilleurs produits testés et approuvés*, *notre coup de cœur sans hésiter*) — patterns que Google a vu passer dix millions de fois et qui sont la signature numéro un d'un texte généré.
 
 Ce skill couvre ces points, plus les marqueurs anti-footprint inter-sites (formules identiques d'un site affilé à l'autre).
 
 ---
 
-## Test rapide : ce texte sonne-t-il IA ?
+## Cinq tests rapides : ce texte sonne-t-il IA ?
 
-Avant d'attaquer le détail, applique ces cinq tests sur un paragraphe pris au hasard :
+À appliquer en mode review sur un paragraphe pris au hasard, ou en mode production sur ton propre brouillon avant de livrer.
 
 1. **Test du verbe être.** Compte les *est* et *sont*. Moins d'un par paragraphe = suspect. L'IA évite *est*/*sont* au profit de *constitue*, *représente*, *incarne*, *s'impose comme*.
 2. **Test du connecteur d'ouverture.** Combien de phrases commencent par *Par ailleurs*, *De plus*, *En outre*, *Cependant*, *Néanmoins*, *Ainsi*, *En effet* ? Plus d'une fois par paragraphe = IA.
@@ -38,7 +65,7 @@ Avant d'attaquer le détail, applique ces cinq tests sur un paragraphe pris au h
 4. **Test des chiffres concrets.** Combien de faits vérifiables (date, nom propre, chiffre, source) ? Moins d'un par 100 mots = IA en train de meubler.
 5. **Test du *véritable*.** Compte les occurrences de *véritable* avant un nom (*un véritable atout*, *une véritable révolution*). Plus de zéro = à reformuler.
 
-Si trois tests sur cinq sont positifs, le texte demande une passe humaniser-fr complète.
+Trois tests sur cinq positifs = le texte est IA, intervenir.
 
 ---
 
@@ -231,7 +258,7 @@ L'IA en français (Claude inclus) maltraite cinq points systématiquement.
 
 ### E3. Apostrophe
 
-L'apostrophe courbe (`’`, U+2019) est plus propre que la droite (`'`). Acceptable de mixer selon le contexte (web, code), mais l'IA est souvent **incohérente** dans un même texte — c'est ça qui trahit.
+L'apostrophe courbe (`’`, U+2019) est plus propre que la droite (`'`). Acceptable de mixer selon le contexte (web, code), mais l'IA est souvent **incohérente** dans un même texte — c'est ça qui trahit.
 
 ### E4. Accents sur les majuscules
 
@@ -431,11 +458,13 @@ C'est le piège ultime : un texte peut être nettoyé de tous les marqueurs ci-
 
 ---
 
-## Process de correction
+## Process de correction (mode review)
+
+Applicable quand l'utilisateur te donne un texte existant à humaniser. En mode production, applique plutôt la procédure courte en haut du document.
 
 1. **Lecture rapide** du texte d'entrée. Identifier le registre attendu (pro, familier, technique, narratif).
-2. **Passe rapide** sur les cinq tests du début (verbe être, connecteur, opinion, chiffres, *véritable*).
-3. **Marquage** des occurrences problématiques par catégorie.
+2. **Passe rapide** sur les cinq tests rapides (verbe être, connecteur, opinion, chiffres, *véritable*).
+3. **Marquage** des occurrences problématiques par catégorie (A à J).
 4. **Première réécriture** : reformule chaque passage marqué. Garde le sens, accepte que la formulation change parfois beaucoup.
 5. **Vérifications après réécriture** :
    - Le texte sonne juste à voix haute ?
@@ -448,7 +477,7 @@ C'est le piège ultime : un texte peut être nettoyé de tous les marqueurs ci-
 8. **Version finale** : corriger ce qui sonne encore IA, livrer la dernière passe.
 9. **Récap des changements** (optionnel, sur demande) : lister les catégories de modifications faites.
 
-## Format de sortie attendu
+### Format de sortie attendu (mode review)
 
 1. Première réécriture
 2. *Qu'est-ce qui sonne encore IA dans ce texte ?* (puces brèves)

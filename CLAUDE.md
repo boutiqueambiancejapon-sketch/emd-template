@@ -8,7 +8,7 @@
 
 Article ou page de contenu → lire `SEO-GEO-REDACTION.md` ET le fichier AUTHOR correspondant avant la première ligne.
 
-Texte qui sonne IA / à humaniser / article SEO à relire → le skill `humaniser-fr` se déclenche automatiquement.
+Production OU relecture d'un contenu rédactionnel en français (article, fiche produit, page À propos, FAQ, brief, intro, titre SEO, newsletter…) → le skill `humaniser-fr` se déclenche automatiquement à la rédaction comme à la relecture. Triggers production : « rédige », « écris », « crée une page/article/fiche/FAQ », « fais-moi un comparatif ». Triggers review : « humanise », « sonne IA », « relis ».
 
 ## Projet
 Template générique "10 minutes" · Stack : Next.js ~16.2.1 + Tailwind v4 + TypeScript strict

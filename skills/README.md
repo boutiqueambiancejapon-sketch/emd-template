@@ -9,7 +9,7 @@ Chaque skill suit la convention Anthropic : un sous-dossier en kebab-case conte
 | Skill | Rôle | Triggers principaux |
 |---|---|---|
 | [`integrate-claude-design`](./integrate-claude-design/SKILL.md) | Intègre les outputs livrés par Claude Design dans la structure emd-template (mapping, conversions, réutilisation des composants, filtre qualité, nettoyage) | « intègre ce qui est dans design-incoming », « merge les designs », « applique les outputs Claude Design » |
-| [`humaniser-fr`](./humaniser-fr/SKILL.md) | Détecte et corrige les marqueurs IA en français, avec section spécifique sites affiliés / SEO / blog d'autorité | « humanise ce texte », « ça sonne IA », « retire les tics ChatGPT », « relis cet article SEO » |
+| [`humaniser-fr`](./humaniser-fr/SKILL.md) | **Prévient ET corrige** les marqueurs IA dans tout texte français. Chargé à la rédaction (mode production) ET à la relecture (mode review). Section spécifique sites affiliés / SEO / blog d'autorité | **Production** : « rédige un article », « écris une fiche produit », « crée une page À propos », « rédige la FAQ », « compose un titre SEO ». **Review** : « humanise ce texte », « ça sonne IA », « relis cet article SEO » |
 
 ## Ajouter un skill
 
