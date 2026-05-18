@@ -8,30 +8,30 @@
 
 Article ou page de contenu → lire `SEO-GEO-REDACTION.md` ET le fichier AUTHOR correspondant avant la première ligne.
 
-Texte qui sonne IA / à humaniser → le skill `boileau` (dans `skills/boileau/`) se déclenche automatiquement sur « humanise », « sonne IA », « retire les tics IA ».
+Texte qui sonne IA / à humaniser / article SEO à relire → le skill `humaniser-fr` (dans `skills/humaniser-fr/`) se déclenche automatiquement sur « humanise », « sonne IA », « retire les tics ChatGPT », « relis cet article SEO ».
 
 ## Projet
-Template générique "10 minutes" · Stack : Next.js ~16.2.1 + Tailwind v4 + TypeScript strict
-Langue : FR uniquement · pas de [locale] · routes racine directes
+Template générique "10 minutes" · Stack : Next.js ~16.2.1 + Tailwind v4 + TypeScript strict
+Langue : FR uniquement · pas de [locale] · routes racine directes
 Configuration centralisée dans `niche.config.ts`
 
 ## Skills locaux
 Voir [`skills/README.md`](skills/README.md) pour la liste des skills bundlés avec le template.
 
 ## DA & images
-DA : typographie configurable · effets aurora/noise CSS · SVG inline · composition dark bold
+DA : typographie configurable · effets aurora/noise CSS · SVG inline · composition dark bold
 Toute section visuellement vide est un bug de DA. Claude Code a toute latitude — documenter dans DECISIONS.md.
 
 ## Assets autorisés
-Images : `public/images/` — uploadées via le CMS ou commitées directement
+Images : `public/images/` — uploadées via le CMS ou commitées directement
 Utiliser `next/image` avec `alt` descriptif pour toutes les images éditoriales
-Icônes : lucide-react · SVG inline pour éléments décoratifs
-OG : générées via app/opengraph-image.tsx
-Jamais : picsum · unsplash · placeholder.com · images hotlinkées depuis un CDN tiers
+Icônes : lucide-react · SVG inline pour éléments décoratifs
+OG : générées via app/opengraph-image.tsx
+Jamais : picsum · unsplash · placeholder.com · images hotlinkées depuis un CDN tiers
 
 ## Fonts
-Next.js variables : `--next-font-primary` (Space Grotesk) · `--next-font-display` (configurable) · `--next-font-mono` (JetBrains Mono)
-Tailwind theme : `--font-primary` → `var(--next-font-primary)` · idem pour display et mono
+Next.js variables : `--next-font-primary` (Space Grotesk) · `--next-font-display` (configurable) · `--next-font-mono` (JetBrains Mono)
+Tailwind theme : `--font-primary` → `var(--next-font-primary)` · idem pour display et mono
 
 ## Liens affiliés
 TOUT lien Amazon dans le code ou le contenu MDX doit passer par addAffiliateTag() ou le composant <AffiliateLink>.
@@ -40,7 +40,7 @@ Tag affilié configuré dans `niche.config.ts`.
 
 ## Configuration centralisée
 `niche.config.ts` est le fichier maître. Tous les composants, configs et pages en dépendent.
-Pour personnaliser un site : modifier uniquement `niche.config.ts`, pas les composants.
+Pour personnaliser un site : modifier uniquement `niche.config.ts`, pas les composants.
 
 ## Comportement
 - Tâche 3+ étapes → plan tasks/todo.md avant
@@ -54,7 +54,7 @@ Pour personnaliser un site : modifier uniquement `niche.config.ts`, pas les comp
 - [ ] Variables CSS · zéro hardcode · composants < 150 lignes
 - [ ] Secrets hors repo · CSP sans unsafe-eval
 - [ ] zéro fonts.googleapis.com · adjustFontFallback:true
-- [ ] Article : byline + AuthorCard + JSON-LD author (sans photo)
+- [ ] Article : byline + AuthorCard + JSON-LD author (sans photo)
 - [ ] Tous les liens Amazon passent par addAffiliateTag() ou <AffiliateLink>
 - [ ] curl retourne H1 sans JS
 - [ ] Chaque section a un fond traité documenté dans DECISIONS.md
@@ -64,7 +64,7 @@ Pour personnaliser un site : modifier uniquement `niche.config.ts`, pas les comp
 
 ## Git
 Jamais direct sur main · feature = branche = PR · Conventional Commits anglais
-Branches : feature/ · fix/ · content/
+Branches : feature/ · fix/ · content/
 
 ## Code
 TS strict · HTML sémantique · params Promise await
