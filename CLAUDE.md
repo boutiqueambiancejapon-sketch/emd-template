@@ -4,11 +4,19 @@
 
 1. Lire **PROGRESS.md** et `/docs/` selon la tâche en cours.
 2. Si `design-incoming/` contient des fichiers → le skill `integrate-claude-design` prend le relais. **Ne JAMAIS** proposer un questionnaire d'init.
-3. Si `design-incoming/` est vide → demander à l'utilisateur ce qu'il veut faire (rédiger un article, compléter `niche.config.ts`, fix, etc.). Pas de séquence d'init automatique.
+3. Si `design-incoming/` est vide → demander à l'utilisateur ce qu'il veut faire. Pas de séquence d'init automatique.
 
-Article ou page de contenu → lire `SEO-GEO-REDACTION.md` ET le fichier AUTHOR correspondant avant la première ligne.
+## Rédaction de contenu (article, fiche produit, page, FAQ, brief, intro, newsletter…)
 
-Production OU relecture d'un contenu rédactionnel en français (article, fiche produit, page À propos, FAQ, brief, intro, titre SEO, newsletter…) → le skill `humaniser-fr` se déclenche automatiquement à la rédaction comme à la relecture. Triggers production : « rédige », « écris », « crée une page/article/fiche/FAQ », « fais-moi un comparatif ». Triggers review : « humanise », « sonne IA », « relis ».
+Sur tout trigger de rédaction (« rédige », « écris », « crée une page », « produis un brief », « relis »), **trois skills s'auto-déclenchent en parallèle** :
+
+- `ton-of-voice` — applique la voix éditoriale du site (ou la définit via interview de 8 questions si `content/ton-of-voice.md` est vide).
+- `seo-geo-redaction` — structure SEO + GEO (citabilité LLM, JSON-LD, FAQ, maillage).
+- `humaniser-fr` — garde-fous anti-IA (mode production + review).
+
+Avant la première ligne, ces trois skills internalisent leurs règles. Pas de travail manuel.
+
+Lire aussi `docs/AUTHOR-[slug].md` si l'article a un auteur dédié.
 
 ## Projet
 Template générique "10 minutes" · Stack : Next.js ~16.2.1 + Tailwind v4 + TypeScript strict
