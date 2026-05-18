@@ -1,7 +1,12 @@
-# Claude Code — 10min-template
+# Claude Code — emd-template
 
-Lis PROGRESS.md avant chaque session. Lis /docs/ selon ta tâche.
-Article ou page de contenu → lire SEO-GEO-REDACTION.md ET le fichier AUTHOR correspondant avant la première ligne.
+## Premier réflexe à chaque session
+
+1. Lire **PROGRESS.md** et `/docs/` selon la tâche en cours.
+2. Si `design-incoming/` existe et contient des fichiers → suivre `design-incoming/READ-FIRST.md` pour intégrer les outputs Claude Design. **Ne JAMAIS** proposer un questionnaire d'init.
+3. Si `design-incoming/` est vide ou absent → demander à l'utilisateur ce qu'il veut faire (rédiger un article, compléter `niche.config.ts`, fix, etc.). Pas de séquence d'init automatique.
+
+Article ou page de contenu → lire `SEO-GEO-REDACTION.md` ET le fichier AUTHOR correspondant avant la première ligne.
 
 ## Projet
 Template générique "10 minutes" · Stack : Next.js ~16.2.1 + Tailwind v4 + TypeScript strict

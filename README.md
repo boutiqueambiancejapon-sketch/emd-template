@@ -1,25 +1,22 @@
-# 10min-template
+# emd-template
 
-Template pour créer un site "10 minutes" — comparateur, quiz, simulateur, deals et blog.
-Fork, lance le prompt d'init, réponds à 10 questions, le site est prêt.
+Template Next.js pour sites éditoriaux « 10 minutes » — comparateur, quiz, simulateur, deals, blog. Toute la configuration passe par `niche.config.ts`. CMS intégré sur `/admin`.
 
 ## Démarrage
 
 ```bash
-# 1. Fork ce repo
-# 2. Cloner et installer
+# 1. "Use this template" sur GitHub → nouveau repo, clone-le
 cp .env.example .env.local
 npm install
 npm run dev
 
-# 3. Initialiser avec Claude Code : donner le prompt de docs/PROMPT-INIT.md
+# 2. Colle les outputs Claude Design dans design-incoming/
+# 3. Ouvre Claude Code → « intègre ce qui est dans design-incoming/ »
 ```
 
-## Configuration
+Pas d'outputs Claude Design ? Remplis `niche.config.ts` à la main, c'est le seul fichier obligatoire.
 
-Tout le site est configuré via **un seul fichier** : `niche.config.ts`
-
-Le prompt d'init pose les questions et remplit automatiquement ce fichier.
+Voir [`design-incoming/READ-FIRST.md`](design-incoming/READ-FIRST.md) pour la procédure d'intégration détaillée.
 
 ## Stack
 
@@ -99,10 +96,12 @@ Disponibles dans les articles :
 
 ## Documentation
 
-- [`docs/PROMPT-INIT.md`](docs/PROMPT-INIT.md) — Prompt d'initialisation
+- [`design-incoming/READ-FIRST.md`](design-incoming/READ-FIRST.md) — Workflow d'intégration Claude Design
 - [`docs/TEMPLATE-SPEC.md`](docs/TEMPLATE-SPEC.md) — Architecture du template
 - [`docs/CMS-SPEC.md`](docs/CMS-SPEC.md) — Documentation CMS
 - [`docs/SEO-GEO-REDACTION.md`](docs/SEO-GEO-REDACTION.md) — Guide SEO/GEO rédaction
+- [`docs/DA-PRESETS.md`](docs/DA-PRESETS.md) — Presets DA
+- [`docs/DA-ANTI-IA.md`](docs/DA-ANTI-IA.md) — Patterns visuels anti-IA
 - [`DECISIONS.md`](DECISIONS.md) — Décisions d'architecture
 - [`PROGRESS.md`](PROGRESS.md) — Progression
 

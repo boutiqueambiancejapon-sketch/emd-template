@@ -1,7 +1,14 @@
 /**
  * niche.config.ts — Configuration centrale du site.
  * C'est le SEUL fichier à remplir pour chaque nouveau site issu du template.
- * Le prompt d'init pose les questions et remplit ces valeurs.
+ *
+ * Workflow :
+ * - Soit rempli par Claude Code lors de l'intégration des outputs Claude Design
+ *   (voir design-incoming/READ-FIRST.md).
+ * - Soit rempli à la main quand il n'y a pas de livrable Claude Design.
+ *
+ * Tous les composants, configs et pages dépendent de ce fichier. Ne pas hardcoder
+ * de couleur, de font, de nom de site, de tagline dans le JSX — passer par ici.
  */
 
 export type NicheConfig = {
@@ -113,7 +120,9 @@ export type NicheConfig = {
 }
 
 // ─── Valeurs par défaut (placeholder) ───────────────────────────────────
-// Le prompt d'init remplace ces valeurs. Le site build même avec des valeurs vides.
+// Ces valeurs permettent au site de build avec un template vierge. Elles sont
+// remplacées soit par Claude Code lors de l'intégration des outputs Claude Design,
+// soit à la main lors d'un setup manuel.
 
 export const niche: NicheConfig = {
   siteName: '10min-template',

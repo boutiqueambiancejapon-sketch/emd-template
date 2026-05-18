@@ -1,21 +1,25 @@
-# Progression — 10min-template
+# Progression — emd-template
 
-## Complété — Template cleanup
+## Architecture actuelle
 
-### Nettoyage et abstraction
-- [x] Suppression de tout le contenu Apple (articles, produits, blog)
-- [x] Création de `niche.config.ts` — fichier de configuration central
-- [x] Abstraction de tous les composants (Hero, Nav, Footer, FeaturedTools, DealsStrip, AuthorTeaser)
-- [x] Remplacement des 5 sections Apple hardcodées par 1 `CategorySection` générique
-- [x] Mise à jour configs (cms.config, layout, sitemap, robots, package.json)
-- [x] Nettoyage content/ (settings.yaml, pages/*.yaml, exemples)
-- [x] Fichiers exemples (_example.mdx, _example.yaml)
-- [x] Nettoyage docs et SVGs
+Le template est prêt à être réutilisé sur de nouveaux sites. Workflow par défaut :
 
-## Architecture
+1. **Use this template** sur GitHub → nouveau repo.
+2. `npm install && npm run dev`.
+3. Soit coller les outputs Claude Design dans `design-incoming/` et demander à Claude Code de les intégrer (voir `design-incoming/READ-FIRST.md`), soit remplir `niche.config.ts` à la main.
 
-Le template est prêt à être forké. Pour initialiser un nouveau site :
-1. Fork ce repo
-2. Donner le prompt d'init (`docs/PROMPT-INIT.md`) à Claude Code
-3. Répondre aux questions → `niche.config.ts` est rempli automatiquement
-4. Le site est buildable et déployable
+Plus de « prompt d'init » en 10 questions — voir `docs/PROMPT-INIT.md` (deprecated).
+
+## Invariants du template
+
+- `niche.config.ts` est l'unique fichier de configuration éditable par site.
+- `packages/cms/` est portable tel quel entre sites.
+- Le `CategorySection` générique remplace les sections hardcodées.
+- Tout ce qui touche aux fonts, couleurs et vocabulaire passe par variables CSS / config — jamais en dur dans le JSX.
+
+## Historique
+
+- Nettoyage complet du contenu Apple d'origine (articles, sections, configs hardcodées).
+- Abstraction des composants (`Hero`, `Nav`, `Footer`, `FeaturedTools`, `DealsStrip`, `AuthorTeaser`).
+- Création de `niche.config.ts` comme source de vérité.
+- Bascule du workflow init-prompt vers le workflow Claude Design + `design-incoming/`.
