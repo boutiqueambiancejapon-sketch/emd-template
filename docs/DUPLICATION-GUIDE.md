@@ -1,177 +1,109 @@
-# Guide de duplication — Fork 10minutesapple vers une nouvelle niche
+# Guide de personnalisation par site
 
-## Prérequis
-- Fork ou import ZIP de `boutiqueambiancejapon-sketch/10minutesapple`
-- Lire `docs/CMS-SPEC.md` pour comprendre le CMS
-- Lire `CLAUDE.md` pour les conventions
+Checklist des modifications à faire sur un nouveau repo forké du template `emd-template`. La plupart du travail éditorial passe par les Skills (auto-déclenchés) ; ce qui reste manuel est ci-dessous.
+
+Le workflow officiel :
+
+1. **Use this template** sur GitHub (pas un fork) → nouveau repo propre.
+2. Cloner localement, `npm install`, `npm run dev`.
+3. Suivre la checklist ci-dessous.
+4. À la première demande de rédaction, laisser le skill `ton-of-voice` conduire l'interview de 8 questions.
 
 ---
 
-## Étape 1 — Supprimer le contenu Apple (ne pas modifier le code)
+## Étape 1 — Configuration technique (`niche.config.ts`)
 
-```bash
-# Articles
-rm content/articles/*.mdx
+C'est le SEUL fichier de configuration technique éditable. Remplir au minimum :
 
-# Blog
-rm -rf content/blog/iphone/
+- `siteName`, `domain`, `tagline`
+- `entity`, `entities`, `entityVerb`, `dealWord` (vocabulaire de la niche)
+- `heroPrefix`, `heroSuffix`, `rotatingWords`, `subtitle`
+- `categories` (1 à 5 catégories minimum)
+- `palette` (5 accents + 3 backgrounds + 3 textes) ou les laisser et les écraser via Claude Design
+- `fonts.display`, `fonts.body` (Google Fonts)
+- `logo` (texte du logo)
+- `affiliateTag` (tag Amazon)
+- `repo` (« org/repo » du nouveau site)
+- `branch` (en général `main`)
+- `signature` (anchor, oneRule, inspiration, forbidden — clé anti-IA visuelle)
 
-# Garder ces fichiers (structure CMS) :
-# content/pages/home.yaml → à modifier étape 3
-# content/pages/deals.yaml → à modifier étape 3
-# content/pages/comparer.yaml → à modifier étape 3
-# content/settings.yaml → à modifier étape 3
-# content/users.yaml → ne pas toucher (comptes CMS)
-```
+Les champs `author.*` peuvent rester vides si tu utilises `content/ton-of-voice.md` (voix générique du site).
 
-## Étape 2 — Remplacer le branding
+## Étape 2 — Voix éditoriale
 
-### Fichiers à modifier :
+Deux niveaux possibles :
 
-**`cms.config.ts`** — changer :
-- `siteName` → nouveau nom
-- `repo` → nouveau repo GitHub
-- `branch` → branche par défaut du nouveau repo
-- `collections.articles.fields.categorie.options` → nouvelles catégories
+- **Voix site** (obligatoire) : `content/ton-of-voice.md`. Rempli automatiquement par le skill `ton-of-voice` lors de la première demande de rédaction (interview 8 questions). Ne pas éditer à la main sauf raison spécifique.
+- **Voix auteur** (optionnel) : `docs/AUTHOR-[slug].md` par auteur signé. Suivre le template `docs/AUTHOR-template.md`. Créer aussi la fiche `content/authors/[slug].yaml` côté CMS.
 
-**`app/layout.tsx`** — changer :
-- Les 2 fonts Google (`Space_Grotesk`, `Unbounded`) → nouvelles fonts
-- `metadataBase` → nouveau domaine
-- `title.default` → nouveau titre
-- `description` → nouvelle description
+## Étape 3 — Contenu d'amorçage (via CMS ou à la main dans `content/`)
 
-**`app/globals.css`** — changer toutes les variables `:root` :
-- `--bg-primary`, `--bg-surface`, `--bg-surface-2`
-- `--accent-1` à `--accent-5`
-- `--text-primary`, `--text-secondary`, `--text-muted`
-- `--aurora-1`, `--aurora-2`, `--aurora-3`
-- Répéter pour `[data-theme="light"]`
+- `content/settings.yaml` : `siteName`, `siteDescription`, `siteUrl`, structure de navigation.
+- `content/pages/home.yaml` : eyebrow, h1_prefix/suffix, rotating_words, subtitle, CTAs, tools section.
+- `content/pages/deals.yaml` : titres + bandeau défilant + disclaimer affiliation.
+- `content/pages/comparer.yaml` : titres.
+- Au moins 1 article de test dans `content/articles/` pour valider le build blog.
 
-**`app/admin/layout.tsx`** — changer :
-- Les couleurs inline du CMS pour matcher la nouvelle palette
-- Le `siteName` est lu depuis `cms.config.ts` (automatique)
+## Étape 4 — Identité visuelle (si pas de Claude Design)
 
-**`components/layout/Nav.tsx`** — changer :
-- Le texte du logo ("10min" + "Apple" → nouveau nom)
-- Les liens de navigation (choisir, comparer, etc.)
-- Les dropdowns par catégorie
+Si tu as des outputs Claude Design à intégrer : les coller dans `design-incoming/` et lancer le skill `integrate-claude-design`.
 
-**`components/layout/Footer.tsx`** — changer :
-- Le texte du logo
-- Les colonnes de liens
-- Le copyright
+Sinon, modifier à la main :
 
-## Étape 3 — Adapter le contenu des pages
+- `app/layout.tsx` : fonts Google (`next/font`), `metadataBase`, `title.default`, `description`.
+- `app/globals.css` : variables `:root` (couleurs, radii, shadows). Voir `docs/DA-PRESETS.md` pour les helpers.
+- `app/admin/layout.tsx` : couleurs du sidebar admin pour matcher la palette.
+- `components/layout/Nav.tsx` et `components/layout/Footer.tsx` : logo, liens.
 
-**`content/settings.yaml`** — remplacer :
-- `siteName`, `siteDescription`, `siteUrl`
-- `nav` → structure de navigation complète
+## Étape 5 — Affiliation
 
-**`content/pages/home.yaml`** — remplacer :
-- `eyebrow`, `h1_prefix`, `h1_suffix`
-- `rotating_words` → les catégories/produits de la niche
-- `subtitle`, `cta_primary`, `cta_secondary`
-- `tools_eyebrow`, `tools_title`, `tools_cta`
+- `niche.config.ts` → `affiliateTag` : tag Amazon du site.
+- Vérifier que `lib/utils/affiliate.ts` lit bien ce tag (devrait être auto).
+- Disclosure affiliation : champ `affiliate_disclaimer` dans `content/pages/*.yaml` (à reformuler pour CHAQUE site, anti-footprint SEO — le skill `humaniser-fr` catégorie G5 gère ça).
 
-**`content/pages/deals.yaml`** — remplacer :
-- `title`, `subtitle`
-- `marquee` → les deals de la niche
-- `faq_title`, `affiliate_disclaimer`
+## Étape 6 — SEO technique par site
 
-**`content/pages/comparer.yaml`** — remplacer :
-- `title`, `subtitle`
-
-## Étape 4 — Adapter les outils interactifs
-
-**`lib/comparateur.ts`** — remplacer :
-- Les produits (modèles, prix, specs, URLs Amazon)
-- Les catégories de produits
-- Les critères de comparaison
-
-**`lib/article-ctas.ts`** — remplacer :
-- Les CTAs produits par catégorie (nom, prix, URL, hook)
-- Les catégories
-
-**`lib/blog.ts`** — changer :
-- `CATEGORY_LABELS` → nouvelles catégories avec labels
-
-**`app/(site)/choisir/`** — adapter :
-- Les questions du quiz par produit
-- Les résultats et recommandations
-
-**`app/(site)/simulateur/`** — adapter :
-- Les calculs et paramètres au domaine
-
-## Étape 5 — SEO & Auteur
-
-**`docs/SEO-GEO-REDACTION.md`** — changer :
-- Les formats de title par type de page
-- Les exemples de métadonnées
-- Le nom du site dans les formats
-
-**`docs/AUTHOR-mathias.md`** — remplacer ou créer un nouveau :
-- Nouveau nom, titre, bio
-- Nouveau ton, exemples, no-go
-- Nouveau schema Person
-
-**`app/sitemap.ts`** — changer le domaine
-**`app/robots.ts`** — changer le domaine
-**`CLAUDE.md`** — changer domaine, repo, branche, auteur actif
-
-## Étape 6 — Liens affiliés
-
-**`lib/utils/affiliate.ts`** — changer :
-- Le tag affilié (`ambiancejap0a-21` → nouveau tag)
-
-**`lib/plugins/remarkAmazonAffiliate.ts`** — changer :
-- Le tag par défaut
+- `app/sitemap.ts` : domaine.
+- `app/robots.ts` : domaine.
+- `app/opengraph-image.tsx` : couleurs et fonts si custom.
+- Vérifier que `niche.config.ts → vercelRegion` est sur la bonne région (fra1 par défaut).
 
 ## Étape 7 — Variables d'environnement Vercel
 
 ```
 CMS_SECRET=<openssl rand -hex 32>
-CMS_GITHUB_TOKEN=<nouveau PAT GitHub>
+CMS_GITHUB_TOKEN=<PAT GitHub avec accès au nouveau repo>
 BLOB_READ_WRITE_TOKEN=<auto via Vercel Blob store>
-GITHUB_CMS_CLIENT_ID=<nouvelle OAuth App>
-GITHUB_CMS_CLIENT_SECRET=<nouveau secret>
-CMS_ALLOWED_USERS=<nouveau username>
-BFL_API_KEY=<clé Flux, peut être la même>
+GITHUB_CMS_CLIENT_ID=<OAuth App du site (optionnel)>
+GITHUB_CMS_CLIENT_SECRET=<secret OAuth (optionnel)>
+CMS_ALLOWED_USERS=<username GitHub admin>
+BFL_API_KEY=<clé Flux pour génération d'images (optionnel)>
 ```
 
-## Étape 8 — Premier article + déploiement
+Créer aussi un Vercel Blob store (Storage > Blob > Public access) — le `BLOB_READ_WRITE_TOKEN` se crée automatiquement.
 
-1. Rédiger 1 article dans `content/articles/` pour valider le template blog
-2. `git push` → Vercel déploie
-3. Vérifier : home, blog, CMS `/admin`, outils
-4. Créer le Blob store sur Vercel (Storage > Blob > Public access)
+## Étape 8 — Vérifications avant premier déploiement
 
----
+- [ ] `npm run build` passe sans erreur.
+- [ ] `npm run type-check` passe.
+- [ ] Au moins 1 article test build correctement et est affiché sur `/blog`.
+- [ ] CMS accessible sur `/admin`.
+- [ ] `content/ton-of-voice.md` est rempli (plus de TODO).
+- [ ] Aucune mention résiduelle du domaine ou du nom du site source dans le code (sauf `content/`).
+- [ ] Liens affiliés Amazon testés : clic via `<AffiliateLink>` retourne le bon tag.
 
 ## Ce qu'on NE touche PAS
 
-Ces fichiers/dossiers sont identiques pour tous les sites :
+Ces dossiers sont identiques pour tous les sites enfants :
 
 ```
 packages/cms/              ← CMS complet (auth, CRUD, media, users, WYSIWYG)
 app/admin/                 ← Pages admin (sauf couleurs layout)
 app/api/cms/               ← API routes CMS
 scripts/upload-blob.ts     ← Script upload images
-middleware.ts              ← Passthrough
+middleware.ts              ← Passthrough CSP / headers
 lib/cms-pages.ts           ← Helper lecture pages YAML
-packages/cms/lib/          ← Auth, session, GitHub API, parser, password, rate-limit, users
-packages/cms/components/   ← LoginForm, ContentEditor, CollectionList, MediaBrowser, UsersManager, WysiwygEditor
+skills/                    ← Skills auto-déclenchés (sauf si tu en ajoutes des spécifiques au site)
 ```
 
-## Checklist finale
-
-- [ ] Aucune mention de "Apple", "iPhone", "10minutesapple" dans le code (sauf content/)
-- [ ] Nouvelles couleurs dans globals.css ET dans app/admin/layout.tsx
-- [ ] Nouvelles fonts dans app/layout.tsx
-- [ ] Nouveau tag affilié dans lib/utils/affiliate.ts
-- [ ] Nouveau domaine dans sitemap.ts, robots.ts, CLAUDE.md, layout.tsx metadataBase
-- [ ] Nouveau auteur dans docs/AUTHOR-[slug].md
-- [ ] cms.config.ts avec bon repo + branche + catégories
-- [ ] content/settings.yaml avec bonne navigation
-- [ ] Au moins 1 article de test qui build sans erreur
-- [ ] CMS accessible sur /admin après déploiement
-- [ ] Vercel Blob store connecté (public access)
+Des modifications dans ces dossiers cassent la portabilité entre sites du réseau.

@@ -1,6 +1,6 @@
 # emd-template
 
-Template Next.js pour sites éditoriaux « 10 minutes » — comparateur, quiz, simulateur, deals, blog. Toute la configuration passe par `niche.config.ts`. CMS intégré sur `/admin`.
+Template Next.js pour sites éditoriaux « 10 minutes » — comparateur, quiz, simulateur, deals, blog. Toute la configuration passe par `niche.config.ts`. CMS intégré sur `/admin`. Workflows de rédaction et d'intégration design pris en charge par des Skills auto-déclenchés.
 
 ## Démarrage
 
@@ -12,11 +12,23 @@ npm run dev
 
 # 2. Colle les outputs Claude Design dans design-incoming/
 # 3. Ouvre Claude Code → « intègre ce qui est dans design-incoming/ »
+#    (Le skill integrate-claude-design prend le relais automatiquement.)
 ```
 
-Pas d'outputs Claude Design ? Remplis `niche.config.ts` à la main, c'est le seul fichier obligatoire.
+Pas d'outputs Claude Design ? Remplis `niche.config.ts` à la main, c'est le seul fichier obligatoire.
 
-Voir [`design-incoming/READ-FIRST.md`](design-incoming/READ-FIRST.md) pour la procédure d'intégration détaillée.
+## Skills auto-déclenchés
+
+Le dossier `skills/` contient quatre skills qui se chargent automatiquement quand leurs triggers correspondent :
+
+| Skill | Quand il s'active |
+|---|---|
+| `integrate-claude-design` | « intègre ce qui est dans design-incoming », « merge les designs » |
+| `ton-of-voice` | Tout trigger de rédaction. Si `content/ton-of-voice.md` est vide → conduit un interview de 8 questions. |
+| `seo-geo-redaction` | Tout trigger de rédaction (article, fiche produit, brief, comparatif…) |
+| `humaniser-fr` | Production (écrit propre dès le départ) + Review (« humanise », « sonne IA ») |
+
+Sur une demande de rédaction, `ton-of-voice` + `seo-geo-redaction` + `humaniser-fr` se chargent en parallèle. Détail dans [`skills/README.md`](skills/README.md).
 
 ## Stack
 
@@ -30,7 +42,7 @@ Voir [`design-incoming/READ-FIRST.md`](design-incoming/READ-FIRST.md) pour la pr
 
 ## Composants MDX
 
-Disponibles dans les articles :
+Disponibles dans les articles :
 
 | Composant | Usage |
 |---|---|
@@ -49,7 +61,7 @@ Disponibles dans les articles :
 
 ## CMS (`/admin`)
 
-- Editeur WYSIWYG TipTap (tables, images, formatage)
+- Éditeur WYSIWYG TipTap (tables, images, formatage)
 - Import intelligent (copier-coller texte brut)
 - Sidebar SEO compacte
 - FAQ preview en temps réel
@@ -76,13 +88,13 @@ Disponibles dans les articles :
 | `/confidentialite` | Politique de confidentialité |
 | `/admin/*` | CMS complet |
 
-## SEO
+## SEO & GEO
 
 - JSON-LD (Article, Person, BreadcrumbList, FAQPage, WebSite)
 - OG dynamique par page
 - Sitemap + robots.ts
 - hreflang prêt (ajouter `'en'` dans `niche.locales` pour activer)
-- `docs/SEO-GEO-REDACTION.md` — guide permanent
+- Doctrine de rédaction : skill `seo-geo-redaction` (auto-déclenché sur la rédaction)
 
 ## Scripts
 
@@ -96,14 +108,17 @@ Disponibles dans les articles :
 
 ## Documentation
 
-- [`design-incoming/READ-FIRST.md`](design-incoming/READ-FIRST.md) — Workflow d'intégration Claude Design
+- [`skills/README.md`](skills/README.md) — Index des Skills auto-déclenchés
+- [`design-incoming/READ-FIRST.md`](design-incoming/READ-FIRST.md) — Zone d'atterrissage des outputs Claude Design
+- [`content/ton-of-voice.md`](content/ton-of-voice.md) — Voix éditoriale du site (rempli via interview au premier lancement)
+- [`docs/AUTHOR-template.md`](docs/AUTHOR-template.md) — Squelette pour fichiers auteur (`docs/AUTHOR-[slug].md`)
 - [`docs/TEMPLATE-SPEC.md`](docs/TEMPLATE-SPEC.md) — Architecture du template
 - [`docs/CMS-SPEC.md`](docs/CMS-SPEC.md) — Documentation CMS
-- [`docs/SEO-GEO-REDACTION.md`](docs/SEO-GEO-REDACTION.md) — Guide SEO/GEO rédaction
-- [`docs/DA-PRESETS.md`](docs/DA-PRESETS.md) — Presets DA
+- [`docs/DA-PRESETS.md`](docs/DA-PRESETS.md) — Presets de direction artistique
 - [`docs/DA-ANTI-IA.md`](docs/DA-ANTI-IA.md) — Patterns visuels anti-IA
+- [`docs/DUPLICATION-GUIDE.md`](docs/DUPLICATION-GUIDE.md) — Checklist de personnalisation par site
 - [`DECISIONS.md`](DECISIONS.md) — Décisions d'architecture
-- [`PROGRESS.md`](PROGRESS.md) — Progression
+- [`PROGRESS.md`](PROGRESS.md) — Progression et historique
 
 ## Variables Vercel
 
