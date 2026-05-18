@@ -8,10 +8,15 @@
 
 Article ou page de contenu → lire `SEO-GEO-REDACTION.md` ET le fichier AUTHOR correspondant avant la première ligne.
 
+Texte qui sonne IA / à humaniser → le skill `boileau` (dans `skills/boileau/`) se déclenche automatiquement sur « humanise », « sonne IA », « retire les tics IA ».
+
 ## Projet
 Template générique "10 minutes" · Stack : Next.js ~16.2.1 + Tailwind v4 + TypeScript strict
 Langue : FR uniquement · pas de [locale] · routes racine directes
 Configuration centralisée dans `niche.config.ts`
+
+## Skills locaux
+Voir [`skills/README.md`](skills/README.md) pour la liste des skills bundlés avec le template.
 
 ## DA & images
 DA : typographie configurable · effets aurora/noise CSS · SVG inline · composition dark bold
